@@ -325,15 +325,11 @@ public class SwingUi extends JComponent {
         draftPart = newDraftPart.getDraftPart();
     }
 
-    Odb<TrackPart> getDatabase() {
-        return db;
-    }
 
     private class TrainMouseAdapter extends MouseAdapter {
         private final Logger logger = LoggerFactory.getLogger(TrainMouseAdapter.class);
         private final ModeKeyListener keyListener;
         private final SwingUi swingUi;
-//        private final Odb<TrackPart> db;
         private Optional<Point> startPoint = Optional.empty();
         private final EventBus bus;
 
@@ -341,16 +337,15 @@ public class SwingUi extends JComponent {
             this.bus = bus;
             this.keyListener = keyListener;
             this.swingUi = swingUi;
-//            this.db = swingUi.getDatabase();
         }
 
         @Override
         public void mousePressed(final MouseEvent e) {
             final Point pressedPoint = calculateRasterPoint(e);
             switch (keyListener.getDrawMode()) {
-                case Track:// {
+                case Track:
                 case SwitchTrack: {
-                    startPoint = db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint));
+                    startPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(e.getPoint()));
                 }
                 break;
                 case Move:
@@ -359,11 +354,9 @@ public class SwingUi extends JComponent {
                     final TrackPart moveDraft = db.filterUnique(part -> part.isNear(pressedPoint)).orElse(null);
                     logger.debug("Part '{}' found", moveDraft);
                     bus.post(UpdateDraftPart.create(moveDraft));
-//                    swingUi.updateDraftPart(moveDraft);
                     break;
                 case Switch:
                     final Switch draftSwitch = Switch.create(pressedPoint);
-//                    swingUi.updateDraftPart(draftSwitch);
                     bus.post(UpdateDraftPart.create(draftSwitch));
                     break;
                 case Detail:
@@ -394,30 +387,26 @@ public class SwingUi extends JComponent {
                 case Switch:
                     final Switch draftSwitch = Switch.create(pressedPoint);
                     bus.post(UpdateDraftPart.create(draftSwitch));
-//                    swingUi.updateDraftPart(draftPart);
                     break;
                 case Track: {
                     final Point endPoint = db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(pressedPoint);
                     logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
                     final TrackPart draftSimpleTrack = Track.createSimpleTrack(startPoint.get(), endPoint);
                     bus.post(UpdateDraftPart.create(draftSimpleTrack));
-//                    swingUi.updateDraftPart(draftSimpleTrack);
                 }
                 break;
                 case SwitchTrack: {
                     Optional<TrackPart> parts = db.filterUnique(part -> part.isNear(pressedPoint));
                     logger.debug("Found Part to move : {}",parts );
-                    final Point endPoint = parts.map(part -> part.getNextConnectionpoint(pressedPoint)).get();
+                    final Point endPoint = parts.map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(pressedPoint);
                     logger.debug("Draw SwitchTrack from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
                     final TrackPart draftSwitchTrack = Track.createSwitchTrack(startPoint.get(), endPoint);
                     bus.post(UpdateDraftPart.create(draftSwitchTrack));
-//                    swingUi.updateDraftPart(draftSwitchTrack);
                 }
                 break;
                 case Move:
                     final TrackPart moveDraft = SwingUi.this.draftPart.moveTo(pressedPoint);
                     bus.post(UpdateDraftPart.create(moveDraft));
-//                    swingUi.updateDraftPart(moveDraft);
                     break;
                 case DummySwitch:
                 case Rotate:
@@ -436,18 +425,18 @@ public class SwingUi extends JComponent {
         public void mouseReleased(final MouseEvent e) {
             final InvisiblePart invisibleDraftPart = InvisiblePart.create();
             bus.post(UpdateDraftPart.create(invisibleDraftPart));
-//            swingUi.updateDraftPart(invisibleDraftPart);
+            final Point pressedPoint = e.getPoint();
             final Point mousePoint = calculateRasterPoint(e);
 
             switch (keyListener.getDrawMode()) {
                 case Track: {
-                    final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).get();
+                    final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).orElse(pressedPoint);
                     logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
                     db.add(Track.createSimpleTrack(startPoint.get(), endPoint));
                 }
                 break;
                 case SwitchTrack: {
-                    final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).get();
+                    final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).orElse(pressedPoint);
                     logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
                     db.add(Track.createSwitchTrack(startPoint.get(), endPoint));
                 }
