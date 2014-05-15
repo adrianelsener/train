@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class DenkoviWrapper implements Board {
 
+
     private final IpAddress address;
     private SnmpAPI api;
     private SnmpSession session;
@@ -22,7 +23,7 @@ public class DenkoviWrapper implements Board {
         api = new SnmpAPI();
         session = new SnmpSession(api);
         // session.setCommunity(Community);
-        // session.setRemotePort(Port);
+        // session.setRemotePort(Port);l
         try {
             session.open();
         } catch (final SnmpException e) {
