@@ -5,9 +5,7 @@ import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.ToggleCallback;
 import com.beust.jcommander.internal.Lists;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -73,7 +71,7 @@ public class SwitchTrack extends Track {
 
     @Override
     protected Color getLineColor() {
-        if ((TrackState.On == trackState && TrackView.Default == trackView) || TrackState.Off == trackState && TrackView.Inverted == trackView){
+        if ((TrackState.On == trackState && TrackView.Default == trackView) || TrackState.Off == trackState && TrackView.Inverted == trackView) {
             return Color.red;
         } else {
             return Color.blue;
