@@ -1,5 +1,8 @@
 package ch.adrianelsener.train.gui.swing;
 
+import ch.adrianelsener.train.gui.swing.events.UpdateDetails;
+import com.google.common.eventbus.Subscribe;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -10,7 +13,7 @@ import javax.swing.WindowConstants;
 import java.awt.Component;
 import java.awt.GridLayout;
 
-class DetailWindow extends JFrame {
+public class DetailWindow extends JFrame {
     private static final long serialVersionUID = 1L;
     private final JTextField id = new JTextField();
     private final JTextField board = new JTextField();
@@ -58,6 +61,11 @@ class DetailWindow extends JFrame {
 
     public void setApplyListener(final ApplyActionListener applyListener) {
         this.applyListener = applyListener;
+    }
+
+    @Subscribe
+    public void updateDetails(UpdateDetails detailWithPart) {
+        setDetails(detailWithPart.getDraftPart());
     }
 
     public void setDetails(final TrackPart details) {

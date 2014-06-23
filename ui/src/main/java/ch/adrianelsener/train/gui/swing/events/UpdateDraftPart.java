@@ -1,5 +1,6 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.events;
 
+import ch.adrianelsener.train.gui.swing.TrackPart;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class UpdateDraftPart implements UpdateToken {
@@ -13,6 +14,7 @@ public class UpdateDraftPart implements UpdateToken {
         return new UpdateDraftPart(draftPart);
     }
 
+    @Override
     public TrackPart getDraftPart() {
         return draftPart;
     }

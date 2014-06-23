@@ -16,9 +16,11 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.DummyToggler;
 import ch.adrianelsener.train.gui.SwitchBoardToggler;
 import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.swing.events.*;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.*;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +56,14 @@ public class SwingUi extends JComponent {
     private final static Logger logger = LoggerFactory.getLogger(SwingUi.class);
     private final ModeKeyListener keyListener;
     private final TrainMouseAdapter mouseListener;
+    private final MouseAdapter popUpListener = new MainPopupMenu.PopClickListener();
     private final int rasterSize = 5;
     private final boolean detailsDefaultVisible = true;
-    private final EventBus bus = new EventBus("mainbus");
 
-    private final Odb<TrackPart> db;
+    @Inject
+    private EventBus bus;
+    @Inject
+    private Odb<TrackPart> db;
     private final ObjectFactory<TrackPart> objectFactory;
     private TrackPart draftPart = InvisiblePart.create();
     private ToggleCallback toggler;
@@ -68,10 +73,27 @@ public class SwingUi extends JComponent {
     private DetailWindow details;
     private CheckSwitch switchChecker = new CheckSwitch();
     private Optional<File> currentShowing = Optional.empty();
+    private final DbUpdateHandler dbUpdater;
+    private final Injector injector;
 
     SwingUi() {
+        Odb<TrackPart> theDb = CsvOdb.create(TrackPart.class).build();
+
+         final Module busModule = new AbstractModule() {
+             @Override
+             protected void configure() {
+                 bind(EventBus.class).asEagerSingleton();
+             }
+         };
+        final Module dbModule = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(new TypeLiteral<Odb<TrackPart>>(){}).toInstance(theDb);
+            }
+        };
+        injector = Guice.createInjector(busModule, dbModule);
         keyListener = new ModeKeyListener();
-        mouseListener = new TrainMouseAdapter(keyListener, this, bus);
+        mouseListener = new TrainMouseAdapter(keyListener);
         objectFactory = input -> {
             final Iterator<String> iterator = input.iterator();
             final String type = iterator.next();
@@ -86,8 +108,12 @@ public class SwingUi extends JComponent {
                     throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
             }
         };
-        db = CsvOdb.create(TrackPart.class).build();
-        bus.register(this);
+        EventBus theBus = injector.getInstance(EventBus.class);
+        injector.injectMembers(this);
+        injector.injectMembers(mouseListener);
+        dbUpdater = DbUpdateHandler.create(db);
+        theBus.register(this);
+        theBus.register(dbUpdater);
     }
 
     public static void main(final String[] args) throws Exception {
@@ -180,6 +206,7 @@ public class SwingUi extends JComponent {
         speedControlFrame.setVisible(true);
         frame.addKeyListener(keyListener);
         p.addMouseListener(mouseListener);
+        p.addMouseListener(popUpListener);
         p.addMouseMotionListener(mouseListener);
     }
 
@@ -325,22 +352,30 @@ public class SwingUi extends JComponent {
         draftPart = newDraftPart.getDraftPart();
     }
 
+    @Subscribe
+    public void updateUi(UpdateMainUi updateMainUi) {
+        repaint();
+    }
+
 
     private class TrainMouseAdapter extends MouseAdapter {
         private final Logger logger = LoggerFactory.getLogger(TrainMouseAdapter.class);
         private final ModeKeyListener keyListener;
-        private final SwingUi swingUi;
         private Optional<Point> startPoint = Optional.empty();
-        private final EventBus bus;
+        @Inject
+        private EventBus bus;
+        @Inject
+        private Odb<TrackPart> db;
 
-        public TrainMouseAdapter(final ModeKeyListener keyListener, SwingUi swingUi, EventBus bus) {
-            this.bus = bus;
+        public TrainMouseAdapter(final ModeKeyListener keyListener) {
             this.keyListener = keyListener;
-            this.swingUi = swingUi;
         }
 
         @Override
         public void mousePressed(final MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                return;
+            }
             final Point pressedPoint = calculateRasterPoint(e);
             switch (keyListener.getDrawMode()) {
                 case Track:
@@ -363,12 +398,8 @@ public class SwingUi extends JComponent {
                     final Optional<TrackPart> nextTo = db.filterUnique(part -> part.isNear(pressedPoint));
                     if (nextTo.isPresent()) {
                         final TrackPart trackPart = nextTo.get();
-                        details.setDetails(trackPart);
-                        final DetailWindow.ApplyActionListener applyListener = text -> {
-                            db.replace(part -> trackPart == part, part -> part.setId(text.getId()).setBoardId(text.getBoardId()).invertView(text.isInverted()));
-                            SwingUi.this.repaint();
-                        };
-                        details.setApplyListener(applyListener);
+                        bus.post(UpdateDraftPart.create(trackPart));
+                        bus.post(UpdateApplyListener.create(trackPart, bus));
                     }
                     break;
                 case DummySwitch:
@@ -382,6 +413,9 @@ public class SwingUi extends JComponent {
 
         @Override
         public void mouseDragged(final MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                return;
+            }
             final Point pressedPoint = calculateRasterPoint(e);
             switch (keyListener.getDrawMode()) {
                 case Switch:
@@ -417,12 +451,15 @@ public class SwingUi extends JComponent {
                     break;
             }
             if (keyListener.getDrawMode().isDraft()) {
-                frame.repaint();
+                bus.post(UpdateMainUi.create());
             }
         }
 
         @Override
         public void mouseReleased(final MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                return;
+            }
             final InvisiblePart invisibleDraftPart = InvisiblePart.create();
             bus.post(UpdateDraftPart.create(invisibleDraftPart));
             final Point pressedPoint = e.getPoint();
@@ -473,7 +510,7 @@ public class SwingUi extends JComponent {
                 case Detail:
                     break;
             }
-            repaint();
+            bus.post(UpdateMainUi.create());
             keyListener.resetDrawMode();
         }
 
