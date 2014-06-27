@@ -9,6 +9,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * With this basic class it will be possible to use JUnit-rules. So JUnit Rules be added in TestNG as in JUnit.
+ * To get it work, just extend TestNG test class from RulesForTestNg and add Rules as common.
+ */
 public abstract class RulesForTestNg {
 
     private enum MethodToInvoke {
