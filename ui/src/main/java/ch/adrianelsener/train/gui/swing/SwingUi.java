@@ -297,7 +297,7 @@ public class SwingUi extends JComponent {
                 final File selectedFile;
                 selectedFile = fileChooser.getSelectedFile();
                 currentShowing = Optional.of(selectedFile);
-                final CsvReader<TrackPart> reader = new CsvReader<>(selectedFile, objectFactory);
+                final CsvReader<TrackPart> reader = new CsvReader<TrackPart>(selectedFile, objectFactory);
                 db.setStorage(reader).init();
                 repaint();
             }
@@ -352,6 +352,12 @@ public class SwingUi extends JComponent {
     public void updateDraftPart(UpdateDraftPart newDraftPart) {
         logger.debug("Event received with {}", newDraftPart);
         draftPart = newDraftPart.getDraftPart();
+    }
+
+    @Subscribe
+    public void moveDraftPart(UpdateMoveDraftPart destination) {
+        final TrackPart moveDraft = draftPart.moveTo(destination.getDestination());
+        updateDraftPart(UpdateDraftPart.create(moveDraft));
     }
 
     @Subscribe
@@ -441,8 +447,9 @@ public class SwingUi extends JComponent {
                 }
                 break;
                 case Move:
-                    final TrackPart moveDraft = SwingUi.this.draftPart.moveTo(pressedPoint);
-                    bus.post(UpdateDraftPart.create(moveDraft));
+                    bus.post(UpdateMoveDraftPart.create(pressedPoint));
+//                    final TrackPart moveDraft = SwingUi.this.draftPart.moveTo(pressedPoint);
+//                    bus.post(UpdateDraftPart.create(moveDraft));
                     break;
                 case DummySwitch:
                 case Rotate:
