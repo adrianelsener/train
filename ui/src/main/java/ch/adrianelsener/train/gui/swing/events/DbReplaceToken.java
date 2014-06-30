@@ -4,7 +4,7 @@ import ch.adrianelsener.odb.api.DbUpdater;
 import ch.adrianelsener.odb.api.Odb;
 import ch.adrianelsener.odb.api.OdbFunction;
 import ch.adrianelsener.odb.api.OdbPredicate;
-import ch.adrianelsener.train.gui.swing.TrackPart;
+import ch.adrianelsener.train.gui.swing.model.TrackPart;
 
 /**
  * Created by els on 5/20/14.

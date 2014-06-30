@@ -1,4 +1,4 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Collection;
 
-class InvisiblePart implements TrackPart {
+public class InvisiblePart implements TrackPart {
     private final static Logger logger = LoggerFactory.getLogger(InvisiblePart.class);
     private static final InvisiblePart INSTANCE = new InvisiblePart();
 

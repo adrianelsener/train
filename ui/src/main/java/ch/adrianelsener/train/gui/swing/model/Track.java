@@ -1,6 +1,5 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

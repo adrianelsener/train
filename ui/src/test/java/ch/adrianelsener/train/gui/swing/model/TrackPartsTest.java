@@ -1,4 +1,4 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -14,6 +14,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
 
+import ch.adrianelsener.train.gui.swing.model.TrackPart;
+import ch.adrianelsener.train.gui.swing.model.TrackParts;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;

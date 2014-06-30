@@ -1,4 +1,4 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.ToggleCallback;
 import com.google.common.base.Optional;

@@ -1,10 +1,10 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.swing.TrackView;
 import com.beust.jcommander.internal.Lists;
-import com.google.common.base.Splitter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.gui.swing;
 
-enum TrackView {
+public enum TrackView {
     Default {
         @Override
         public TrackView other() {

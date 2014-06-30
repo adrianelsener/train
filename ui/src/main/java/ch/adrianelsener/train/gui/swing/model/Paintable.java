@@ -1,4 +1,4 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
 import java.awt.Graphics2D;
 

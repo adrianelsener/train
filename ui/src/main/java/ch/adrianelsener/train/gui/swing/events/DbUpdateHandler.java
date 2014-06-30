@@ -2,7 +2,7 @@ package ch.adrianelsener.train.gui.swing.events;
 
 import ch.adrianelsener.odb.api.DbUpdater;
 import ch.adrianelsener.odb.api.Odb;
-import ch.adrianelsener.train.gui.swing.TrackPart;
+import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import com.google.common.eventbus.Subscribe;
 
 /**

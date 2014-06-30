@@ -1,4 +1,4 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.odb.api.Datacontainer;
 import ch.adrianelsener.train.gui.BoardId;

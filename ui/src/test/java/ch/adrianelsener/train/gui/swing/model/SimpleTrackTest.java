@@ -1,5 +1,7 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.gui.swing.model.SimpleTrack;
+import ch.adrianelsener.train.gui.swing.model.Track;
 import com.google.common.collect.Collections2;
 import org.testng.annotations.Test;
 

@@ -1,8 +1,9 @@
-package ch.adrianelsener.train.gui.swing;
+package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.swing.TrackView;
 import com.google.common.collect.Collections2;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;

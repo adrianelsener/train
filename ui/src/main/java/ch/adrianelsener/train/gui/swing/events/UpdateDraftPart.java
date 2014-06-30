@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.gui.swing.events;
 
-import ch.adrianelsener.train.gui.swing.TrackPart;
+import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class UpdateDraftPart implements UpdateToken {
