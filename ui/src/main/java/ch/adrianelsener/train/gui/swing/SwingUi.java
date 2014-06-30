@@ -75,8 +75,6 @@ public class SwingUi extends JComponent {
     private DetailWindow details;
     private CheckSwitch switchChecker = new CheckSwitch();
     private Optional<File> currentShowing = Optional.empty();
-    private final DbUpdateHandler dbUpdater;
-    private final Injector injector;
 
     SwingUi() {
         Odb<TrackPart> theDb = CsvOdb.create(TrackPart.class).build();
@@ -93,9 +91,9 @@ public class SwingUi extends JComponent {
                 bind(new TypeLiteral<Odb<TrackPart>>(){}).toInstance(theDb);
             }
         };
-        injector = Guice.createInjector(busModule, dbModule);
+        final Injector injector = Guice.createInjector(busModule, dbModule);
         keyListener = new ModeKeyListener();
-        mouseListener = new TrainMouseAdapter(keyListener);
+        mouseListener = new TrainMouseAdapter(currentDrawMode);
         objectFactory = input -> {
             final Iterator<String> iterator = input.iterator();
             final String type = iterator.next();
@@ -115,7 +113,7 @@ public class SwingUi extends JComponent {
         injector.injectMembers(mouseListener);
         injector.injectMembers(popUpListener);
         injector.injectMembers(keyListener);
-        dbUpdater = DbUpdateHandler.create(db);
+        final DbUpdateHandler dbUpdater = DbUpdateHandler.create(db);
         theBus.register(this);
         theBus.register(dbUpdater);
         theBus.register(currentDrawMode);
@@ -175,7 +173,7 @@ public class SwingUi extends JComponent {
                 logger.debug("Getting caches board for address {}", networkAddress);
                 board = boards.get(networkAddress);
             } else {
-                logger.debug("Create new Board for adress {}", networkAddress);
+                logger.debug("Create new Board for address {}", networkAddress);
                 final IpAddress address = IpAddress.fromValue(networkAddress);
                 board = new DenkoviWrapper(address);
             }
@@ -299,7 +297,7 @@ public class SwingUi extends JComponent {
                 final File selectedFile;
                 selectedFile = fileChooser.getSelectedFile();
                 currentShowing = Optional.of(selectedFile);
-                final CsvReader<TrackPart> reader = new CsvReader<TrackPart>(selectedFile, objectFactory);
+                final CsvReader<TrackPart> reader = new CsvReader<>(selectedFile, objectFactory);
                 db.setStorage(reader).init();
                 repaint();
             }
@@ -364,15 +362,15 @@ public class SwingUi extends JComponent {
 
     private class TrainMouseAdapter extends MouseAdapter {
         private final Logger logger = LoggerFactory.getLogger(TrainMouseAdapter.class);
-        private final ModeKeyListener keyListener;
+        private final DrawModeState drawMode;
         private Optional<Point> startPoint = Optional.empty();
         @Inject
         private EventBus bus;
         @Inject
         private Odb<TrackPart> db;
 
-        public TrainMouseAdapter(final ModeKeyListener keyListener) {
-            this.keyListener = keyListener;
+        public TrainMouseAdapter(DrawModeState drawMode) {
+            this.drawMode = drawMode;
         }
 
         @Override
@@ -381,7 +379,7 @@ public class SwingUi extends JComponent {
                 return;
             }
             final Point pressedPoint = calculateRasterPoint(e);
-            switch (currentDrawMode.getDrawMode()) {
+            switch (drawMode.getDrawMode()) {
                 case Track:
                 case SwitchTrack: {
                     startPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(e.getPoint()));
@@ -421,7 +419,7 @@ public class SwingUi extends JComponent {
                 return;
             }
             final Point pressedPoint = calculateRasterPoint(e);
-            switch (currentDrawMode.getDrawMode()) {
+            switch (drawMode.getDrawMode()) {
                 case Switch:
                     final Switch draftSwitch = Switch.create(pressedPoint);
                     bus.post(UpdateDraftPart.create(draftSwitch));
@@ -454,7 +452,7 @@ public class SwingUi extends JComponent {
                 case NoOp:
                     break;
             }
-            if (currentDrawMode.getDrawMode().isDraft()) {
+            if (drawMode.getDrawMode().isDraft()) {
                 bus.post(UpdateMainUi.create());
             }
         }
@@ -469,7 +467,7 @@ public class SwingUi extends JComponent {
             final Point pressedPoint = e.getPoint();
             final Point mousePoint = calculateRasterPoint(e);
 
-            switch (currentDrawMode.getDrawMode()) {
+            switch (drawMode.getDrawMode()) {
                 case Track: {
                     final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).orElse(pressedPoint);
                     logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
@@ -484,26 +482,26 @@ public class SwingUi extends JComponent {
                 break;
                 case Switch: {
                     final Switch newSwitch = Switch.create(mousePoint);
-                    logger.debug("Neue switch {}", newSwitch);
+                    logger.debug("New switch {}", newSwitch);
                     db.add(newSwitch);
                 }
                 break;
                 case DummySwitch: {
                     final Switch newSwitch = Switch.createDummy(mousePoint);
-                    logger.debug("Neue switch {}", newSwitch);
+                    logger.debug("New switch {}", newSwitch);
                     db.add(newSwitch);
                 }
                 break;
                 case Rotate:
                     logger.debug("Mirror Object next to {}", mousePoint);
-                    db.replace(part -> part.isNear(mousePoint), part -> part.createMirror());
+                    db.replace(part -> part.isNear(mousePoint), TrackPart::createMirror);
                     break;
                 case Delete:
                     logger.debug("Delete part near to {}", mousePoint);
                     db.delete(part -> part.isNear(mousePoint));
                     break;
                 case Move:
-                    logger.debug("Postion of part near to {} to position {}", startPoint.get(), mousePoint);
+                    logger.debug("Position of part near to {} to position {}", startPoint.get(), mousePoint);
                     db.replace(part -> part.isNear(startPoint.get()), part -> part.moveTo(mousePoint));
                     break;
                 case NoOp:

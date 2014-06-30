@@ -6,9 +6,6 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by els on 6/25/14.
- */
 public class DrawModeState {
     private static final Logger logger = LoggerFactory.getLogger(DrawModeState.class);
     private DrawMode mode = DrawMode.NoOp;
