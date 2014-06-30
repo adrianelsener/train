@@ -1,5 +1,7 @@
 package ch.adrianelsener.train.gui.swing;
 
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +10,8 @@ import java.awt.event.KeyListener;
 
 class ModeKeyListener implements KeyListener {
     private final static Logger logger = LoggerFactory.getLogger(ModeKeyListener.class);
-    private DrawMode mode = DrawMode.NoOp;
+    @Inject
+    private EventBus bus;
 
     @Override
     public void keyTyped(final KeyEvent e) {
@@ -16,48 +19,44 @@ class ModeKeyListener implements KeyListener {
         switch (keyChar) {
         case 'g':
             logger.debug("Detected: keyfeature new track");
-            mode = DrawMode.Track;
+            bus.post(DrawMode.Track);
             break;
         case 'G':
             logger.debug("Detected: keyfeature new switch track");
-            mode = DrawMode.SwitchTrack;
+            bus.post( DrawMode.SwitchTrack);
             break;
         case 'w':
             logger.debug("Detected: keyfeature new switch");
-            mode = DrawMode.Switch;
+            bus.post( DrawMode.Switch);
             break;
         case 'v':
             logger.debug("Detected: keyfeature new dummySwitch");
-            mode = DrawMode.DummySwitch;
+            bus.post( DrawMode.DummySwitch);
             break;
         case 'r':
             logger.debug("Detected: keyfeature rotate switch");
-            mode = DrawMode.Rotate;
+            bus.post( DrawMode.Rotate);
             break;
         case 't':
             logger.debug("Detected: keyfeature toggle");
-            mode = DrawMode.Toggle;
+            bus.post( DrawMode.Toggle);
             break;
         case 'd':
             logger.debug("Detected: keyfeature delete");
-            mode = DrawMode.Delete;
+            bus.post(DrawMode.Delete);
             break;
         case 'm':
             logger.debug("Detected: keyfeature move");
-            mode = DrawMode.Move;
+            bus.post(DrawMode.Move);
             break;
         case 's':
             logger.debug("Detected: keyfeature show details");
-            mode = DrawMode.Detail;
+            bus.post(DrawMode.Detail);
             break;
         default:
             logger.debug("Detected keyboard interaction but no mapping");
             break;
         }
-    }
-
-    public DrawMode getDrawMode() {
-        return mode;
     }
 
     @Override
@@ -68,9 +67,4 @@ class ModeKeyListener implements KeyListener {
     @Override
     public void keyPressed(final KeyEvent e) {
     }
-
-    public void resetDrawMode() {
-        mode = DrawMode.NoOp;
-    }
-
 }

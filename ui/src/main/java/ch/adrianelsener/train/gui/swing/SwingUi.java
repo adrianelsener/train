@@ -35,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.xml.soap.Detail;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -56,7 +57,8 @@ public class SwingUi extends JComponent {
     private final static Logger logger = LoggerFactory.getLogger(SwingUi.class);
     private final ModeKeyListener keyListener;
     private final TrainMouseAdapter mouseListener;
-    private final MouseAdapter popUpListener = new MainPopupMenu.PopClickListener();
+    private final MouseAdapter popUpListener = new MainPopupMenu.PopupClickListener();
+    private final DrawModeState currentDrawMode = new DrawModeState();
     private final int rasterSize = 5;
     private final boolean detailsDefaultVisible = true;
 
@@ -111,9 +113,12 @@ public class SwingUi extends JComponent {
         EventBus theBus = injector.getInstance(EventBus.class);
         injector.injectMembers(this);
         injector.injectMembers(mouseListener);
+        injector.injectMembers(popUpListener);
+        injector.injectMembers(keyListener);
         dbUpdater = DbUpdateHandler.create(db);
         theBus.register(this);
         theBus.register(dbUpdater);
+        theBus.register(currentDrawMode);
     }
 
     public static void main(final String[] args) throws Exception {
@@ -193,8 +198,7 @@ public class SwingUi extends JComponent {
         details = new DetailWindow();
         bus.register(details);
         bus.register(this);
-        final DetailWindow.ApplyActionListener applyListener = text -> {
-        };
+        final DetailWindow.ApplyActionListener applyListener = text -> {};
         details.setApplyListener(applyListener);
         details.setVisible(detailsDefaultVisible);
 
@@ -377,7 +381,7 @@ public class SwingUi extends JComponent {
                 return;
             }
             final Point pressedPoint = calculateRasterPoint(e);
-            switch (keyListener.getDrawMode()) {
+            switch (currentDrawMode.getDrawMode()) {
                 case Track:
                 case SwitchTrack: {
                     startPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(e.getPoint()));
@@ -417,7 +421,7 @@ public class SwingUi extends JComponent {
                 return;
             }
             final Point pressedPoint = calculateRasterPoint(e);
-            switch (keyListener.getDrawMode()) {
+            switch (currentDrawMode.getDrawMode()) {
                 case Switch:
                     final Switch draftSwitch = Switch.create(pressedPoint);
                     bus.post(UpdateDraftPart.create(draftSwitch));
@@ -450,7 +454,7 @@ public class SwingUi extends JComponent {
                 case NoOp:
                     break;
             }
-            if (keyListener.getDrawMode().isDraft()) {
+            if (currentDrawMode.getDrawMode().isDraft()) {
                 bus.post(UpdateMainUi.create());
             }
         }
@@ -465,7 +469,7 @@ public class SwingUi extends JComponent {
             final Point pressedPoint = e.getPoint();
             final Point mousePoint = calculateRasterPoint(e);
 
-            switch (keyListener.getDrawMode()) {
+            switch (currentDrawMode.getDrawMode()) {
                 case Track: {
                     final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).orElse(pressedPoint);
                     logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
@@ -511,7 +515,7 @@ public class SwingUi extends JComponent {
                     break;
             }
             bus.post(UpdateMainUi.create());
-            keyListener.resetDrawMode();
+            bus.post(DrawMode.NoOp);
         }
 
         private Point calculateRasterPoint(final MouseEvent e) {
