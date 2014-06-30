@@ -2,6 +2,9 @@
 <project version="4">
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="com.google.common.eventbus.Subscribe" />
+    </list>
   </component>
   <component name="IdProvider" IDEtalkID="7BAF6A1EDCF2EC627956864AE64E5D11" />
   <component name="MavenProjectsManager">
