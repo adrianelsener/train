@@ -27,6 +27,8 @@ class TrainMouseAdapter  extends MouseAdapter {
         if (e.isPopupTrigger()) {
             return;
         }
+        final int button = e.getButton();
+        logger.debug("button nr {} is pressed", button);
         switch (drawMode.getDrawMode()) {
             case Track:
             case SwitchTrack:
@@ -44,10 +46,12 @@ class TrainMouseAdapter  extends MouseAdapter {
             case DummySwitch:
                 bus.post(DraftPartCreationAction.createDummySwitch(e.getPoint()));
                 break;
-            case Rotate:
-            case Toggle:
-            case Delete:
             case NoOp:
+            case Toggle:
+                bus.post(UpdatePart.createToggle(e.getPoint()));
+                break;
+            case Rotate:
+            case Delete:
                 break;
         }
     }
@@ -81,9 +85,11 @@ class TrainMouseAdapter  extends MouseAdapter {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        logger.trace("Mouse release with drawMode {}", drawMode);
         if (e.isPopupTrigger()) {
             return;
         }
+        logger.debug("mouse button {} was released", e.getButton());
         final InvisiblePart invisibleDraftPart = InvisiblePart.create();
         bus.post(UpdateDraftPart.create(invisibleDraftPart));
         switch (drawMode.getDrawMode()) {
@@ -110,8 +116,6 @@ class TrainMouseAdapter  extends MouseAdapter {
                 break;
             case NoOp:
             case Toggle:
-                bus.post(UpdatePart.createToggle(e.getPoint()));
-                break;
             case Detail:
                 break;
         }
