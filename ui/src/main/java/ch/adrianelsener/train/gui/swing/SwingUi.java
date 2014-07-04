@@ -26,22 +26,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -52,6 +38,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
+import static ch.adrianelsener.train.gui.swing.events.PointCalculator.RasterEnabled;
+
 public class SwingUi extends JComponent {
     private static final long serialVersionUID = 1L;
     private final static Logger logger = LoggerFactory.getLogger(SwingUi.class);
@@ -61,6 +49,7 @@ public class SwingUi extends JComponent {
     private final DrawModeState currentDrawMode = new DrawModeState();
     private final int rasterSize = 5;
     private final boolean detailsDefaultVisible = true;
+    private PointCalculator pointCalc;
 
     @Inject
     private EventBus bus;
@@ -79,16 +68,17 @@ public class SwingUi extends JComponent {
     SwingUi() {
         Odb<TrackPart> theDb = CsvOdb.create(TrackPart.class).build();
 
-         final Module busModule = new AbstractModule() {
-             @Override
-             protected void configure() {
-                 bind(EventBus.class).asEagerSingleton();
-             }
-         };
+        final Module busModule = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(EventBus.class).asEagerSingleton();
+            }
+        };
         final Module dbModule = new AbstractModule() {
             @Override
             protected void configure() {
-                bind(new TypeLiteral<Odb<TrackPart>>(){}).toInstance(theDb);
+                bind(new TypeLiteral<Odb<TrackPart>>() {
+                }).toInstance(theDb);
             }
         };
         final Injector injector = Guice.createInjector(busModule, dbModule);
@@ -108,6 +98,11 @@ public class SwingUi extends JComponent {
                     throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
             }
         };
+        if (rasterEnabled) {
+            pointCalc = new RasterEnabled(rasterSize, theDb);
+        } else {
+            pointCalc = new PointCalculator.RasterDisabled(theDb);
+        }
         EventBus theBus = injector.getInstance(EventBus.class);
         injector.injectMembers(this);
         injector.injectMembers(mouseListener);
@@ -196,7 +191,8 @@ public class SwingUi extends JComponent {
         details = new DetailWindow();
         bus.register(details);
         bus.register(this);
-        final DetailWindow.ApplyActionListener applyListener = text -> {};
+        final DetailWindow.ApplyActionListener applyListener = text -> {
+        };
         details.setApplyListener(applyListener);
         details.setVisible(detailsDefaultVisible);
 
@@ -336,7 +332,7 @@ public class SwingUi extends JComponent {
             final JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                 final File selectedFile = fileChooser.getSelectedFile();
-                db.setStorage(new CsvReader<>(selectedFile, objectFactory)).flush();
+                db.setStorage(new CsvReader<TrackPart>(selectedFile, objectFactory)).flush();
             }
         });
         return save;
@@ -349,15 +345,47 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    public void createDraftPart(final DraftPartCreationAction action) {
+        TrackPart draftPart = action.createDraftPart(creationStartPoint, pointCalc);
+        this.draftPart = draftPart;
+        repaint();
+    }
+
+    @Subscribe
+    public void setCreationStartPoint(final UpdatePoint.CreationStartPoint creationStartPoint) {
+        logger.debug("creation start point set to {}", creationStartPoint);
+        Point pressedPoint = pointCalc.calculatePoint(creationStartPoint.getPoint());
+        this.creationStartPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(creationStartPoint.getPoint()));
+    }
+
+    private Optional<Point> creationStartPoint = Optional.empty();
+
+    @Subscribe
     public void updateDraftPart(UpdateDraftPart newDraftPart) {
         logger.debug("Event received with {}", newDraftPart);
         draftPart = newDraftPart.getDraftPart();
+        repaint();
+    }
+
+    @Subscribe
+    public void createPart(PartCreationAction newPart) {
+        db.add(newPart.createDraftPart(creationStartPoint, pointCalc));
+        draftPart = InvisiblePart.create();
+        bus.post(DrawMode.NoOp);
+        repaint();
+    }
+
+    @Subscribe
+    public void updatePart(UpdatePart action) {
+        action.doTransformation(db, pointCalc);
+        repaint();
     }
 
     @Subscribe
     public void moveDraftPart(UpdateMoveDraftPart destination) {
         final TrackPart moveDraft = draftPart.moveTo(destination.getDestination());
         updateDraftPart(UpdateDraftPart.create(moveDraft));
+        repaint();
     }
 
     @Subscribe
@@ -365,15 +393,25 @@ public class SwingUi extends JComponent {
         repaint();
     }
 
+    @Subscribe
+    public void updateDetailsUi(UpdatePoint.DetailCoordinatesPoint detailsPoint) {
+        final Optional<TrackPart> nextTo = db.filterUnique(part -> part.isNear(detailsPoint.getPoint()));
+        if (nextTo.isPresent()) {
+            final TrackPart trackPart = nextTo.get();
+            bus.post(UpdateDetails.create(trackPart));
+            bus.post(UpdateApplyListener.create(trackPart, bus));
+        }
+    }
+
+    @Subscribe
+    public void toggle(UpdatePart.TogglePart toggleAction) {
+        toggleAction.toggle(toggler, db);
+        repaint();
+    }
 
     private class TrainMouseAdapter extends MouseAdapter {
         private final Logger logger = LoggerFactory.getLogger(TrainMouseAdapter.class);
         private final DrawModeState drawMode;
-        private Optional<Point> startPoint = Optional.empty();
-        @Inject
-        private EventBus bus;
-        @Inject
-        private Odb<TrackPart> db;
 
         public TrainMouseAdapter(DrawModeState drawMode) {
             this.drawMode = drawMode;
@@ -381,36 +419,27 @@ public class SwingUi extends JComponent {
 
         @Override
         public void mousePressed(final MouseEvent e) {
+            logger.debug("Mouse pressed while draw mode is set to {}", drawMode);
             if (e.isPopupTrigger()) {
                 return;
             }
-            final Point pressedPoint = calculateRasterPoint(e);
             switch (drawMode.getDrawMode()) {
                 case Track:
-                case SwitchTrack: {
-                    startPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(e.getPoint()));
-                }
-                break;
+                case SwitchTrack:
+                    bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
+                    break;
                 case Move:
-                    logger.debug("Move Part next to {}", pressedPoint);
-                    startPoint = Optional.of(pressedPoint);
-                    final TrackPart moveDraft = db.filterUnique(part -> part.isNear(pressedPoint)).orElse(null);
-                    logger.debug("Part '{}' found", moveDraft);
-                    bus.post(UpdateDraftPart.create(moveDraft));
+                    bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
                     break;
                 case Switch:
-                    final Switch draftSwitch = Switch.create(pressedPoint);
-                    bus.post(UpdateDraftPart.create(draftSwitch));
+                    bus.post(DraftPartCreationAction.createSwitch(e.getPoint()));
                     break;
                 case Detail:
-                    final Optional<TrackPart> nextTo = db.filterUnique(part -> part.isNear(pressedPoint));
-                    if (nextTo.isPresent()) {
-                        final TrackPart trackPart = nextTo.get();
-                        bus.post(UpdateDraftPart.create(trackPart));
-                        bus.post(UpdateApplyListener.create(trackPart, bus));
-                    }
+                    bus.post(UpdatePoint.createDetailCoordinates(e.getPoint()));
                     break;
                 case DummySwitch:
+                    bus.post(DraftPartCreationAction.createDummySwitch(e.getPoint()));
+                    break;
                 case Rotate:
                 case Toggle:
                 case Delete:
@@ -421,46 +450,28 @@ public class SwingUi extends JComponent {
 
         @Override
         public void mouseDragged(final MouseEvent e) {
-            if (e.isPopupTrigger()) {
-                return;
-            }
-            final Point pressedPoint = calculateRasterPoint(e);
             switch (drawMode.getDrawMode()) {
                 case Switch:
-                    final Switch draftSwitch = Switch.create(pressedPoint);
-                    bus.post(UpdateDraftPart.create(draftSwitch));
+                    bus.post(DraftPartCreationAction.createSwitch(e.getPoint()));
                     break;
-                case Track: {
-                    final Point endPoint = db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(pressedPoint);
-                    logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
-                    final TrackPart draftSimpleTrack = Track.createSimpleTrack(startPoint.get(), endPoint);
-                    bus.post(UpdateDraftPart.create(draftSimpleTrack));
-                }
-                break;
-                case SwitchTrack: {
-                    Optional<TrackPart> parts = db.filterUnique(part -> part.isNear(pressedPoint));
-                    logger.debug("Found Part to move : {}",parts );
-                    final Point endPoint = parts.map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(pressedPoint);
-                    logger.debug("Draw SwitchTrack from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
-                    final TrackPart draftSwitchTrack = Track.createSwitchTrack(startPoint.get(), endPoint);
-                    bus.post(UpdateDraftPart.create(draftSwitchTrack));
-                }
-                break;
+                case Track:
+                    bus.post(DraftPartCreationAction.createTrack(e.getPoint()));
+                    break;
+                case SwitchTrack:
+                    bus.post(DraftPartCreationAction.createSwitchTrack(e.getPoint()));
+                    break;
                 case Move:
-                    bus.post(UpdateMoveDraftPart.create(pressedPoint));
-//                    final TrackPart moveDraft = SwingUi.this.draftPart.moveTo(pressedPoint);
-//                    bus.post(UpdateDraftPart.create(moveDraft));
+                    bus.post(UpdateMoveDraftPart.create(e.getPoint()));
                     break;
                 case DummySwitch:
+                    bus.post(DraftPartCreationAction.createDummySwitch(e.getPoint()));
+                    break;
                 case Rotate:
                 case Toggle:
                 case Delete:
                 case Detail:
                 case NoOp:
                     break;
-            }
-            if (drawMode.getDrawMode().isDraft()) {
-                bus.post(UpdateMainUi.create());
             }
         }
 
@@ -471,69 +482,37 @@ public class SwingUi extends JComponent {
             }
             final InvisiblePart invisibleDraftPart = InvisiblePart.create();
             bus.post(UpdateDraftPart.create(invisibleDraftPart));
-            final Point pressedPoint = e.getPoint();
-            final Point mousePoint = calculateRasterPoint(e);
-
             switch (drawMode.getDrawMode()) {
-                case Track: {
-                    final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).orElse(pressedPoint);
-                    logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
-                    db.add(Track.createSimpleTrack(startPoint.get(), endPoint));
-                }
-                break;
-                case SwitchTrack: {
-                    final Point endPoint = db.filterUnique(part -> part.isNear(mousePoint)).map(part -> part.getNextConnectionpoint(mousePoint)).orElse(pressedPoint);
-                    logger.debug("Draw line from {}:{} to {}:{}", startPoint.get().x, startPoint.get().y, endPoint.x, endPoint.y);
-                    db.add(Track.createSwitchTrack(startPoint.get(), endPoint));
-                }
-                break;
-                case Switch: {
-                    final Switch newSwitch = Switch.create(mousePoint);
-                    logger.debug("New switch {}", newSwitch);
-                    db.add(newSwitch);
-                }
-                break;
-                case DummySwitch: {
-                    final Switch newSwitch = Switch.createDummy(mousePoint);
-                    logger.debug("New switch {}", newSwitch);
-                    db.add(newSwitch);
-                }
-                break;
+                case Track:
+                    bus.post(PartCreationAction.createTrack(e.getPoint()));
+                    break;
+                case SwitchTrack:
+                    bus.post(PartCreationAction.createSwitchTrack(e.getPoint()));
+                    break;
+                case Switch:
+                    bus.post(PartCreationAction.createSwitch(e.getPoint()));
+                    break;
+                case DummySwitch:
+                    bus.post(PartCreationAction.createDummySwitch(e.getPoint()));
+                    break;
                 case Rotate:
-                    logger.debug("Mirror Object next to {}", mousePoint);
-                    db.replace(part -> part.isNear(mousePoint), TrackPart::createMirror);
+                    bus.post(UpdatePart.createMirror(e.getPoint()));
                     break;
                 case Delete:
-                    logger.debug("Delete part near to {}", mousePoint);
-                    db.delete(part -> part.isNear(mousePoint));
+                    bus.post(UpdatePart.deletePart(e.getPoint()));
                     break;
                 case Move:
-                    logger.debug("Position of part near to {} to position {}", startPoint.get(), mousePoint);
-                    db.replace(part -> part.isNear(startPoint.get()), part -> part.moveTo(mousePoint));
+                    bus.post(UpdatePart.movePart(e.getPoint()));
+//                    logger.debug("Position of part near to {} to position {}", startPoint.get(), mousePoint);
+//                    db.replace(part -> part.isNear(startPoint.get()), part -> part.moveTo(mousePoint));
                     break;
                 case NoOp:
                 case Toggle:
-                    logger.debug("Toggle switch next to {}", mousePoint);
-                    db.replace(part -> part.isNear(mousePoint), part -> part.toggle(toggler));
+                    bus.post(UpdatePart.createToggle(e.getPoint()));
                     break;
                 case Detail:
                     break;
             }
-            bus.post(UpdateMainUi.create());
-            bus.post(DrawMode.NoOp);
-        }
-
-        private Point calculateRasterPoint(final MouseEvent e) {
-            final Point mousePoint;
-            if (rasterEnabled) {
-                final Point originalPoint = e.getPoint();
-                final int x = originalPoint.x - originalPoint.x % rasterSize;
-                final int y = originalPoint.y - originalPoint.y % rasterSize;
-                mousePoint = new Point(x, y);
-            } else {
-                mousePoint = e.getPoint();
-            }
-            return mousePoint;
         }
     }
 
