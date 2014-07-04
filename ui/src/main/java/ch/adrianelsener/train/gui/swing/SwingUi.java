@@ -411,9 +411,12 @@ public class SwingUi extends JComponent {
         repaint();
     }
 
-    private class TrainMouseAdapter extends MouseAdapter {
+    private static class TrainMouseAdapter extends MouseAdapter {
         private final Logger logger = LoggerFactory.getLogger(TrainMouseAdapter.class);
         private final DrawModeState drawMode;
+
+        @Inject
+        private EventBus bus;
 
         public TrainMouseAdapter(DrawModeState drawMode) {
             this.drawMode = drawMode;
@@ -505,8 +508,6 @@ public class SwingUi extends JComponent {
                     break;
                 case Move:
                     bus.post(UpdatePart.movePart(e.getPoint()));
-//                    logger.debug("Position of part near to {} to position {}", startPoint.get(), mousePoint);
-//                    db.replace(part -> part.isNear(startPoint.get()), part -> part.moveTo(mousePoint));
                     break;
                 case NoOp:
                 case Toggle:
