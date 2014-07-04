@@ -378,14 +378,15 @@ public class SwingUi extends JComponent {
 
     @Subscribe
     public void updatePart(UpdatePart action) {
-        action.doTransformation(db, pointCalc);
+        action.doTransformation(db, pointCalc, creationStartPoint);
+        currentDrawMode.setMode(DrawMode.NoOp);
         repaint();
     }
 
     @Subscribe
     public void moveDraftPart(UpdateMoveDraftPart destination) {
         final Point currentPoint = pointCalc.calculatePoint(destination.getDestination());
-        draftPart = draftPart.moveTo(currentPoint);
+        bus.post(UpdateDraftPart.create(draftPart.moveTo(currentPoint)));
         repaint();
     }
 

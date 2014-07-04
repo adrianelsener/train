@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.util.Optional;
 
 public abstract class UpdatePart {
 
@@ -20,7 +21,7 @@ public abstract class UpdatePart {
         return point;
     }
 
-    public abstract void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc);
+    public abstract void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc, Optional<Point> startPoint);
 
     public static UpdatePart createMirror(Point point) {
         return new UpdatePartMirror(point);
@@ -31,8 +32,7 @@ public abstract class UpdatePart {
     }
 
     public static UpdatePart movePart(Point point) {
-        throw new IllegalArgumentException("Not yet implemented");
-//        return new MovePart(point);
+        return new MovePart(point);
     }
 
     public static TogglePart createToggle(Point point) {
@@ -45,7 +45,7 @@ public abstract class UpdatePart {
         }
 
         @Override
-        public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc) {
+        public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc, Optional<Point> startPoint) {
             final Point rasterPoint = pointCalc.calculatePoint(getPoint());
             db.replace(part -> part.isNear(rasterPoint), TrackPart::createMirror);
         }
@@ -59,11 +59,10 @@ public abstract class UpdatePart {
         }
 
         @Override
-        public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc) {
+        public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc, Optional<Point> startPoint) {
             Point mousePoint = pointCalc.calculatePoint(getPoint());
             logger.debug("Delete part near to {}", mousePoint);
             db.delete(part -> part.isNear(mousePoint));
-
         }
     }
 
@@ -80,17 +79,15 @@ public abstract class UpdatePart {
 
     }
 
-//    private static class MovePart extends UpdatePart {
-//        private final static Logger logger = LoggerFactory.getLogger(MovePart.class);
-//        public MovePart(Point point) {
-//            super(point);
-//        }
-//
-//        @Override
-//        public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc) {
-//            Point startPoint = pointCalc.calculatePoint(getPoint());
-//            logger.debug("Position of part near to {} to position {}", startPoint.get(), mousePoint);
-//            db.replace(part -> part.isNear(startPoint.get()), part -> part.moveTo(mousePoint));
-//        }
-//    }
+    private static class MovePart extends UpdatePart {
+        public MovePart(Point point) {
+            super(point);
+        }
+
+        @Override
+        public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc, Optional<Point> startPoint) {
+            Point endPoint = pointCalc.calculatePoint(getPoint());
+            db.replace(part -> part.isNear(startPoint.get()), part -> part.moveTo(endPoint));
+        }
+    }
 }
