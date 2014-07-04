@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -293,7 +292,7 @@ public class SwingUi extends JComponent {
                 final File selectedFile;
                 selectedFile = fileChooser.getSelectedFile();
                 currentShowing = Optional.of(selectedFile);
-                final CsvReader<TrackPart> reader = new CsvReader<TrackPart>(selectedFile, objectFactory);
+                final CsvReader<TrackPart> reader = new CsvReader<>(selectedFile, objectFactory);
                 db.setStorage(reader).init();
                 repaint();
             }
@@ -332,7 +331,7 @@ public class SwingUi extends JComponent {
             final JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                 final File selectedFile = fileChooser.getSelectedFile();
-                db.setStorage(new CsvReader<TrackPart>(selectedFile, objectFactory)).flush();
+                db.setStorage(new CsvReader<>(selectedFile, objectFactory)).flush();
             }
         });
         return save;
@@ -346,8 +345,7 @@ public class SwingUi extends JComponent {
 
     @Subscribe
     public void createDraftPart(final DraftPartCreationAction action) {
-        TrackPart draftPart = action.createDraftPart(creationStartPoint, pointCalc);
-        this.draftPart = draftPart;
+        this.draftPart = action.createDraftPart(creationStartPoint, pointCalc);
         repaint();
     }
 

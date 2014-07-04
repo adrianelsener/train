@@ -3,9 +3,6 @@ package ch.adrianelsener.train.gui.swing.events;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-/**
- * Created by els on 5/19/14.
- */
 public class UpdateDetails implements UpdateToken {
     private final TrackPart draftPart;
 
