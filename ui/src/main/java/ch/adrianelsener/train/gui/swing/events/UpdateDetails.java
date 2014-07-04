@@ -3,7 +3,7 @@ package ch.adrianelsener.train.gui.swing.events;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class UpdateDetails implements UpdateToken {
+public class UpdateDetails {
     private final TrackPart draftPart;
 
     private UpdateDetails(final TrackPart draftPart) {
@@ -14,7 +14,6 @@ public class UpdateDetails implements UpdateToken {
         return new UpdateDetails(draftPart);
     }
 
-    @Override
     public TrackPart getDraftPart() {
         return draftPart;
     }
