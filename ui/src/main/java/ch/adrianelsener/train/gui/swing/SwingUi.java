@@ -356,6 +356,7 @@ public class SwingUi extends JComponent {
         logger.debug("creation start point set to {}", creationStartPoint);
         Point pressedPoint = pointCalc.calculatePoint(creationStartPoint.getPoint());
         this.creationStartPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(creationStartPoint.getPoint()));
+        draftPart = db.filterUnique(part -> part.isNear(pressedPoint)).orElse(InvisiblePart.create());
     }
 
     private Optional<Point> creationStartPoint = Optional.empty();
@@ -383,8 +384,8 @@ public class SwingUi extends JComponent {
 
     @Subscribe
     public void moveDraftPart(UpdateMoveDraftPart destination) {
-        final TrackPart moveDraft = draftPart.moveTo(destination.getDestination());
-        updateDraftPart(UpdateDraftPart.create(moveDraft));
+        final Point currentPoint = pointCalc.calculatePoint(destination.getDestination());
+        draftPart = draftPart.moveTo(currentPoint);
         repaint();
     }
 
