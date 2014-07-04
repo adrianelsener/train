@@ -38,8 +38,7 @@ public abstract class DraftPartCreationAction extends CreationAction {
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final TrackPart draftSwitchTrack = Track.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
-            return draftSwitchTrack;
+            return Track.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
         }
     }
 
@@ -50,8 +49,7 @@ public abstract class DraftPartCreationAction extends CreationAction {
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final TrackPart draftSimpleTrack = Track.createSimpleTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
-            return draftSimpleTrack;
+            return Track.createSimpleTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
         }
     }
 
