@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class TrainMouseAdapter  extends MouseAdapter {
+class TrainMouseAdapter  extends MouseAdapter {
     private final Logger logger = LoggerFactory.getLogger(TrainMouseAdapter.class);
     private final DrawModeState drawMode;
 
