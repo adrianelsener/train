@@ -15,10 +15,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -139,11 +136,13 @@ public class CsvOdbTest {
         assertThat(result.orElse(null), equalTo(sampleFromStore));
     }
 
-    @Test(expectedExceptions = {IllegalStateException.class})
+    @Test
     public void throwsExceptionWhileNoReaderDefined() {
         final Odb<Datacontainer> testee = CsvOdb.create(Datacontainer.class).build();
         // Act
-        testee.getAll();
+        final ImmutableCollection<Datacontainer> result = testee.getAll();
+        // Assert
+        assertThat(result, is(emptyCollectionOf(Datacontainer.class)));
     }
 
 }
