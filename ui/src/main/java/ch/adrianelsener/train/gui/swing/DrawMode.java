@@ -25,4 +25,9 @@ enum DrawMode {
     public boolean isDraft() {
         return isDraft;
     }
+
+    @Override
+    public String toString() {
+        return name();
+    }
 }

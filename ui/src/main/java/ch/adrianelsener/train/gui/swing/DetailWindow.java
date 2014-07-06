@@ -1,26 +1,20 @@
 package ch.adrianelsener.train.gui.swing;
 
+import ch.adrianelsener.train.gui.swing.events.UpdateApplyListener;
 import ch.adrianelsener.train.gui.swing.events.UpdateDetails;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import com.google.common.eventbus.Subscribe;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-import java.awt.Component;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 
 public class DetailWindow extends JFrame {
     private static final long serialVersionUID = 1L;
     private final JTextField id = new JTextField();
     private final JTextField board = new JTextField();
-    private final JButton apply = new JButton("apply");
     private final JCheckBox inverted = new JCheckBox();
-    private ApplyActionListener applyListener = (e) -> {};
+    private ApplyActionListener applyListener = (e) -> {
+    };
 
     public DetailWindow() {
         super("Details");
@@ -30,6 +24,7 @@ public class DetailWindow extends JFrame {
         add(createIdPanel());
         add(createBoardPanel());
         add(createInverted());
+        JButton apply = new JButton("apply");
         add(apply);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         apply.addActionListener(e -> {
@@ -62,6 +57,11 @@ public class DetailWindow extends JFrame {
 
     public void setApplyListener(final ApplyActionListener applyListener) {
         this.applyListener = applyListener;
+    }
+
+    @Subscribe
+    public void updateApplyListener(UpdateApplyListener applyListenerUpdate) {
+        setApplyListener(applyListenerUpdate.getListener());
     }
 
     @Subscribe
