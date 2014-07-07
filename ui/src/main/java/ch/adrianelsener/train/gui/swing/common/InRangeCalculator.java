@@ -12,4 +12,7 @@ public class InRangeCalculator {
         return false;
     }
 
+    public static InRangeCalculator create() {
+        return new InRangeCalculator();
+    }
 }
