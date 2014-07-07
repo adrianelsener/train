@@ -92,7 +92,7 @@ public class SwingUi extends JComponent {
                 case "TS":
                     return SwitchTrack.createSwitchTrack(iterator);
                 case "S":
-                    return Switch.createSwitch(iterator);
+                    return SwingSwitch.createSwitch(iterator);
                 default:
                     throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
             }

@@ -6,7 +6,6 @@ import ch.adrianelsener.train.gui.ToggleCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import com.beust.jcommander.internal.Lists;
-import com.google.inject.Inject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,8 +18,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class Switch implements TrackPart {
-    private final static Logger logger = LoggerFactory.getLogger(Switch.class);
+public class SwingSwitch implements TrackPart {
+    private final static Logger logger = LoggerFactory.getLogger(SwingSwitch.class);
     private final Point center;
     private final SwitchId switchId;
     private final TrackView switchView;
@@ -33,11 +32,11 @@ public class Switch implements TrackPart {
     private final SwitchMode switchMode;
     private final InRangeCalculator inRangeCalc = InRangeCalculator.create();
 
-    private Switch(final Point point, final SwitchMode switchMode) {
+    private SwingSwitch(final Point point, final SwitchMode switchMode) {
         this(point, 0, SwitchId.createDummy(), BoardId.createDummy(), false, switchMode, TrackView.Default);
     }
 
-    Switch(final Point center, final double angle, final SwitchId id, final BoardId boardId, final boolean state, final SwitchMode switchMode, TrackView switchView) {
+    SwingSwitch(final Point center, final double angle, final SwitchId id, final BoardId boardId, final boolean state, final SwitchMode switchMode, TrackView switchView) {
         this.center = center;
         switchId = id;
         on = state;
@@ -66,7 +65,7 @@ public class Switch implements TrackPart {
 
     }
 
-    public static Switch createSwitch(final Iterator<String> iterator) {
+    public static SwingSwitch createSwitch(final Iterator<String> iterator) {
         final Point center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
         final Double drawAngle = Double.valueOf(iterator.next());
         final SwitchId readSwitchId = SwitchId.fromValue(iterator.next());
@@ -74,15 +73,15 @@ public class Switch implements TrackPart {
         final boolean state = Boolean.parseBoolean(iterator.next());
         final SwitchMode switchMode = SwitchMode.valueOf(iterator.next());
         final TrackView switchView = TrackView.valueOf(iterator.next());
-        return new Switch(center, drawAngle, readSwitchId, readBoardId, state, switchMode, switchView);
+        return new SwingSwitch(center, drawAngle, readSwitchId, readBoardId, state, switchMode, switchView);
 
     }
 
-    public static Switch create(final Point point) {
+    public static SwingSwitch create(final Point point) {
         return new RealSwitch(point);
     }
 
-    public static Switch createDummy(final Point point) {
+    public static SwingSwitch createDummy(final Point point) {
         return new DummySwitch(point);
     }
 
@@ -170,8 +169,8 @@ public class Switch implements TrackPart {
     }
 
     @Override
-    public Switch createMirror() {
-        return new Switch(center, angle + 45, switchId, boardId, on, switchMode, switchView);
+    public SwingSwitch createMirror() {
+        return new SwingSwitch(center, angle + 45, switchId, boardId, on, switchMode, switchView);
     }
 
     @Override
@@ -190,18 +189,18 @@ public class Switch implements TrackPart {
     }
 
     @Override
-    public Switch toggle(final ToggleCallback toggler) {
+    public SwingSwitch toggle(final ToggleCallback toggler) {
         toggler.toggleSwitch(switchId, boardId, on);
         return invertState();
     }
 
-    private Switch invertState() {
-        return new Switch(center, angle, switchId, boardId, !on, switchMode, switchView);
+    private SwingSwitch invertState() {
+        return new SwingSwitch(center, angle, switchId, boardId, !on, switchMode, switchView);
     }
 
     @Override
-    public Switch moveTo(final Point newLocation) {
-        return new Switch(newLocation, angle, switchId, boardId, on, switchMode, switchView);
+    public SwingSwitch moveTo(final Point newLocation) {
+        return new SwingSwitch(newLocation, angle, switchId, boardId, on, switchMode, switchView);
     }
 
     @Override
@@ -210,8 +209,8 @@ public class Switch implements TrackPart {
     }
 
     @Override
-    public Switch setId(final String newId) {
-        return new Switch(center, angle, SwitchId.fromValue(newId), boardId, on, switchMode, switchView);
+    public SwingSwitch setId(final String newId) {
+        return new SwingSwitch(center, angle, SwitchId.fromValue(newId), boardId, on, switchMode, switchView);
     }
 
     @Override
@@ -220,19 +219,19 @@ public class Switch implements TrackPart {
     }
 
     @Override
-    public Switch setBoardId(final String boardId) {
-        return new Switch(center, angle, switchId, BoardId.create(boardId), on, switchMode, switchView);
+    public SwingSwitch setBoardId(final String boardId) {
+        return new SwingSwitch(center, angle, switchId, BoardId.create(boardId), on, switchMode, switchView);
     }
 
     @Override
-    public Switch invertView(final boolean inverted) {
+    public SwingSwitch invertView(final boolean inverted) {
         final TrackView selected;
         if (inverted) {
             selected = TrackView.Inverted;
         } else {
             selected = TrackView.Default;
         }
-        return new Switch(center, angle, switchId, boardId, on, switchMode, selected);
+        return new SwingSwitch(center, angle, switchId, boardId, on, switchMode, selected);
     }
 
     @Override
@@ -245,7 +244,7 @@ public class Switch implements TrackPart {
         Real, Dummy
     }
 
-    static class RealSwitch extends Switch {
+    static class RealSwitch extends SwingSwitch {
 
         public RealSwitch(final Point point) {
             super(point, SwitchMode.Real);
@@ -256,7 +255,7 @@ public class Switch implements TrackPart {
         }
     }
 
-    static class DummySwitch extends Switch {
+    static class DummySwitch extends SwingSwitch {
         public DummySwitch(final Point point) {
             super(point, SwitchMode.Dummy);
         }
