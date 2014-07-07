@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,8 +18,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class Track extends AbstractTrackPart implements TrackPart {
+public abstract class Track implements TrackPart {
     private static final Logger logger = LoggerFactory.getLogger(Track.class);
+    private final InRangeCalculator inRangeCalc = InRangeCalculator.create();
     protected final Point startPoint;
     protected final Point endPoint;
 
@@ -97,9 +99,9 @@ public abstract class Track extends AbstractTrackPart implements TrackPart {
 
     @Override
     public Point getNextConnectionpoint(final Point origin) {
-        if (isInRange(origin, startPoint, 10)) {
+        if (inRangeCalc.isInRange(origin, startPoint, 10)) {
             return startPoint;
-        } else if (isInRange(origin, endPoint, 10)) {
+        } else if (inRangeCalc.isInRange(origin, endPoint, 10)) {
             return endPoint;
         } else {
             throw new IllegalArgumentException("Point is not near to something");

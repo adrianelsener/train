@@ -4,7 +4,9 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.ToggleCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
+import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import com.beust.jcommander.internal.Lists;
+import com.google.inject.Inject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,15 +14,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class Switch extends AbstractTrackPart implements TrackPart {
+public class Switch implements TrackPart {
     private final static Logger logger = LoggerFactory.getLogger(Switch.class);
     private final Point center;
     private final SwitchId switchId;
@@ -32,8 +31,9 @@ public class Switch extends AbstractTrackPart implements TrackPart {
     private final Point topRightPoint;
     private final Point bottomRightPoint;
     private final SwitchMode switchMode;
+    private final InRangeCalculator inRangeCalc = InRangeCalculator.create();
 
-    public Switch(final Point point, final SwitchMode switchMode) {
+    private Switch(final Point point, final SwitchMode switchMode) {
         this(point, 0, SwitchId.createDummy(), BoardId.createDummy(), false, switchMode, TrackView.Default);
     }
 
@@ -143,11 +143,11 @@ public class Switch extends AbstractTrackPart implements TrackPart {
 
     @Override
     public Point getNextConnectionpoint(final Point origin) {
-        if (isInRange(origin, leftPoint, 10)) {
+        if (inRangeCalc.isInRange(origin, leftPoint, 10)) {
             return leftPoint;
-        } else if (isInRange(origin, topRightPoint, 15)) {
+        } else if (inRangeCalc.isInRange(origin, topRightPoint, 15)) {
             return topRightPoint;
-        } else if (isInRange(origin, bottomRightPoint, 15)) {
+        } else if (inRangeCalc.isInRange(origin, bottomRightPoint, 15)) {
             return bottomRightPoint;
         } else {
             throw new IllegalArgumentException("getNextConnectionpoint soll nur aufgerufen werden wenn auch etwas in der naehe ist");
