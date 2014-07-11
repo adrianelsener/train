@@ -83,6 +83,35 @@ public class GraphCreatorTest {
         assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(swingSwitchChild.getId())))), childWithParent(withParent(equalTo(swingSwitchParent.getId())))));
     }
 
+    @Test
+    public void switchWithTwoLinesDefinesOneGraph() {
+        final Point sharedPointA = mock(Point.class, "PointA");
+        final Point sharedPointB = mock(Point.class, "PointB");
+        final Point sharedPointC = mock(Point.class, "PointC");
+        final SwingSwitch swingSwitchParent = mock(SwingSwitch.class, "Parent");
+        final SwingSwitch swingSwitchChild = mock(SwingSwitch.class, "Child");
+        final Track trackA = mock(Track.class, "PipetrackA");
+        final Track trackB = mock(Track.class, "PipetrackB");
+        when(swingSwitchParent.getId()).thenReturn(SwitchId.create(7));
+        when(swingSwitchChild.getId()).thenReturn(SwitchId.create(8));
+        when(swingSwitchParent.getOutConnectors()).thenReturn(ImmutableList.of(sharedPointA));
+        when(swingSwitchParent.getInConnectors()).thenReturn(ImmutableList.of());
+        when(trackA.getInConnectors()).thenReturn(ImmutableList.of(sharedPointA, sharedPointB));
+        when(trackA.getOutConnectors()).thenReturn(ImmutableList.of(sharedPointB, sharedPointA));
+        when(trackA.isPipe()).thenReturn(true);
+        when(trackB.getInConnectors()).thenReturn(ImmutableList.of(sharedPointC, sharedPointB));
+        when(trackB.getOutConnectors()).thenReturn(ImmutableList.of(sharedPointB, sharedPointC));
+        when(trackB.isPipe()).thenReturn(true);
+        when(swingSwitchChild.getInConnectors()).thenReturn(ImmutableList.of(sharedPointC));
+        when(swingSwitchChild.getOutConnectors()).thenReturn(ImmutableList.of());
+        final ImmutableCollection<TrackPart> parts = ImmutableList.of(swingSwitchChild, swingSwitchParent, trackA, trackB);
+        // Act
+        final ImmutableCollection<GraphTrackPart> result = testee.graphify(parts);
+        // Assert
+        assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(swingSwitchChild.getId())))), childWithParent(withParent(equalTo(swingSwitchParent.getId())))));
+
+    }
+
     private static Matcher<? super GraphTrackPart> withId(Matcher<SwitchId> matcher) {
         return new FeatureMatcher<GraphTrackPart, SwitchId>(matcher, "getId", "getId") {
             @Override

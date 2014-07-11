@@ -3,14 +3,16 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.SwitchId;
 import com.beust.jcommander.internal.Maps;
 import com.beust.jcommander.internal.Sets;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.base.Predicates;
+import com.google.common.collect.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class GraphCreator {
     private final static Logger logger = LoggerFactory.getLogger(GraphCreator.class);
@@ -36,7 +38,12 @@ public class GraphCreator {
                                     graphParent.appendChild(other);
                                 } else {
                                     logger.debug("is a pipe -> use as additional out connector points");
-                                    additionalOut.addAll(part.getOutConnectors());
+                                    final ImmutableCollection<Point> pipeOutConnector = part.getOutConnectors();
+                                    final Collection<Point> points = Collections2.filter(pipeOutConnector, Predicates.not(Predicates.equalTo(outConnector)));
+                                    final Collection<TrackPart> filteredParts = Collections2.filter(trackParts, Predicates.not(Predicates.equalTo(part)));
+                                    final Collection<Point> pipedOutConnectors = followPipe(filteredParts, points);
+                                    additionalOut.addAll(pipedOutConnectors);
+//                                    additionalOut.addAll(part.getOutConnectors());
                                 }
                             }
                         }
@@ -60,6 +67,28 @@ public class GraphCreator {
             }
         }
         return ImmutableSet.copyOf(graphParts.values());
+    }
+
+    private Collection<Point> followPipe(Collection<TrackPart> trackParts, Collection<Point> points) {
+        final ImmutableList.Builder<Point> listBuilder = ImmutableList.builder();
+        for (TrackPart part : trackParts) {
+            for (Point point : points) {
+                if (part.getInConnectors().contains(point)) {
+                    if (part.isPipe()) {
+                        logger.debug("'{}' is a pipe", part );
+                        final ImmutableCollection<Point> pipeOutConnector = part.getOutConnectors();
+                        final Collection<Point> otherPoints = Collections2.filter(pipeOutConnector, Predicates.not(Predicates.equalTo(point)));
+                        logger.debug("deeper check with '{}'", otherPoints);
+                        final Collection<TrackPart> filteredParts = Collections2.filter(trackParts, Predicates.not(Predicates.equalTo(part)));
+                        listBuilder.addAll(followPipe(filteredParts, otherPoints));
+                    } else {
+                        logger.debug("No pipe as result so result is '{}'", point);
+                        return Lists.newArrayList(point);
+                    }
+                }
+            }
+        }
+        return listBuilder.build();
     }
 
     private GraphTrackPart getOrCreateGraphPart(Map<SwitchId, GraphTrackPart> graphParts, TrackPart trackPartA) {
