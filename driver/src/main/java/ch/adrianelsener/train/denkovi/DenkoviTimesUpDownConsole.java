@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.IpAddress;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Pin;
+import ch.adrianelsener.train.denkovi.Pin;
 
 public class DenkoviTimesUpDownConsole {
 

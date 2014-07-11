@@ -1,7 +1,5 @@
 package ch.adrianelsener.train.denkovi;
 
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Jp;
-
 public interface Board {
 
     void close();
@@ -12,5 +10,6 @@ public interface Board {
 
     void set(PinState pinState);
 
+    int read(Pin pin);
 
 }

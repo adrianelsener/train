@@ -3,7 +3,7 @@ package ch.adrianelsener.train.driver;
 import ch.adrianelsener.train.config.ConfKey;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.denkovi.Board;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Pin;
+import ch.adrianelsener.train.denkovi.Pin;
 import ch.adrianelsener.train.denkovi.PinState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

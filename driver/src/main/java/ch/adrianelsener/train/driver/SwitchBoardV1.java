@@ -3,7 +3,7 @@ package ch.adrianelsener.train.driver;
 import ch.adrianelsener.train.config.ConfKey;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.denkovi.Board;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Pin;
+import ch.adrianelsener.train.denkovi.Pin;
 import ch.adrianelsener.train.denkovi.PinState;
 
 import com.google.common.collect.ImmutableList;
@@ -15,14 +15,14 @@ public class SwitchBoardV1 extends AbstractBoard implements SwitchBoardDriver {
         On {
             @Override
             public PinState forPin(final Pin pin) {
-                return new PinState(pin, ch.adrianelsener.train.denkovi.DenkoviWrapper.State.On);
+                return new PinState(pin, ch.adrianelsener.train.denkovi.State.On);
             }
         }//
         ,
         Off {
             @Override
             public PinState forPin(final Pin pin) {
-                return new PinState(pin, ch.adrianelsener.train.denkovi.DenkoviWrapper.State.Off);
+                return new PinState(pin, ch.adrianelsener.train.denkovi.State.Off);
             }
 
         };

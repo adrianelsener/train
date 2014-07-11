@@ -4,7 +4,7 @@ import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.config.ConfigPropertyReader;
 import ch.adrianelsener.train.denkovi.Board;
 import ch.adrianelsener.train.denkovi.DenkoviWrapper;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.IpAddress;
+import ch.adrianelsener.train.denkovi.IpAddress;
 import ch.adrianelsener.train.driver.SwitchBoardV1;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchBoardToggler;

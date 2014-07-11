@@ -12,10 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Jp;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Pin;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.State;
-
 public class SwingBoard implements Board {
     private final Map<Pin, State> currentState = new HashMap<>();
     private final List<JCheckBox> checkboxes = new ArrayList<>();
@@ -90,6 +86,11 @@ public class SwingBoard implements Board {
         if (Pin._13.off().equals(pinState)) {
             applyStates(currentState);
         }
+    }
+
+    @Override
+    public int read(Pin pin) {
+        return 0;
     }
 
     private void applyStates(Map<Pin, State> currentState) {
