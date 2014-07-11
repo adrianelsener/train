@@ -7,8 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
 public class DenkoviWrapper implements Board {
-
-
     private final IpAddress address;
     private SnmpAPI api;
     private SnmpSession session;
@@ -32,11 +30,6 @@ public class DenkoviWrapper implements Board {
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see ch.adrianelsener.train.denkovi.Board#close()
-     */
     @Override
     public void close() {
         api.close();
@@ -45,8 +38,7 @@ public class DenkoviWrapper implements Board {
         api = null;
     }
 
-    @Override
-    public int SNMP_SET(final int Port, final Jp OID, final byte dataType, final String SetValue, final String Community) {
+    int SNMP_SET(final int Port, final Jp OID, final byte dataType, final String SetValue, final String Community) {
         if (null == api || null == session || null == pdu) {
             init();
         }
@@ -79,8 +71,7 @@ public class DenkoviWrapper implements Board {
         return 1;
     }
 
-    @Override
-    public String SNMP_GET(final int Port, final Jp OID, final String Community) {
+    String SNMP_GET(final int Port, final Jp OID, final String Community) {
         final SnmpTarget target = new SnmpTarget();
         target.setTargetHost(address.getAddress());
         target.setTargetPort(Port);

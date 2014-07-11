@@ -102,7 +102,7 @@ public class SwingSwitchTest {
     public void getNextConnectionpoint_RightTop() {
         final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
-        final Point result = testee.getNextConnectionpoint(new Point(32, 32));
+        final Point result = testee.getNextConnectionpoint(new Point(36, 32));
         // Assert
         assertThat(result, is(equalTo(new Point(45, 40))));
 
@@ -113,7 +113,7 @@ public class SwingSwitchTest {
         // new Point(30, 30)
         final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
-        final Point result = testee.getNextConnectionpoint(new Point(32, 28));
+        final Point result = testee.getNextConnectionpoint(new Point(36, 28));
         // Assert
         assertThat(result, is(equalTo(new Point(45, 20))));
     }
@@ -174,22 +174,6 @@ public class SwingSwitchTest {
         assertThat(startYCaptor.getAllValues().get(3), is(equalTo(startYCaptor.getAllValues().get(1))));
         assertThat(endXCaptor.getAllValues().get(3), is(equalTo(endXCaptor.getAllValues().get(1))));
         assertThat(endYCaptor.getAllValues().get(3), is(equalTo(endYCaptor.getAllValues().get(1))));
-    }
-
-    @Test
-    public void hasAsOutput_ReturnsTrue_if_LeftSideIsUpperRightSidePoint() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
-        final SwingSwitch leftIsUpperRight = mock(SwingSwitch.class);
-        // Act
-        final boolean result = testee.hasAsOutput(leftIsUpperRight);
-        // Assert
-        assertThat(result, is(true));
-
-    }
-
-    @Test
-    public void hasAsOutput_ReturnsTrue_if_LeftSideIsLowerRightSidePoint() {
-        throw new IllegalStateException("Implement Test");
     }
 
 }

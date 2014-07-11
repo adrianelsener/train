@@ -85,16 +85,6 @@ public class SwingBoard implements Board {
     }
 
     @Override
-    public int SNMP_SET(int Port, Jp OID, byte dataType, String SetValue, String Community) {
-        return 0;
-    }
-
-    @Override
-    public String SNMP_GET(int Port, Jp OID, String Community) {
-        return null;
-    }
-
-    @Override
     public void set(PinState pinState) {
         currentState.put(pinState.pin, pinState.state);
         if (Pin._13.off().equals(pinState)) {

@@ -146,9 +146,9 @@ public class SwingSwitch implements TrackPart {
     public Point getNextConnectionpoint(final Point origin) {
         if (inRangeCalc.isInRange(origin, leftPoint, 10)) {
             return leftPoint;
-        } else if (inRangeCalc.isInRange(origin, topRightPoint, 15)) {
+        } else if (inRangeCalc.isInRange(origin, topRightPoint, 10)) {
             return topRightPoint;
-        } else if (inRangeCalc.isInRange(origin, bottomRightPoint, 15)) {
+        } else if (inRangeCalc.isInRange(origin, bottomRightPoint, 10)) {
             return bottomRightPoint;
         } else {
             throw new IllegalArgumentException("getNextConnectionpoint soll nur aufgerufen werden wenn auch etwas in der naehe ist");
@@ -249,10 +249,6 @@ public class SwingSwitch implements TrackPart {
     @Override
     public boolean isInverted() {
         return TrackView.Inverted == switchView;
-    }
-
-    public boolean hasAsOutput(SwingSwitch other) {
-        return false;
     }
 
     @Override
