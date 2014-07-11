@@ -6,6 +6,8 @@ import ch.adrianelsener.train.gui.ToggleCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -204,6 +206,16 @@ public class SwingSwitch implements TrackPart {
     }
 
     @Override
+    public ImmutableCollection<Point> getInConnectors() {
+        return ImmutableList.of( leftPoint);
+    }
+
+    @Override
+    public ImmutableCollection<Point> getOutConnectors() {
+        return ImmutableList.of(topRightPoint, bottomRightPoint);
+    }
+
+    @Override
     public SwitchId getId() {
         return switchId;
     }
@@ -239,6 +251,14 @@ public class SwingSwitch implements TrackPart {
         return TrackView.Inverted == switchView;
     }
 
+    public boolean hasAsOutput(SwingSwitch other) {
+        return false;
+    }
+
+    @Override
+    public boolean isPipe() {
+        return SwitchMode.Dummy == switchMode;
+    }
 
     enum SwitchMode {
         Real, Dummy
@@ -253,6 +273,7 @@ public class SwingSwitch implements TrackPart {
         RealSwitch(final Point center, final double angle, final SwitchId id, final BoardId boardId, final boolean state, final SwitchMode switchMode, final TrackView switchView) {
             super(center, angle, id, boardId, state, switchMode, switchView);
         }
+
     }
 
     static class DummySwitch extends SwingSwitch {
@@ -263,5 +284,6 @@ public class SwingSwitch implements TrackPart {
         DummySwitch(final Point center, final double angle, final SwitchId id, final BoardId boardId, final boolean state, final SwitchMode switchMode, final TrackView switchView) {
             super(center, angle, id, boardId, state, switchMode, switchView);
         }
-    }
+
+   }
 }

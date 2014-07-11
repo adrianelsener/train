@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -14,6 +15,11 @@ import java.util.Optional;
 public class GraphSwitch implements GraphTrackPart {
     private Optional<GraphTrackPart> parent = Optional.empty();
     private final Collection<GraphTrackPart> childs = Lists.newArrayList();
+    private final SwitchId id;
+
+    public GraphSwitch(SwitchId id) {
+        this.id = id;
+    }
 
     @Override
     public void appendChild(GraphTrackPart other) {
@@ -34,6 +40,11 @@ public class GraphSwitch implements GraphTrackPart {
     @Override
     public void setParent(GraphTrackPart parent) {
         this.parent = Optional.of(parent);
+    }
+
+    @Override
+    public SwitchId getId() {
+        return id;
     }
 
     @Override

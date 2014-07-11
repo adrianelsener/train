@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.gui.SwitchId;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
@@ -15,8 +16,8 @@ public class GraphSwitchTest {
 
     @Test
     public void afterAppendChild_childHasParent() {
-        final GraphSwitch other = new GraphSwitch();
-        final GraphTrackPart testee = new GraphSwitch();
+        final GraphSwitch other = new GraphSwitch(SwitchId.create(1));
+        final GraphTrackPart testee = new GraphSwitch(SwitchId.create(2));
         // Act
         testee.appendChild(other);
         // Assert
@@ -28,8 +29,8 @@ public class GraphSwitchTest {
 
     @Test
     public void afterAppendChild_parentHasChild() {
-        final GraphSwitch other = new GraphSwitch();
-        final GraphSwitch testee = new GraphSwitch();
+        final GraphSwitch other = new GraphSwitch(SwitchId.create(1));
+        final GraphTrackPart testee = new GraphSwitch(SwitchId.create(2));
         // Act
         testee.appendChild(other);
         // Assert

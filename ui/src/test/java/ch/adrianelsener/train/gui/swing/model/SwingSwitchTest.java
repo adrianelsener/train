@@ -20,6 +20,7 @@ import java.util.Iterator;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -174,4 +175,21 @@ public class SwingSwitchTest {
         assertThat(endXCaptor.getAllValues().get(3), is(equalTo(endXCaptor.getAllValues().get(1))));
         assertThat(endYCaptor.getAllValues().get(3), is(equalTo(endYCaptor.getAllValues().get(1))));
     }
+
+    @Test
+    public void hasAsOutput_ReturnsTrue_if_LeftSideIsUpperRightSidePoint() {
+        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch leftIsUpperRight = mock(SwingSwitch.class);
+        // Act
+        final boolean result = testee.hasAsOutput(leftIsUpperRight);
+        // Assert
+        assertThat(result, is(true));
+
+    }
+
+    @Test
+    public void hasAsOutput_ReturnsTrue_if_LeftSideIsLowerRightSidePoint() {
+        throw new IllegalStateException("Implement Test");
+    }
+
 }

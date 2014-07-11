@@ -1,6 +1,8 @@
 package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -64,6 +66,21 @@ public abstract class Track implements TrackPart {
     public void paint(final Graphics2D g) {
         paintLable(g);
         paintPart(g);
+    }
+
+    @Override
+    public ImmutableCollection<Point> getInConnectors() {
+        return ImmutableList.of(startPoint, endPoint);
+    }
+
+    @Override
+    public ImmutableCollection<Point> getOutConnectors() {
+        return ImmutableList.of(endPoint, startPoint);
+    }
+
+    @Override
+    public boolean isPipe() {
+        return true;
     }
 
     private void paintPart(final Graphics2D g) {

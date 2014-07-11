@@ -1,5 +1,7 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.gui.SwitchId;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -11,4 +13,6 @@ public interface GraphTrackPart {
     Collection<GraphTrackPart> getChilds();
 
     void setParent(GraphTrackPart parent);
+
+    SwitchId getId();
 }

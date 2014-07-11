@@ -1,17 +1,15 @@
 package ch.adrianelsener.train.gui.swing.model;
 
-import ch.adrianelsener.train.gui.swing.model.SimpleTrack;
-import ch.adrianelsener.train.gui.swing.model.Track;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableCollection;
 import org.testng.annotations.Test;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -147,4 +145,20 @@ public class SimpleTrackTest {
         assertThat(result, is(equalTo(testee)));
     }
 
+    @Test
+    public void inConnectorsHasStartAndEndPoint() {
+        final Track testee = new SimpleTrack(startPoint, endPoint);
+        // Act
+        final ImmutableCollection<Point> result = testee.getInConnectors();
+        // Assert
+        assertThat(result, containsInAnyOrder(equalTo(startPoint), equalTo(endPoint)));
+    }
+    @Test
+    public void outConnectorsHasStartAndEndPoint() {
+        final Track testee = new SimpleTrack(startPoint, endPoint);
+        // Act
+        final ImmutableCollection<Point> result = testee.getOutConnectors();
+        // Assert
+        assertThat(result, containsInAnyOrder(equalTo(startPoint), equalTo(endPoint)));
+    }
 }
