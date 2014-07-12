@@ -12,10 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Jp;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Pin;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.State;
-
 public class SwingBoard implements Board {
     private final Map<Pin, State> currentState = new HashMap<>();
     private final List<JCheckBox> checkboxes = new ArrayList<>();
@@ -85,21 +81,16 @@ public class SwingBoard implements Board {
     }
 
     @Override
-    public int SNMP_SET(int Port, Jp OID, byte dataType, String SetValue, String Community) {
-        return 0;
-    }
-
-    @Override
-    public String SNMP_GET(int Port, Jp OID, String Community) {
-        return null;
-    }
-
-    @Override
     public void set(PinState pinState) {
         currentState.put(pinState.pin, pinState.state);
         if (Pin._13.off().equals(pinState)) {
             applyStates(currentState);
         }
+    }
+
+    @Override
+    public int read(Pin pin) {
+        return 0;
     }
 
     private void applyStates(Map<Pin, State> currentState) {

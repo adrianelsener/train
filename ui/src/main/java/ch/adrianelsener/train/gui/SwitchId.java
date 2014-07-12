@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.gui;
 
+import ch.adrianelsener.train.driver.WeicheMitState;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -7,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import ch.adrianelsener.train.driver.SwitchBoardV1.WeicheMitState;
 
 public abstract class SwitchId implements PersistableId {
 

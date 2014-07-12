@@ -74,30 +74,34 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ch.adrianelsener.adventnet</groupId>
-            <artifactId>logging</artifactId>
-            <version>SNAPSHOT-1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.adrianelsener.adventnet</groupId>
-            <artifactId>snmp</artifactId>
-            <version>SNAPSHOT-1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.adrianelsener.adventnet</groupId>
-            <artifactId>crimson</artifactId>
-            <version>SNAPSHOT-1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.adrianelsener.adventnet</groupId>
-            <artifactId>jaxp</artifactId>
-            <version>SNAPSHOT-1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8.7</version>
         </dependency>
 
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.adrianelsener.adventnet</groupId>
+                <artifactId>logging</artifactId>
+                <version>SNAPSHOT-1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.adrianelsener.adventnet</groupId>
+                <artifactId>snmp</artifactId>
+                <version>SNAPSHOT-1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.adrianelsener.adventnet</groupId>
+                <artifactId>crimson</artifactId>
+                <version>SNAPSHOT-1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.adrianelsener.adventnet</groupId>
+                <artifactId>jaxp</artifactId>
+                <version>SNAPSHOT-1.0.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

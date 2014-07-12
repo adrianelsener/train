@@ -20,10 +20,11 @@ import java.util.Iterator;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class SwitchTest {
+public class SwingSwitchTest {
     private final Point middle = new Point(30, 30);
     @Mock
     private Graphics2D g;
@@ -45,7 +46,7 @@ public class SwitchTest {
 
     @Test
     public void nearIsInside() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
         final boolean result = testee.isNear(middle);
         // Assert
@@ -54,7 +55,7 @@ public class SwitchTest {
 
     @Test
     public void nearIsOutsideOnTop() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
         final boolean result = testee.isNear(new Point(30, 30 - 11));
         // Assert
@@ -63,7 +64,7 @@ public class SwitchTest {
 
     @Test
     public void nearIsOutsideOnBottom() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
         final boolean result = testee.isNear(new Point(30, 30 + 11));
         // Assert
@@ -72,7 +73,7 @@ public class SwitchTest {
 
     @Test
     public void nearIsOutsideOnLeft() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
         final boolean result = testee.isNear(new Point(30 - 11, 30));
         // Assert
@@ -81,7 +82,7 @@ public class SwitchTest {
 
     @Test
     public void nearIsOutsideOnRight() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
         final boolean result = testee.isNear(new Point(30 + 16, 30));
         // Assert
@@ -90,7 +91,7 @@ public class SwitchTest {
 
     @Test
     public void getNextConnectionpoint_Left() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
         final Point result = testee.getNextConnectionpoint(new Point(27, 30));
         // Assert
@@ -99,9 +100,9 @@ public class SwitchTest {
 
     @Test
     public void getNextConnectionpoint_RightTop() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
-        final Point result = testee.getNextConnectionpoint(new Point(32, 32));
+        final Point result = testee.getNextConnectionpoint(new Point(36, 32));
         // Assert
         assertThat(result, is(equalTo(new Point(45, 40))));
 
@@ -110,38 +111,38 @@ public class SwitchTest {
     @Test
     public void getNextConnectionpoint_RightBottom() {
         // new Point(30, 30)
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
-        final Point result = testee.getNextConnectionpoint(new Point(32, 28));
+        final Point result = testee.getNextConnectionpoint(new Point(36, 28));
         // Assert
         assertThat(result, is(equalTo(new Point(45, 20))));
     }
 
     @Test
     public void createMirrorReturnsMirrored() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         // Act
-        final Switch result = testee.createMirror();
+        final SwingSwitch result = testee.createMirror();
         // Assert
-        final Switch mirrored = new Switch(middle, 45, SwitchId.createDummy(), BoardId.createDummy(), false, Switch.SwitchMode.Real, TrackView.Default);
+        final SwingSwitch mirrored = new SwingSwitch(middle, 45, SwitchId.createDummy(), BoardId.createDummy(), false, SwingSwitch.SwitchMode.Real, TrackView.Default);
         assertThat(result, is(equalTo(mirrored)));
     }
 
     @Test
     public void asCsvStringCanBeUsedForFromCsvString() {
-        final Switch testee = Switch.create(middle).toggle(toggler).invertView(true);
+        final SwingSwitch testee = SwingSwitch.create(middle).toggle(toggler).invertView(true);
         // Act
         final Collection<String> strings = Collections2.transform(testee.getDataToPersist(), input -> input.toString());
         final Iterator<String> iterator = strings.iterator();
         iterator.next();
-        final Switch result = Switch.createSwitch(iterator);
+        final SwingSwitch result = SwingSwitch.createSwitch(iterator);
         // Assert
         assertThat(result, is(equalTo(testee)));
     }
 
     @Test
     public void regularDrawing() {
-        final Switch testee = Switch.create(middle);
+        final SwingSwitch testee = SwingSwitch.create(middle);
         testee.paint(g);
         // Assert
         verify(g, times(4)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
@@ -153,7 +154,7 @@ public class SwitchTest {
 
     @Test
     public void toggledDrawing() {
-        final Switch testee = Switch.create(middle).toggle(toggler);
+        final SwingSwitch testee = SwingSwitch.create(middle).toggle(toggler);
         testee.paint(g);
         // Assert
         verify(g, times(4)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
@@ -165,7 +166,7 @@ public class SwitchTest {
 
     @Test
     public void testInvertedView() {
-        final Switch testee = Switch.create(middle).invertView(true);
+        final SwingSwitch testee = SwingSwitch.create(middle).invertView(true);
         testee.paint(g);
         // Assert
         verify(g, times(4)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
@@ -174,4 +175,5 @@ public class SwitchTest {
         assertThat(endXCaptor.getAllValues().get(3), is(equalTo(endXCaptor.getAllValues().get(1))));
         assertThat(endYCaptor.getAllValues().get(3), is(equalTo(endYCaptor.getAllValues().get(1))));
     }
+
 }

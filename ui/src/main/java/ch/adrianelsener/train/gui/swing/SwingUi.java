@@ -10,7 +10,7 @@ import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.config.ConfigPropertyReader;
 import ch.adrianelsener.train.denkovi.Board;
 import ch.adrianelsener.train.denkovi.DenkoviWrapper;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.IpAddress;
+import ch.adrianelsener.train.denkovi.IpAddress;
 import ch.adrianelsener.train.driver.SwitchBoardV1;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.DummyToggler;
@@ -92,7 +92,7 @@ public class SwingUi extends JComponent {
                 case "TS":
                     return SwitchTrack.createSwitchTrack(iterator);
                 case "S":
-                    return Switch.createSwitch(iterator);
+                    return SwingSwitch.createSwitch(iterator);
                 default:
                     throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
             }

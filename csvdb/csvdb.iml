@@ -24,10 +24,6 @@
     <orderEntry type="library" name="Maven: org.beanshell:bsh:2.0b4" level="project" />
     <orderEntry type="library" name="Maven: com.beust:jcommander:1.27" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.12" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:logging:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:snmp:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:crimson:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:jaxp:SNAPSHOT-1.0.0" level="project" />
     <orderEntry type="module" module-name="testngrules" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-library:1.3" level="project" />

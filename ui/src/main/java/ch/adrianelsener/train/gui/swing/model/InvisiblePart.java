@@ -3,11 +3,11 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.ToggleCallback;
+import com.google.common.collect.ImmutableCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.util.Collection;
 
 public class InvisiblePart implements TrackPart {
@@ -55,6 +55,21 @@ public class InvisiblePart implements TrackPart {
     @Override
     public TrackPart moveTo(final Point newLocation) {
         throw new IllegalStateException("moveTo is not available on InvisiblePart");
+    }
+
+    @Override
+    public ImmutableCollection<Point> getInConnectors() {
+        throw new IllegalStateException("Invisible part can not be connected");
+    }
+
+    @Override
+    public ImmutableCollection<Point> getOutConnectors() {
+        throw new IllegalStateException("Invisible part can not be connected");
+    }
+
+    @Override
+    public boolean isPipe() {
+        return true;
     }
 
     @Override

@@ -25,10 +25,6 @@
     <orderEntry type="library" name="Maven: com.beust:jcommander:1.27" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.9.5" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:logging:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:snmp:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:crimson:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:jaxp:SNAPSHOT-1.0.0" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">

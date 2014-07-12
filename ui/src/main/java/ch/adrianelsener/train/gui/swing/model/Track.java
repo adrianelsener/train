@@ -1,5 +1,8 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,8 +20,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class Track extends AbstractTrackPart implements TrackPart {
+public abstract class Track implements TrackPart {
     private static final Logger logger = LoggerFactory.getLogger(Track.class);
+    private final InRangeCalculator inRangeCalc = InRangeCalculator.create();
     protected final Point startPoint;
     protected final Point endPoint;
 
@@ -64,6 +68,21 @@ public abstract class Track extends AbstractTrackPart implements TrackPart {
         paintPart(g);
     }
 
+    @Override
+    public ImmutableCollection<Point> getInConnectors() {
+        return ImmutableList.of(startPoint, endPoint);
+    }
+
+    @Override
+    public ImmutableCollection<Point> getOutConnectors() {
+        return ImmutableList.of(endPoint, startPoint);
+    }
+
+    @Override
+    public boolean isPipe() {
+        return true;
+    }
+
     private void paintPart(final Graphics2D g) {
         g.setColor(getLineColor());
         g.setStroke(new BasicStroke(2));
@@ -97,9 +116,9 @@ public abstract class Track extends AbstractTrackPart implements TrackPart {
 
     @Override
     public Point getNextConnectionpoint(final Point origin) {
-        if (isInRange(origin, startPoint, 10)) {
+        if (inRangeCalc.isInRange(origin, startPoint, 10)) {
             return startPoint;
-        } else if (isInRange(origin, endPoint, 10)) {
+        } else if (inRangeCalc.isInRange(origin, endPoint, 10)) {
             return endPoint;
         } else {
             throw new IllegalArgumentException("Point is not near to something");

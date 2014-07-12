@@ -2,6 +2,7 @@ package ch.adrianelsener.train.driver;
 
 import static org.mockito.Mockito.verify;
 
+import ch.adrianelsener.train.denkovi.Pin;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -10,7 +11,6 @@ import org.testng.annotations.Test;
 import ch.adrianelsener.train.config.ConfKey;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.denkovi.Board;
-import ch.adrianelsener.train.denkovi.DenkoviWrapper.Pin;
 import ch.adrianelsener.train.denkovi.PinState;
 
 public class SpeedBoardV1Test {
@@ -49,6 +49,8 @@ public class SpeedBoardV1Test {
 
     private Config createSampleConfig() {
         final Config config = new Config();
+
+
         config.put(ConfKey.create("SB.00.Up"), "P.10");
         config.put(ConfKey.create("SB.00.Down"), "P.11");
         config.put(ConfKey.create("SB.00.SpeedStep"), "P.12");

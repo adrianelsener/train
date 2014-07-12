@@ -25,14 +25,14 @@
     <orderEntry type="library" name="Maven: org.beanshell:bsh:2.0b4" level="project" />
     <orderEntry type="library" name="Maven: com.beust:jcommander:1.27" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.12" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:logging:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:snmp:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:crimson:SNAPSHOT-1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:jaxp:SNAPSHOT-1.0.0" level="project" />
     <orderEntry type="module" module-name="testngrules" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="module" module-name="config" />
     <orderEntry type="module" module-name="driver" />
+    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:logging:SNAPSHOT-1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:snmp:SNAPSHOT-1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:crimson:SNAPSHOT-1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: ch.adrianelsener.adventnet:jaxp:SNAPSHOT-1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject:guice:4.0-beta" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
