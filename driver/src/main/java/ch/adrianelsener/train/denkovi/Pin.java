@@ -22,7 +22,7 @@ public enum Pin {
     _14(Jp.P4, 32), //
     _15(Jp.P4, 64), //
     _16(Jp.P4, 128), //
-    ;
+    _17(Jp.P5, 1);
 
     private final Jp jp;
     private final int internalValue;
@@ -48,7 +48,7 @@ public enum Pin {
      * @param pinWithPDotNumber
      * @return
      */
-    public static ch.adrianelsener.train.denkovi.Pin forPDotNotation(final String pinWithPDotNumber) {
+    public static Pin forPDotNotation(final String pinWithPDotNumber) {
         if (StringUtils.startsWith(pinWithPDotNumber, "P.")) {
             return forNumber(pinWithPDotNumber.substring(2));
         } else {

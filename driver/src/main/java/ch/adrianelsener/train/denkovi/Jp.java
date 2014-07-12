@@ -15,6 +15,12 @@ public enum Jp {
         String getAddressInternal() {
             return "2";
         }
+    }, P5 {
+        @Override
+        String getAddressInternal() {
+//            ".1.3.6.1.4.1.19865.1.2.3.xxxx.0"
+            return "3";
+        }
     };
 
     abstract String getAddressInternal();
