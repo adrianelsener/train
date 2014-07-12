@@ -1,7 +1,5 @@
 package ch.adrianelsener.train.denkovi;
 
-import ch.adrianelsener.train.denkovi.Pin;
-
 public class PinState {
     final Pin pin;
     final State state;

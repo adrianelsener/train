@@ -1,8 +1,16 @@
 package ch.adrianelsener.train.driver;
 
-/**
- * Created by els on 7/11/14.
- */
+import ch.adrianelsener.train.denkovi.Pin;
+
 public enum Occupied {
-    _01
+    _01(Pin._17);
+    private Pin pin;
+
+    Occupied(Pin pin) {
+        this.pin = pin;
+    }
+
+    public Pin getPin() {
+        return pin;
+    }
 }

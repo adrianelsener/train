@@ -27,6 +27,11 @@ abstract class AbstractBoard {
         sleep();
     }
 
+    protected int get(final Pin pin) {
+        logger.debug("read pin {} from board", pin);
+        return board.read(pin);
+    }
+
     protected void sleep() {
         try {
             Thread.sleep(SLEEP_TIME);
