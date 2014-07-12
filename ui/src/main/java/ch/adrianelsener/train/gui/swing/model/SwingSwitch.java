@@ -178,7 +178,7 @@ public class SwingSwitch implements TrackPart {
     @Override
     public Collection<Object> getDataToPersist() {
         final List<Object> objects = Lists.newArrayList();
-        objects.add("S,");
+        objects.add("S");
         objects.add(center.x);
         objects.add(center.y);
         objects.add(Double.toString(angle));
