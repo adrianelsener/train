@@ -401,6 +401,7 @@ public class SwingUi extends JComponent {
             bus.post(UpdateDetails.create(trackPart));
             bus.post(UpdateApplyListener.create(trackPart, bus));
         }
+        currentDrawMode.setMode(DrawMode.NoOp);
     }
 
     @Subscribe
