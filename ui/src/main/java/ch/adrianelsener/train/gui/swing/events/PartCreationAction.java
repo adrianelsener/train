@@ -3,13 +3,12 @@ package ch.adrianelsener.train.gui.swing.events;
 import ch.adrianelsener.train.gui.swing.model.SwingSwitch;
 import ch.adrianelsener.train.gui.swing.model.Track;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.Optional;
 
-/**
- * Created by els on 7/1/14.
- */
 public abstract class PartCreationAction extends CreationAction{
     public PartCreationAction(Point point) {
         super( point);
@@ -33,49 +32,58 @@ public abstract class PartCreationAction extends CreationAction{
     }
 
     private static class SwitchTrackCreationAction extends PartCreationAction {
+        private static final Logger logger = LoggerFactory.getLogger(SwitchTrackCreationAction.class);
         public SwitchTrackCreationAction(Point point) {
             super(point);
         }
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final TrackPart draftSwitchTrack = Track.createSwitchTrack(point.get(), getEndPoint());
-            return draftSwitchTrack;
+            final TrackPart switchTrack = Track.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
+            logger.debug("Created final switch track '{}' to send to ui", switchTrack);
+            return switchTrack;
         }
     }
 
     private static class TrackCreationAction extends PartCreationAction {
+        private final static Logger logger = LoggerFactory.getLogger(TrackCreationAction.class);
         public TrackCreationAction(Point point) {
             super(point);
         }
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final TrackPart draftSimpleTrack = Track.createSimpleTrack(point.get(), getEndPoint());
-            return draftSimpleTrack;
+            final TrackPart simpleTrack = Track.createSimpleTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
+            logger.debug("created simple track '{}' to send to ui", simpleTrack);
+            return simpleTrack;
         }
     }
 
     private static class SwitchCreationAction extends PartCreationAction{
+        private final static Logger logger = LoggerFactory.getLogger(SwitchTrackCreationAction.class);
         public SwitchCreationAction(Point point) {
             super(point);
         }
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final SwingSwitch draftSwitch = SwingSwitch.create(getEndPoint());
-            return draftSwitch;
+            final SwingSwitch swingSwitch = SwingSwitch.create(getEndPoint());
+            logger.debug("created switch '{}' to send to ui", swingSwitch);
+            return swingSwitch;
         }
     }
 
     private static class DummySwitchCreationAction extends PartCreationAction {
+        private final static Logger logger = LoggerFactory.getLogger(DummySwitchCreationAction.class);
         public DummySwitchCreationAction(Point point) {
             super(point);
         }
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            return SwingSwitch.createDummy(getEndPoint());
+            final SwingSwitch dummySwitch = SwingSwitch.createDummy(getEndPoint());
+            logger.debug("created dummy switch '{}' to send to ui", dummySwitch);
+            return dummySwitch;
         }
     }
 }
