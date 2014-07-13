@@ -60,9 +60,8 @@ public abstract class UpdatePart {
 
         @Override
         public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc, Optional<Point> startPoint) {
-            Point mousePoint = pointCalc.calculatePoint(getPoint());
-            logger.debug("Delete part near to {}", mousePoint);
-            db.delete(part -> part.isNear(mousePoint));
+            logger.debug("Delete part near to {}", getPoint());
+            db.delete(part -> part.isNear(getPoint()));
         }
     }
 
