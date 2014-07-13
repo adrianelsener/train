@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.gui;
 
-import ch.adrianelsener.train.driver.WeicheMitState;
+import ch.adrianelsener.train.driver.SwitchWithState;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 public abstract class SwitchId implements PersistableId {
 
-    public abstract WeicheMitState mapToWeicheMitState(final boolean isOn);
+    public abstract SwitchWithState mapToWeicheMitState(final boolean isOn);
 
     private static class NumberbasedSwitchId extends SwitchId {
 
@@ -22,7 +22,7 @@ public abstract class SwitchId implements PersistableId {
         }
 
         @Override
-        public WeicheMitState mapToWeicheMitState(final boolean isOn) {
+        public SwitchWithState mapToWeicheMitState(final boolean isOn) {
             final StringBuilder sb = new StringBuilder("_");
             if (id < 10) {
                 sb.append("0");
@@ -33,7 +33,7 @@ public abstract class SwitchId implements PersistableId {
             } else {
                 sb.append("R");
             }
-            return WeicheMitState.valueOf(sb.toString());
+            return SwitchWithState.valueOf(sb.toString());
         }
 
         @Override
@@ -54,7 +54,7 @@ public abstract class SwitchId implements PersistableId {
 
     private static class DummySwitchId extends SwitchId {
         @Override
-        public WeicheMitState mapToWeicheMitState(final boolean isOn) {
+        public SwitchWithState mapToWeicheMitState(final boolean isOn) {
             throw new IllegalStateException("mapToWeicheMitState kann mit DummySwitchId nicht durchgefuehrt werden");
         }
 

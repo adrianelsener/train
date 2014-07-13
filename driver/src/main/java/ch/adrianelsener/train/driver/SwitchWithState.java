@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * Created by els on 7/11/14.
  */
-public enum WeicheMitState {
+public enum SwitchWithState {
     _01L(State.On, State.On, State.On, State.On)//
     , _01R(State.Off, State.On, State.On, State.On)//
     , _02L(State.On, State.Off, State.On, State.On) //
@@ -25,7 +25,7 @@ public enum WeicheMitState {
     ;
     private final ImmutableList<State> states;
 
-    private WeicheMitState(final State p1, final State p2, final State p3, final State p4) {
+    private SwitchWithState(final State p1, final State p2, final State p3, final State p4) {
         states = ImmutableList.of(p1, p2, p3, p4);
     }
 

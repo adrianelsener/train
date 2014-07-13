@@ -103,13 +103,13 @@ public abstract class Track implements TrackPart {
 
         logger.debug("Look if point {} is near to {}", point, this);
         if (point.x - 6 < largestX && point.x + 6 > smallestX) {
-            logger.trace("Is in X-range");
+            logger.debug("Is in X-range");
             if (point.y - 6 < largestY && point.y + 6 > smallestY) {
                 return true;
             }
-            logger.trace("But not in Y");
+            logger.debug("But not in Y");
         }
-        logger.trace("Not in X-Range");
+        logger.debug("Not in X-Range");
 
         return false;
     }
