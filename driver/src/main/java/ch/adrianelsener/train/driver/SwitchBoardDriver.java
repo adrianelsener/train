@@ -2,6 +2,6 @@ package ch.adrianelsener.train.driver;
 
 public interface SwitchBoardDriver {
 
-    public void turn(WeicheMitState statedRelay);
+    public void turn(SwitchWithState statedRelay);
 
 }

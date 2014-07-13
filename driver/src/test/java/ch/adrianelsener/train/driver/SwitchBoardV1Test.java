@@ -20,20 +20,20 @@ public class SwitchBoardV1Test {
     public Object[][] createLeftRightData() {
         final Config config = createSampleConfig();
         return new Object[][]{//
-                {new Testdata(WeicheMitState._01L, Pin._10.on(), Pin._11.on(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._01R, Pin._10.off(), Pin._11.on(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._02L, Pin._10.on(), Pin._11.off(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._02R, Pin._10.off(), Pin._11.off(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._03L, Pin._10.on(), Pin._11.on(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._03R, Pin._10.off(), Pin._11.on(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._04L, Pin._10.on(), Pin._11.off(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._04R, Pin._10.off(), Pin._11.off(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._05L, Pin._10.on(), Pin._11.on(), Pin._12.on(), Pin._13.off(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._05R, Pin._10.off(), Pin._11.on(), Pin._12.on(), Pin._13.off(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._06L, Pin._10.off(), Pin._11.off(), Pin._12.on(), Pin._13.off(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._06R, Pin._10.off(), Pin._11.on(), Pin._12.off(), Pin._13.off(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._07L, Pin._10.on(), Pin._11.off(), Pin._12.off(), Pin._13.off(), Pin._14, config)} //
-                , {new Testdata(WeicheMitState._07R, Pin._10.off(), Pin._11.off(), Pin._12.off(), Pin._13.off(), Pin._14, config)} //
+                {new Testdata(SwitchWithState._01L, Pin._10.on(), Pin._11.on(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._01R, Pin._10.off(), Pin._11.on(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._02L, Pin._10.on(), Pin._11.off(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._02R, Pin._10.off(), Pin._11.off(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._03L, Pin._10.on(), Pin._11.on(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._03R, Pin._10.off(), Pin._11.on(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._04L, Pin._10.on(), Pin._11.off(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._04R, Pin._10.off(), Pin._11.off(), Pin._12.off(), Pin._13.on(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._05L, Pin._10.on(), Pin._11.on(), Pin._12.on(), Pin._13.off(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._05R, Pin._10.off(), Pin._11.on(), Pin._12.on(), Pin._13.off(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._06L, Pin._10.off(), Pin._11.off(), Pin._12.on(), Pin._13.off(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._06R, Pin._10.off(), Pin._11.on(), Pin._12.off(), Pin._13.off(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._07L, Pin._10.on(), Pin._11.off(), Pin._12.off(), Pin._13.off(), Pin._14, config)} //
+                , {new Testdata(SwitchWithState._07R, Pin._10.off(), Pin._11.off(), Pin._12.off(), Pin._13.off(), Pin._14, config)} //
         };
     }
 
@@ -67,7 +67,7 @@ public class SwitchBoardV1Test {
 
     private static class Testdata {
 
-        private final WeicheMitState weicheSeite;
+        private final SwitchWithState weicheSeite;
         private final PinState p1;
         private final PinState p2;
         private final PinState p3;
@@ -75,7 +75,7 @@ public class SwitchBoardV1Test {
         private final Pin ptoggle;
         private final Config config;
 
-        public Testdata(final WeicheMitState weicheSeite, final PinState p1, final PinState p2, final PinState p3, final PinState p4,
+        public Testdata(final SwitchWithState weicheSeite, final PinState p1, final PinState p2, final PinState p3, final PinState p4,
                         final Pin ptoggle, final Config config) {
             this.weicheSeite = weicheSeite;
             this.p1 = p1;

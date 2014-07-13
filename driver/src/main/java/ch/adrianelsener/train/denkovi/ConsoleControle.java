@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import ch.adrianelsener.train.denkovi.Pin;
-
 public class ConsoleControle implements Runnable {
 
     public ConsoleControle(Board denkoviWrapper) {
@@ -33,7 +31,7 @@ public class ConsoleControle implements Runnable {
                 toggle(Pin._02, Math.abs(amount));
                 break;
             case WEICHE:
-                Weiche2RelaysMapping relaysMapping = Weiche2RelaysMapping.fromInput(amount);
+                Switch2RelaysMapping relaysMapping = Switch2RelaysMapping.fromInput(amount);
                 for (PinState relayState : relaysMapping.relayState) {
                     board.set(relayState);
                     sleep(50);
@@ -50,7 +48,7 @@ public class ConsoleControle implements Runnable {
         }
     }
 
-    private enum Weiche2RelaysMapping {
+    private enum Switch2RelaysMapping {
         W01_L(1, Pin._11.on(), Pin._12.on(), Pin._13.on(), Pin._14.on()), //
         W01_R(2, Pin._11.off(), Pin._12.on(), Pin._13.on(), Pin._14.on()), //
         W02_L(3, Pin._11.on(), Pin._12.off(), Pin._13.on(), Pin._14.on()), //
@@ -66,13 +64,13 @@ public class ConsoleControle implements Runnable {
         private final int input;
         private final PinState[] relayState;
 
-        private Weiche2RelaysMapping(int input, PinState... relayState) {
+        private Switch2RelaysMapping(int input, PinState... relayState) {
             this.input = input;
             this.relayState = relayState;
         }
 
-        public static Weiche2RelaysMapping fromInput(int input) {
-            for (Weiche2RelaysMapping w2rm : Weiche2RelaysMapping.values()) {
+        public static Switch2RelaysMapping fromInput(int input) {
+            for (Switch2RelaysMapping w2rm : Switch2RelaysMapping.values()) {
                 if (w2rm.input == input) {
                     return w2rm;
                 }
