@@ -2,6 +2,7 @@ package ch.adrianelsener.train.gui;
 
 import java.util.Map;
 
+import ch.adrianelsener.train.driver.SwitchBoardDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ import com.google.common.collect.Maps;
 
 public class SwitchBoardToggler implements ToggleCallback {
     private final static Logger logger = LoggerFactory.getLogger(SwitchBoardToggler.class);
-    private final Map<BoardId, SwitchBoardV1> boards = Maps.newHashMap();
+    private final Map<BoardId, SwitchBoardDriver> boards = Maps.newHashMap();
 
     private SwitchBoardToggler() {
         super();
@@ -28,7 +29,7 @@ public class SwitchBoardToggler implements ToggleCallback {
     }
 
     @Override
-    public void addBoard(final BoardId boardId, final SwitchBoardV1 board) {
+    public void addBoard(final BoardId boardId, final SwitchBoardDriver board) {
         boards.put(boardId, board);
     }
 }

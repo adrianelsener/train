@@ -1,7 +1,11 @@
 package ch.adrianelsener.train.gui.swing.events;
 
-/**
- * Created by els on 7/14/14.
- */
 public class UpdateStates {
+    private UpdateStates() {
+        super();
+    }
+
+    public static UpdateStates create() {
+        return new UpdateStates();
+    }
 }

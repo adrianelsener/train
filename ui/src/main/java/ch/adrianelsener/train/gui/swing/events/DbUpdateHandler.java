@@ -5,9 +5,6 @@ import ch.adrianelsener.odb.api.Odb;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import com.google.common.eventbus.Subscribe;
 
-/**
- * Created by els on 5/20/14.
- */
 public class DbUpdateHandler {
     private final Odb<TrackPart> db;
 

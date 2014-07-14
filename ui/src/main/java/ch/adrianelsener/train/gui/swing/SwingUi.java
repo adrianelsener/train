@@ -410,4 +410,9 @@ public class SwingUi extends JComponent {
         toggleAction.toggle(toggler, db);
         repaint();
     }
+
+    @Subscribe
+    public void updateSwitches(UpdateStates updateStates) {
+
+    }
 }
