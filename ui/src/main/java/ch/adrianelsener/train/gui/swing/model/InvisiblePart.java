@@ -49,7 +49,8 @@ public class InvisiblePart implements TrackPart {
 
     @Override
     public TrackPart toggle(final ToggleCallback toggler) {
-        throw new IllegalStateException("toggle is not available on InvisiblePart");
+        logger.warn("toggle on '{}' has no impact!", this);
+        return this;
     }
 
     @Override

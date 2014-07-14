@@ -7,6 +7,7 @@ import ch.adrianelsener.train.gui.ToggleCallback;
 import com.google.common.collect.ImmutableCollection;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
+import javax.annotation.Nonnull;
 import java.awt.Point;
 import java.util.Collection;
 
@@ -14,7 +15,14 @@ public interface TrackPart extends Nearby, Paintable, Datacontainer {
 
     TrackPart createMirror();
 
-    TrackPart toggle(ToggleCallback toggler);
+    /**
+     * Toggles the part. This means, the drawn part will change its state and the physical has to change the state.
+     * To change the physical state, the ToggleCallback is used to do that.
+     *
+     * @param toggler
+     * @return
+     */
+    @Nonnull TrackPart toggle(@Nonnull ToggleCallback toggler);
 
     TrackPart moveTo(Point newLocation);
 
