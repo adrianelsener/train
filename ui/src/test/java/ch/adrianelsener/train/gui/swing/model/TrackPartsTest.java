@@ -14,13 +14,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
 
-import ch.adrianelsener.train.gui.swing.model.TrackPart;
-import ch.adrianelsener.train.gui.swing.model.TrackParts;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
 
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 
 public class TrackPartsTest {
 
@@ -177,7 +175,7 @@ public class TrackPartsTest {
         testee.add(part1);
         testee.add(part2);
         final Point resPoint = new Point(6, 6);
-        final ToggleCallback toggler = mock(ToggleCallback.class);
+        final SwitchCallback toggler = mock(SwitchCallback.class);
         // Act
         testee.toggleNextTo(resPoint, toggler);
         // Assert

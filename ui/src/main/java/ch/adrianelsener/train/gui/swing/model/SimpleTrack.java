@@ -2,9 +2,8 @@ package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import com.beust.jcommander.internal.Lists;
-import com.google.common.collect.ImmutableCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +62,7 @@ public class SimpleTrack extends Track {
     }
 
     @Override
-    public TrackPart toggle(final ToggleCallback toggler) {
+    public TrackPart toggle(final SwitchCallback toggler) {
         logger.debug("No toggle on simple track");
         return this;
     }

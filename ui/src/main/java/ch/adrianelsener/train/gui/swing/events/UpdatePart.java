@@ -1,7 +1,7 @@
 package ch.adrianelsener.train.gui.swing.events;
 
 import ch.adrianelsener.odb.api.Odb;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +72,7 @@ public abstract class UpdatePart {
             this.point = point;
         }
 
-        public void toggle(ToggleCallback toggler, Odb<TrackPart> db) {
+        public void toggle(SwitchCallback toggler, Odb<TrackPart> db) {
             db.replace(part -> part.isNear(point), part -> part.toggle(toggler));
         }
 

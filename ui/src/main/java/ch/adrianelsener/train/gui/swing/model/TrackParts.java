@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.gui.swing.model;
 
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -96,7 +96,7 @@ public class TrackParts implements Iterable<TrackPart> {
         }
     }
 
-    public void toggleNextTo(final Point p, final ToggleCallback toggler) {
+    public void toggleNextTo(final Point p, final SwitchCallback toggler) {
         logger.debug("Search next point near {}", p);
         for (final TrackPart part : parts) {
             if (part.isNear(p)) {

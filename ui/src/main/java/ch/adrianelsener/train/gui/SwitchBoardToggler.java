@@ -6,11 +6,9 @@ import ch.adrianelsener.train.driver.SwitchBoardDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.adrianelsener.train.driver.SwitchBoardV1;
-
 import com.google.common.collect.Maps;
 
-public class SwitchBoardToggler implements ToggleCallback {
+public class SwitchBoardToggler implements SwitchCallback {
     private final static Logger logger = LoggerFactory.getLogger(SwitchBoardToggler.class);
     private final Map<BoardId, SwitchBoardDriver> boards = Maps.newHashMap();
 
@@ -24,7 +22,7 @@ public class SwitchBoardToggler implements ToggleCallback {
         boards.get(boardId).turn(switchId.mapToWeicheMitState(isOn));
     }
 
-    public static ToggleCallback create() {
+    public static SwitchCallback create() {
         return new SwitchBoardToggler();
     }
 

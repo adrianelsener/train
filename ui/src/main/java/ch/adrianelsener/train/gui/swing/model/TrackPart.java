@@ -3,13 +3,11 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.odb.api.Datacontainer;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.ImmutableCollection;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import javax.annotation.Nonnull;
 import java.awt.Point;
-import java.util.Collection;
 
 public interface TrackPart extends Nearby, Paintable, Datacontainer {
 
@@ -22,7 +20,7 @@ public interface TrackPart extends Nearby, Paintable, Datacontainer {
      * @param toggler
      * @return
      */
-    @Nonnull TrackPart toggle(@Nonnull ToggleCallback toggler);
+    @Nonnull TrackPart toggle(@Nonnull SwitchCallback toggler);
 
     TrackPart moveTo(Point newLocation);
 

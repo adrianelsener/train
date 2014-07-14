@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.adrianelsener.train.driver.SwitchBoardV1;
 
-public class DummyToggler implements ToggleCallback {
+public class DummyToggler implements SwitchCallback {
     private final static Logger logger = LoggerFactory.getLogger(DummyToggler.class);
 
     @Override
@@ -13,7 +13,7 @@ public class DummyToggler implements ToggleCallback {
         logger.info("Toggle command for board {} switchId {} and state {}", boardId, switchId, on);
     }
 
-    public static ToggleCallback create() {
+    public static SwitchCallback create() {
         return new DummyToggler();
     }
 

@@ -2,9 +2,7 @@ package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.ToggleCallback;
-import ch.adrianelsener.train.gui.swing.model.SwitchTrack;
-import ch.adrianelsener.train.gui.swing.model.Track;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.Collections2;
 import org.hamcrest.FeatureMatcher;
 import org.mockito.Mock;
@@ -26,7 +24,7 @@ public class SwitchTrackTest {
     private final Point startPoint = new Point(30, 30);
     private final Point endPoint = new Point(100, 30);
     @Mock
-    private  ToggleCallback toggler;
+    private SwitchCallback toggler;
     @Mock
     private  Graphics2D g;
 

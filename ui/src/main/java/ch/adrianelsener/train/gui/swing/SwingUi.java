@@ -15,7 +15,7 @@ import ch.adrianelsener.train.driver.SwitchBoardV1;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.DummyToggler;
 import ch.adrianelsener.train.gui.SwitchBoardToggler;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.events.*;
 import ch.adrianelsener.train.gui.swing.model.*;
 import com.google.common.collect.Maps;
@@ -56,7 +56,7 @@ public class SwingUi extends JComponent {
     private Odb<TrackPart> db;
     private final ObjectFactory<TrackPart> objectFactory;
     private TrackPart draftPart = InvisiblePart.create();
-    private ToggleCallback toggler;
+    private SwitchCallback toggler;
     private boolean rasterEnabled = true;
 
     private JFrame frame;

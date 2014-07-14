@@ -2,7 +2,7 @@ package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import com.beust.jcommander.internal.Lists;
 
@@ -60,7 +60,7 @@ public class SwitchTrack extends Track {
     }
 
     @Override
-    public SwitchTrack toggle(final ToggleCallback toggler) {
+    public SwitchTrack toggle(final SwitchCallback toggler) {
         toggler.toggleSwitch(getId(), getBoardId(), trackState.isOn());
         return new SwitchTrack(startPoint, endPoint, trackId, boardId, trackState.other(), trackView);
     }

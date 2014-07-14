@@ -2,7 +2,7 @@ package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.ImmutableCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class InvisiblePart implements TrackPart {
     }
 
     @Override
-    public TrackPart toggle(final ToggleCallback toggler) {
+    public TrackPart toggle(final SwitchCallback toggler) {
         logger.warn("toggle on '{}' has no impact!", this);
         return this;
     }

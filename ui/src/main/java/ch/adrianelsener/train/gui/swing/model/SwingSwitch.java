@@ -2,7 +2,7 @@ package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import com.beust.jcommander.internal.Lists;
@@ -191,7 +191,7 @@ public class SwingSwitch implements TrackPart {
     }
 
     @Override
-    public SwingSwitch toggle(final ToggleCallback toggler) {
+    public SwingSwitch toggle(final SwitchCallback toggler) {
         toggler.toggleSwitch(switchId, boardId, on);
         return invertState();
     }

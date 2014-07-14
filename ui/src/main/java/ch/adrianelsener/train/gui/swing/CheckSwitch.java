@@ -9,7 +9,7 @@ import ch.adrianelsener.train.driver.SwitchBoardV1;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchBoardToggler;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.ToggleCallback;
+import ch.adrianelsener.train.gui.SwitchCallback;
 import org.apache.commons.io.IOUtils;
 
 import javax.swing.JButton;
@@ -83,7 +83,7 @@ public class CheckSwitch extends JFrame implements ActionListener {
         final Config config = new ConfigPropertyReader(configfis).getConfig();
         IOUtils.closeQuietly(configfis);
         final SwitchBoardV1 weichenBoard = new SwitchBoardV1(board, config, 0);
-        final ToggleCallback toggler = SwitchBoardToggler.create();
+        final SwitchCallback toggler = SwitchBoardToggler.create();
         toggler.addBoard(BoardId.fromValue(0), weichenBoard);
 
         state = !state;
