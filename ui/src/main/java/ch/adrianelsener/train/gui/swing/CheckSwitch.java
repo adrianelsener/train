@@ -23,6 +23,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
 
+/**
+ * This will be a simple UI to check a relay card
+ */
 public class CheckSwitch extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
 

@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 
@@ -51,6 +52,11 @@ public class InvisiblePart implements TrackPart {
     public TrackPart toggle(final SwitchCallback toggler) {
         logger.warn("toggle on '{}' has no impact!", this);
         return this;
+    }
+
+    @Override
+    public void applyState(@Nonnull SwitchCallback callback) {
+        logger.info("applyState on '{}' is not available", this);
     }
 
     @Override

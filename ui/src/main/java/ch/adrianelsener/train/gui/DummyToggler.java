@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.gui;
 
+import ch.adrianelsener.train.driver.SwitchBoardDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,7 @@ public class DummyToggler implements SwitchCallback {
     }
 
     @Override
-    public void addBoard(final BoardId fromValue, final SwitchBoardV1 weichenBoard) {
+    public void addBoard(final BoardId fromValue, final SwitchBoardDriver weichenBoard) {
         logger.debug("Nothing to do with {}", weichenBoard);
     }
 

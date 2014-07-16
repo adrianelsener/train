@@ -124,13 +124,13 @@ public class SwingSwitchTest {
         // Act
         final SwingSwitch result = testee.createMirror();
         // Assert
-        final SwingSwitch mirrored = new SwingSwitch(middle, 45, SwitchId.createDummy(), BoardId.createDummy(), false, SwingSwitch.SwitchMode.Real, TrackView.Default);
+        final SwingSwitch mirrored = new RealSwitch(middle, 45, SwitchId.createDummy(), BoardId.createDummy(), false, TrackView.Default);
         assertThat(result, is(equalTo(mirrored)));
     }
 
     @Test
     public void asCsvStringCanBeUsedForFromCsvString() {
-        final SwingSwitch testee = SwingSwitch.create(middle).toggle(toggler).invertView(true);
+        final SwingSwitch testee = RealSwitch.create(middle).toggle(toggler).invertView(true);
         // Act
         final Collection<String> strings = Collections2.transform(testee.getDataToPersist(), input -> input.toString());
         final Iterator<String> iterator = strings.iterator();

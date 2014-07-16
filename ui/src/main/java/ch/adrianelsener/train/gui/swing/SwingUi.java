@@ -93,6 +93,8 @@ public class SwingUi extends JComponent {
                     return SwitchTrack.createSwitchTrack(iterator);
                 case "S":
                     return SwingSwitch.createSwitch(iterator);
+                case "DS":
+                    return SwingSwitch.createSwitch(iterator);
                 default:
                     throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
             }
@@ -413,6 +415,8 @@ public class SwingUi extends JComponent {
 
     @Subscribe
     public void updateSwitches(UpdateStates updateStates) {
-
+        db.getAll().forEach(part -> {
+//            part.toggle()
+        });
     }
 }

@@ -5,7 +5,9 @@ import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import com.beust.jcommander.internal.Lists;
+import com.google.common.annotations.VisibleForTesting;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,6 +34,10 @@ public class SwitchTrack extends Track {
     public static Track createSwitchTrack(final Iterator<String> iterator) {
         return new SwitchTrack(new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())), new Point(
                 Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())), SwitchId.fromValue(iterator.next()), BoardId.fromValue(iterator.next()), TrackState.valueOf(iterator.next()), TrackView.valueOf(iterator.next()));
+    }
+
+    @VisibleForTesting TrackState getTrackState() {
+        return trackState;
     }
 
     @Override
@@ -63,6 +69,11 @@ public class SwitchTrack extends Track {
     public SwitchTrack toggle(final SwitchCallback toggler) {
         toggler.toggleSwitch(getId(), getBoardId(), trackState.isOn());
         return new SwitchTrack(startPoint, endPoint, trackId, boardId, trackState.other(), trackView);
+    }
+
+    @Override
+    public void applyState(@Nonnull SwitchCallback callback) {
+        callback.toggleSwitch(getId(), getBoardId(), getTrackState().isOn());
     }
 
     @Override
@@ -114,7 +125,7 @@ public class SwitchTrack extends Track {
         return TrackView.Inverted == trackView;
     }
 
-    private enum TrackState {
+    enum TrackState {
         On {
             @Override
             public TrackState other() {

@@ -17,6 +17,7 @@ import java.awt.Point;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.both;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -167,7 +168,7 @@ public class SwitchTrackTest {
     public void asCsvStringCanBeUsedForFromCsvString() {
         final Track testee = new SwitchTrack(startPoint, endPoint);
         // Act
-        final Track result = SwitchTrack.fromStringIterable(Collections2.transform(testee.getDataToPersist(), input -> input.toString()));
+        final Track result = SwitchTrack.fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
         // Assert
         assertThat(result, is(equalTo(testee)));
     }
@@ -176,7 +177,7 @@ public class SwitchTrackTest {
     public void asCsvStringCanBeUsedForFromCsvStringToggled() {
         final Track testee = new SwitchTrack(startPoint, endPoint).setBoardId("7").setId("4").toggle(toggler).invertView(true);
         // Act
-        final Track result = SwitchTrack.fromStringIterable(Collections2.transform(testee.getDataToPersist(), input -> input.toString()));
+        final Track result = SwitchTrack.fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
         // Assert
         assertThat(result, is(equalTo(testee)));
     }
@@ -206,6 +207,41 @@ public class SwitchTrackTest {
 
     }
 
+    @Test
+    public void toggle_invokesCallbackCorrectly() {
+        final SwitchTrack testee = new SwitchTrack(startPoint, endPoint).setBoardId("24").setId("42");
+        // act
+        testee.toggle(toggler);
+        // assert
+        verify(toggler).toggleSwitch(testee.getId(), testee.getBoardId(), false);
+    }
+
+    @Test
+    public void toggle_returnsInvertedState() {
+        final SwitchTrack testee = new SwitchTrack(startPoint, endPoint).setBoardId("24").setId("42");
+        // act
+        final SwitchTrack result = testee.toggle(toggler);
+        // assert
+        assertThat(result, both(hasId(testee.getBoardId())).and(hasId(testee.getId())).and(hasState(SwitchTrack.TrackState.On)));
+    }
+
+    @Test
+    public void applyState_invokesCallbackCorrectly() {
+        final SwitchTrack testee = new SwitchTrack(startPoint, endPoint).setBoardId("42").setId("24");
+        // Act
+        testee.applyState(toggler);
+        // assert
+        verify(toggler).toggleSwitch(testee.getId(), testee.getBoardId(), false);
+    }
+
+    private FeatureMatcher<SwitchTrack, SwitchTrack.TrackState> hasState(SwitchTrack.TrackState s) {
+        return new FeatureMatcher<SwitchTrack, SwitchTrack.TrackState>(equalTo(s), "trackState", "trackState") {
+            @Override
+            protected SwitchTrack.TrackState featureValueOf(SwitchTrack o) {
+                return o.getTrackState();
+            }
+        };
+    }
     private FeatureMatcher<SwitchTrack, SwitchId> hasId(SwitchId s) {
         return new FeatureMatcher<SwitchTrack, SwitchId>(equalTo(s), "getId", "getId") {
             @Override

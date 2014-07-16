@@ -1,17 +1,16 @@
 package ch.adrianelsener.train.driver;
 
-import static org.mockito.Mockito.verify;
-
+import ch.adrianelsener.train.config.ConfKey;
+import ch.adrianelsener.train.config.Config;
+import ch.adrianelsener.train.denkovi.Board;
 import ch.adrianelsener.train.denkovi.Pin;
+import ch.adrianelsener.train.denkovi.PinState;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import ch.adrianelsener.train.config.ConfKey;
-import ch.adrianelsener.train.config.Config;
-import ch.adrianelsener.train.denkovi.Board;
-import ch.adrianelsener.train.denkovi.PinState;
+import static org.mockito.Mockito.verify;
 
 public class SpeedBoardV1Test {
     private final Config cfg = createSampleConfig();

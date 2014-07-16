@@ -7,6 +7,7 @@ import com.beust.jcommander.internal.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,7 +20,7 @@ public class SimpleTrack extends Track {
         super(startPoint, endPoint);
     }
 
-    public static Track createSimpleTrack(final Iterator<String> iterator) {
+    public static SimpleTrack createSimpleTrack(final Iterator<String> iterator) {
         return createSimpleTrack(new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())),
                 new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())));
     }
@@ -40,13 +41,13 @@ public class SimpleTrack extends Track {
     }
 
     @Override
-    public TrackPart setId(final String newId) {
+    public SimpleTrack setId(final String newId) {
         logger.info("setId NoOp while Track");
         return this;
     }
 
     @Override
-    public TrackPart setBoardId(final String boardId) {
+    public SimpleTrack setBoardId(final String boardId) {
         logger.info("setBoardId NoOp while Track");
         return this;
     }
@@ -62,9 +63,14 @@ public class SimpleTrack extends Track {
     }
 
     @Override
-    public TrackPart toggle(final SwitchCallback toggler) {
+    public SimpleTrack toggle(final SwitchCallback toggler) {
         logger.debug("No toggle on simple track");
         return this;
+    }
+
+    @Override
+    public void applyState(@Nonnull SwitchCallback callback) {
+        logger.debug("No op on applyStatement since it is a simple track");
     }
 
     @Override

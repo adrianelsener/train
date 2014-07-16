@@ -2,50 +2,33 @@ package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
-import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
-public class SwingSwitch implements TrackPart {
-    private final static Logger logger = LoggerFactory.getLogger(SwingSwitch.class);
-    private final Point center;
-    private final SwitchId switchId;
-    private final TrackView switchView;
-    private final BoardId boardId;
-    private final boolean on;
-    private final double angle;
-    private final Point leftPoint;
-    private final Point topRightPoint;
-    private final Point bottomRightPoint;
-    private final SwitchMode switchMode;
-    private final InRangeCalculator inRangeCalc = InRangeCalculator.create();
+public abstract class SwingSwitch implements TrackPart {
+    protected final Point center;
+    protected final double angle;
+    protected final Point leftPoint;
+    protected final Point topRightPoint;
+    protected final Point bottomRightPoint;
+    protected final InRangeCalculator inRangeCalc = InRangeCalculator.create();
 
-    private SwingSwitch(final Point point, final SwitchMode switchMode) {
-        this(point, 0, SwitchId.createDummy(), BoardId.createDummy(), false, switchMode, TrackView.Default);
+    protected SwingSwitch(final Point point) {
+        this(point, 0);
     }
 
-    SwingSwitch(final Point center, final double angle, final SwitchId id, final BoardId boardId, final boolean state, final SwitchMode switchMode, TrackView switchView) {
+    protected SwingSwitch(final Point center, final double angle) {
         this.center = center;
-        switchId = id;
-        on = state;
-        this.boardId = boardId;
         this.angle = angle;
-        this.switchMode = switchMode;
-        this.switchView = switchView;
 
         final double sin = Math.sin(Math.toRadians(angle));
         final double cos = Math.cos(Math.toRadians(angle));
@@ -67,19 +50,25 @@ public class SwingSwitch implements TrackPart {
 
     }
 
+    @Deprecated // Use direct implementations
     public static SwingSwitch createSwitch(final Iterator<String> iterator) {
         final Point center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
         final Double drawAngle = Double.valueOf(iterator.next());
         final SwitchId readSwitchId = SwitchId.fromValue(iterator.next());
         final BoardId readBoardId = BoardId.fromValue(iterator.next());
         final boolean state = Boolean.parseBoolean(iterator.next());
-        final SwitchMode switchMode = SwitchMode.valueOf(iterator.next());
+        final SwitchMode mode = SwitchMode.valueOf(iterator.next()); // Switchmode no more needed
         final TrackView switchView = TrackView.valueOf(iterator.next());
-        return new SwingSwitch(center, drawAngle, readSwitchId, readBoardId, state, switchMode, switchView);
-
+        switch (mode) {
+            case Real:
+                return new RealSwitch(center, drawAngle, readSwitchId, readBoardId, state, switchView);
+            case Dummy:
+                return new DummySwitch(center, drawAngle);
+        }
+        throw new IllegalArgumentException("Could not determine switch");
     }
 
-    public static SwingSwitch create(final Point point) {
+    public static RealSwitch create(final Point point) {
         return new RealSwitch(point);
     }
 
@@ -103,23 +92,10 @@ public class SwingSwitch implements TrackPart {
         g.drawLine(center.x, center.y, bottomRightPoint.x, bottomRightPoint.y);
     }
 
-    private void drawDirection(final Graphics2D g) {
-        if (SwitchMode.Real.equals(switchMode)) {
-            g.setColor(Color.red);
-            if ((on && (TrackView.Default == switchView)) || ((!on) && (TrackView.Inverted == switchView))) {
-                g.drawLine(center.x, center.y, topRightPoint.x, topRightPoint.y);
-            } else {
-                g.drawLine(center.x, center.y, bottomRightPoint.x, bottomRightPoint.y);
-            }
-        }
-    }
+    protected abstract void drawDirection(final Graphics2D g);
 
-    private void drawLable(final Graphics2D g) {
-        if (SwitchMode.Real.equals(switchMode)) {
-            g.setColor(Color.blue);
-            g.drawString(boardId.toUiString() + "/" + switchId.toUiString(), center.x, center.y - 10);
-        }
-    }
+    protected abstract void drawLable(final Graphics2D g);
+
 
     private int calcY(final double sin, final double cos, final double leftX, final double leftY) {
         return Double.valueOf((-(leftX - center.x) * sin + (leftY - center.y) * cos) + center.y).intValue();
@@ -165,49 +141,15 @@ public class SwingSwitch implements TrackPart {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
     @Override
-    public SwingSwitch createMirror() {
-        return new SwingSwitch(center, angle + 45, switchId, boardId, on, switchMode, switchView);
-    }
-
-    @Override
-    public Collection<Object> getDataToPersist() {
-        final List<Object> objects = Lists.newArrayList();
-        objects.add("S");
-        objects.add(center.x);
-        objects.add(center.y);
-        objects.add(Double.toString(angle));
-        objects.add(switchId.toSerializable());
-        objects.add(boardId.toSerializable());
-        objects.add(on);
-        objects.add(switchMode);
-        objects.add(switchView);
-        return objects;
-    }
-
-    @Override
-    public SwingSwitch toggle(final SwitchCallback toggler) {
-        toggler.toggleSwitch(switchId, boardId, on);
-        return invertState();
-    }
-
-    private SwingSwitch invertState() {
-        return new SwingSwitch(center, angle, switchId, boardId, !on, switchMode, switchView);
-    }
-
-    @Override
-    public SwingSwitch moveTo(final Point newLocation) {
-        return new SwingSwitch(newLocation, angle, switchId, boardId, on, switchMode, switchView);
-    }
-
-    @Override
     public ImmutableCollection<Point> getInConnectors() {
-        return ImmutableList.of( leftPoint);
+        return ImmutableList.of(leftPoint);
     }
 
     @Override
@@ -215,71 +157,26 @@ public class SwingSwitch implements TrackPart {
         return ImmutableList.of(topRightPoint, bottomRightPoint);
     }
 
+
+    protected abstract SwingSwitch createNew(final Point center, final double angle);
+
     @Override
-    public SwitchId getId() {
-        return switchId;
+    public SwingSwitch createMirror() {
+        return createNew(center, angle + 45);
     }
 
     @Override
-    public SwingSwitch setId(final String newId) {
-        return new SwingSwitch(center, angle, SwitchId.fromValue(newId), boardId, on, switchMode, switchView);
-    }
-
-    @Override
-    public BoardId getBoardId() {
-        return boardId;
-    }
-
-    @Override
-    public SwingSwitch setBoardId(final String boardId) {
-        return new SwingSwitch(center, angle, switchId, BoardId.create(boardId), on, switchMode, switchView);
-    }
-
-    @Override
-    public SwingSwitch invertView(final boolean inverted) {
-        final TrackView selected;
-        if (inverted) {
-            selected = TrackView.Inverted;
-        } else {
-            selected = TrackView.Default;
-        }
-        return new SwingSwitch(center, angle, switchId, boardId, on, switchMode, selected);
-    }
-
-    @Override
-    public boolean isInverted() {
-        return TrackView.Inverted == switchView;
+    public SwingSwitch moveTo(final Point newLocation) {
+        return createNew(newLocation, angle);
     }
 
     @Override
     public boolean isPipe() {
-        return SwitchMode.Dummy == switchMode;
+        return true;
     }
 
     enum SwitchMode {
         Real, Dummy
     }
 
-    static class RealSwitch extends SwingSwitch {
-
-        public RealSwitch(final Point point) {
-            super(point, SwitchMode.Real);
-        }
-
-        RealSwitch(final Point center, final double angle, final SwitchId id, final BoardId boardId, final boolean state, final SwitchMode switchMode, final TrackView switchView) {
-            super(center, angle, id, boardId, state, switchMode, switchView);
-        }
-
-    }
-
-    static class DummySwitch extends SwingSwitch {
-        public DummySwitch(final Point point) {
-            super(point, SwitchMode.Dummy);
-        }
-
-        DummySwitch(final Point center, final double angle, final SwitchId id, final BoardId boardId, final boolean state, final SwitchMode switchMode, final TrackView switchView) {
-            super(center, angle, id, boardId, state, switchMode, switchView);
-        }
-
-   }
 }

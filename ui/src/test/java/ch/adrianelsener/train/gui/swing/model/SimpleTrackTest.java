@@ -1,17 +1,21 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableCollection;
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.awt.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class SimpleTrackTest {
     private final Point startPoint = new Point(30, 30);
@@ -160,5 +164,35 @@ public class SimpleTrackTest {
         final ImmutableCollection<Point> result = testee.getOutConnectors();
         // Assert
         assertThat(result, containsInAnyOrder(equalTo(startPoint), equalTo(endPoint)));
+    }
+
+    @Test
+    public void toggle_doesNothingOnCallback() {
+        final SimpleTrack testee = new SimpleTrack(startPoint, endPoint);
+        final SwitchCallback callback = mock(SwitchCallback.class);
+        // act
+        final SimpleTrack result = testee.toggle(callback);
+        // assert
+        verifyZeroInteractions(callback);
+    }
+
+    @Test
+    public void toggle_returnsSameObject() {
+        final SimpleTrack testee = new SimpleTrack(startPoint, endPoint);
+        final SwitchCallback callback = mock(SwitchCallback.class);
+        // act
+        final SimpleTrack result = testee.toggle(callback);
+        // assert
+        assertThat(result, is(sameInstance(testee)));
+    }
+
+    @Test
+    public void applyState_doesNothingOnCallbac() {
+        final Track testee = new SimpleTrack(startPoint, endPoint);
+        final SwitchCallback callback = mock(SwitchCallback.class);
+        // act
+        testee.applyState(callback);
+        // assert
+        verifyZeroInteractions(callback);
     }
 }

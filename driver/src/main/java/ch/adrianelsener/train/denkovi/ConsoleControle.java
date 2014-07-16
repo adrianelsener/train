@@ -27,23 +27,23 @@ public class ConsoleControle implements Runnable {
             int amount = action.amount;
             board.set(Pin._15.off());
             switch (action.type) {
-            case FAHRT:
-                toggle(Pin._02, Math.abs(amount));
-                break;
-            case WEICHE:
-                Switch2RelaysMapping relaysMapping = Switch2RelaysMapping.fromInput(amount);
-                for (PinState relayState : relaysMapping.relayState) {
-                    board.set(relayState);
-                    sleep(50);
-                }
-                toggle(Pin._15, 1);
-                break;
-            case NOOP:
-                System.out.println("NOOP");
-                break;
-            case EXIT:
-                System.out.println("Beendet");
-                System.exit(0);
+                case FAHRT:
+                    toggle(Pin._02, Math.abs(amount));
+                    break;
+                case WEICHE:
+                    Switch2RelaysMapping relaysMapping = Switch2RelaysMapping.fromInput(amount);
+                    for (PinState relayState : relaysMapping.relayState) {
+                        board.set(relayState);
+                        sleep(50);
+                    }
+                    toggle(Pin._15, 1);
+                    break;
+                case NOOP:
+                    System.out.println("NOOP");
+                    break;
+                case EXIT:
+                    System.out.println("Beendet");
+                    System.exit(0);
             }
         }
     }

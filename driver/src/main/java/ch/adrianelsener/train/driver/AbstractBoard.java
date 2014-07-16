@@ -1,12 +1,11 @@
 package ch.adrianelsener.train.driver;
 
-import ch.adrianelsener.train.denkovi.Pin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.denkovi.Board;
+import ch.adrianelsener.train.denkovi.Pin;
 import ch.adrianelsener.train.denkovi.PinState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class AbstractBoard {
     private final static Logger logger = LoggerFactory.getLogger(AbstractBoard.class);

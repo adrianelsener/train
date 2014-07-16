@@ -4,7 +4,7 @@ import ch.adrianelsener.train.config.ConfKey;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.denkovi.Board;
 
-public class OccupiedBoardBeta extends AbstractBoard implements OccupiedBoardDriver{
+public class OccupiedBoardBeta extends AbstractBoard implements OccupiedBoardDriver {
     private final Config boardCfg;
 
     public OccupiedBoardBeta(Config cfg, Board board) {

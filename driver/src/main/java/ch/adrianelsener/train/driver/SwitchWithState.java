@@ -48,6 +48,7 @@ public enum SwitchWithState {
             }
 
         };
+
         public abstract PinState forPin(Pin pin);
     }
 

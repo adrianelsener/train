@@ -31,7 +31,7 @@ public abstract class Track implements TrackPart {
         this.endPoint = endPoint;
     }
 
-    public static Track createSimpleTrack(final Point startPoint, final Point endPoint) {
+    public static SimpleTrack createSimpleTrack(final Point startPoint, final Point endPoint) {
         return new SimpleTrack(startPoint, endPoint);
     }
 

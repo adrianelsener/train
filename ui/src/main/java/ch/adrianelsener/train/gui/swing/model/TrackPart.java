@@ -18,10 +18,21 @@ public interface TrackPart extends Nearby, Paintable, Datacontainer {
      * To change the physical state, the ToggleCallback is used to do that.
      *
      * @param toggler
-     * @return
+     * @return the new part with changed state
      */
     @Nonnull TrackPart toggle(@Nonnull SwitchCallback toggler);
 
+    /**
+     * Applies the current state to SwitchCallback
+     * @param callback
+     */
+    void applyState(@Nonnull SwitchCallback callback);
+
+    /**
+     * Moves a part to the new location
+     * @param newLocation
+     * @return the moved part
+     */
     TrackPart moveTo(Point newLocation);
 
     /**
