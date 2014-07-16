@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/csvdb" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/driver" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/odb" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/testngrules" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmldb" charset="UTF-8" />
+  </component>
 </project>
 
