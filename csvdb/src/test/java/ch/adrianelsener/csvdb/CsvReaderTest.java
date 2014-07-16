@@ -64,16 +64,4 @@ public class CsvReaderTest extends RulesForTestNg {
         }
     }
 
-    private static class TemporaryFolderWraper extends TemporaryFolder {
-        @Override
-        public void before() throws Throwable {
-            super.before();
-        }
-
-        @Override
-        public void after() {
-            super.after();
-        }
-    }
-
 }
