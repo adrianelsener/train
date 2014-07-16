@@ -27,9 +27,13 @@ public class CsvReader<T extends Datacontainer> implements DatabaseStorage<T> {
     private final File file;
     private final ObjectFactory<T> objectFactory;
 
-    public CsvReader(final File file, final ObjectFactory<T> objectFactory) {
+    private CsvReader(final File file, final ObjectFactory<T> objectFactory) {
         this.file = file;
         this.objectFactory = objectFactory;
+    }
+
+    public static <T extends Datacontainer> CsvReader<T> create(final File file, final ObjectFactory<T> objectFactory) {
+        return new CsvReader<>(file, objectFactory);
     }
 
     @Override

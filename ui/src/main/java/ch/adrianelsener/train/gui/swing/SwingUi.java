@@ -229,8 +229,9 @@ public class SwingUi extends JComponent {
     }
 
     private JMenuItem createResendSwitchStates() {
-        final JMenuItem resendSwitchStates = 
-
+        final JMenuItem resendSwitchStates = new JMenuItem("Resend switch states");
+        resendSwitchStates.addActionListener(e -> bus.post(UpdateAllSwitches.create()));
+        return resendSwitchStates;
     }
 
     private JMenu createMenuSettings() {
@@ -307,7 +308,7 @@ public class SwingUi extends JComponent {
                 final File selectedFile;
                 selectedFile = fileChooser.getSelectedFile();
                 currentShowing = Optional.of(selectedFile);
-                final CsvReader<TrackPart> reader = new CsvReader<>(selectedFile, objectFactory);
+                final CsvReader<TrackPart> reader = CsvReader.create(selectedFile, objectFactory);
                 db.setStorage(reader).init();
                 repaint();
             }
@@ -346,7 +347,7 @@ public class SwingUi extends JComponent {
             final JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                 final File selectedFile = fileChooser.getSelectedFile();
-                db.setStorage(new CsvReader<>(selectedFile, objectFactory)).flush();
+                db.setStorage(CsvReader.create(selectedFile, objectFactory)).flush();
             }
         });
         return save;
@@ -374,6 +375,14 @@ public class SwingUi extends JComponent {
     }
 
     private Optional<Point> creationStartPoint = Optional.empty();
+
+    @Subscribe
+    public void updateAllParts(UpdateAllSwitches updateAll) {
+        db.getAll().forEach(part -> {
+            logger.debug("Update state for {}", part);
+            part.applyState(toggler);
+        });
+    }
 
     @Subscribe
     public void updateDraftPart(UpdateDraftPart newDraftPart) {

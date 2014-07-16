@@ -35,7 +35,7 @@ public class CsvReaderTest extends RulesForTestNg {
         final ObjectFactory<Sample> objectFactory = mock(ObjectFactory.class);
         final Sample dummy = mock(Sample.class);
         when(objectFactory.createFrom(anyCollectionOf(String.class))).thenReturn(dummy);
-        final CsvReader<Sample> testee = new CsvReader<Sample>(file, objectFactory);
+        final CsvReader<Sample> testee = CsvReader.create(file, objectFactory);
         // Act
         final Collection<Sample> result = testee.loadFromStorage();
         // Assert
@@ -47,7 +47,7 @@ public class CsvReaderTest extends RulesForTestNg {
     public void testSaveToFile() throws Exception {
         tmpFolder.create();
         final File file = tmpFolder.newFile();
-        final CsvReader<Datacontainer> testee = new CsvReader<Datacontainer>(file, null);
+        final CsvReader<Datacontainer> testee = CsvReader.create(file, null);
         final Datacontainer sampleToWrite = new Sample();
         // Act
         testee.saveToStorage(Lists.newArrayList(sampleToWrite));
