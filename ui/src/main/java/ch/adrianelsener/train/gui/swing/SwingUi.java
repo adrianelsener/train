@@ -94,7 +94,7 @@ public class SwingUi extends JComponent {
                 case "S":
                     return SwingSwitch.createSwitch(iterator);
                 case "DS":
-                    return SwingSwitch.createSwitch(iterator);
+                    return DummySwitch.create(iterator);
                 default:
                     throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
             }
@@ -217,7 +217,20 @@ public class SwingUi extends JComponent {
         menuBar.add(view);
         final JMenu settings = createMenuSettings();
         menuBar.add(settings);
+        final JMenu tools = createMenuTools();
+        menuBar.add(tools);
         return menuBar;
+    }
+
+    private JMenu createMenuTools() {
+        final JMenu toolsMenu = new JMenu("Tools");
+        toolsMenu.add(createResendSwitchStates());
+        return toolsMenu;
+    }
+
+    private JMenuItem createResendSwitchStates() {
+        final JMenuItem resendSwitchStates = 
+
     }
 
     private JMenu createMenuSettings() {

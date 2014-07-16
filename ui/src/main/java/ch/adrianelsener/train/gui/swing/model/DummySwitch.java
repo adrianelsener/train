@@ -9,7 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class DummySwitch extends SwingSwitch {
     private final static Logger logger = LoggerFactory.getLogger(ch.adrianelsener.train.gui.swing.model.DummySwitch.class);
@@ -17,18 +18,7 @@ public class DummySwitch extends SwingSwitch {
     public static ch.adrianelsener.train.gui.swing.model.DummySwitch create(Iterator<String> iterator) {
         final Point center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
         final Double drawAngle = Double.valueOf(iterator.next());
-        iterator.next(); // SwitchId
-        iterator.next(); // BoardId
-        iterator.next(); // State
-        final SwitchMode mode = SwitchMode.valueOf(iterator.next()); // Switchmode no more needed
-        iterator.next(); // SwitchView
-        switch (mode) {
-            case Dummy:
-                return new ch.adrianelsener.train.gui.swing.model.DummySwitch(center, drawAngle);
-            default:
-                throw new IllegalArgumentException("Wrong Type for dummy 'DS'");
-        }
-
+        return new ch.adrianelsener.train.gui.swing.model.DummySwitch(center, drawAngle);
     }
 
     public DummySwitch(final Point point) {
@@ -73,15 +63,10 @@ public class DummySwitch extends SwingSwitch {
     @Override
     public Collection<Object> getDataToPersist() {
         final java.util.List<Object> objects = Lists.newArrayList();
-        objects.add("S");
+        objects.add("DS");
         objects.add(super.center.x);
         objects.add(super.center.y);
         objects.add(Double.toString(super.angle));
-        objects.add("");
-        objects.add("");
-        objects.add("");
-        objects.add(SwitchMode.Dummy);
-        objects.add("");
         return objects;
     }
 
