@@ -231,7 +231,7 @@ public class SwitchTrackTest {
         // Act
         testee.applyState(toggler);
         // assert
-        verify(toggler).toggleSwitch(testee.getId(), testee.getBoardId(), false);
+        verify(toggler).toggleSwitch(testee.getId(), testee.getBoardId(), true);
     }
 
     private FeatureMatcher<SwitchTrack, SwitchTrack.TrackState> hasState(SwitchTrack.TrackState s) {
