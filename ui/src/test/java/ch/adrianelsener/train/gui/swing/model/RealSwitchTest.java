@@ -1,10 +1,13 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.testing.MockInitializer;
+import ch.adrianelsener.testing.RulesForTestNg;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import com.google.common.collect.Collections2;
+import org.junit.Rule;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -24,7 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class SwingSwitchTest {
+public class RealSwitchTest extends RulesForTestNg {
     private final Point middle = new Point(30, 30);
     @Mock
     private Graphics2D g;
@@ -46,7 +49,7 @@ public class SwingSwitchTest {
 
     @Test
     public void nearIsInside() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final boolean result = testee.isNear(middle);
         // Assert
@@ -55,7 +58,7 @@ public class SwingSwitchTest {
 
     @Test
     public void nearIsOutsideOnTop() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final boolean result = testee.isNear(new Point(30, 30 - 11));
         // Assert
@@ -64,7 +67,7 @@ public class SwingSwitchTest {
 
     @Test
     public void nearIsOutsideOnBottom() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final boolean result = testee.isNear(new Point(30, 30 + 11));
         // Assert
@@ -73,7 +76,7 @@ public class SwingSwitchTest {
 
     @Test
     public void nearIsOutsideOnLeft() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final boolean result = testee.isNear(new Point(30 - 11, 30));
         // Assert
@@ -82,7 +85,7 @@ public class SwingSwitchTest {
 
     @Test
     public void nearIsOutsideOnRight() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final boolean result = testee.isNear(new Point(30 + 16, 30));
         // Assert
@@ -91,7 +94,7 @@ public class SwingSwitchTest {
 
     @Test
     public void getNextConnectionpoint_Left() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final Point result = testee.getNextConnectionpoint(new Point(27, 30));
         // Assert
@@ -100,7 +103,7 @@ public class SwingSwitchTest {
 
     @Test
     public void getNextConnectionpoint_RightTop() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final Point result = testee.getNextConnectionpoint(new Point(36, 32));
         // Assert
@@ -111,7 +114,7 @@ public class SwingSwitchTest {
     @Test
     public void getNextConnectionpoint_RightBottom() {
         // new Point(30, 30)
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final Point result = testee.getNextConnectionpoint(new Point(36, 28));
         // Assert
@@ -120,7 +123,7 @@ public class SwingSwitchTest {
 
     @Test
     public void createMirrorReturnsMirrored() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         // Act
         final SwingSwitch result = testee.createMirror();
         // Assert
@@ -130,7 +133,7 @@ public class SwingSwitchTest {
 
     @Test
     public void asCsvStringCanBeUsedForFromCsvString() {
-        final SwingSwitch testee = RealSwitch.create(middle).toggle(toggler).invertView(true);
+        final SwingSwitch testee = new RealSwitch(middle).toggle(toggler).invertView(true);
         // Act
         final Collection<String> strings = Collections2.transform(testee.getDataToPersist(), input -> input.toString());
         final Iterator<String> iterator = strings.iterator();
@@ -142,7 +145,7 @@ public class SwingSwitchTest {
 
     @Test
     public void regularDrawing() {
-        final SwingSwitch testee = SwingSwitch.create(middle);
+        final SwingSwitch testee = new RealSwitch(middle);
         testee.paint(g);
         // Assert
         verify(g, times(4)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
@@ -154,7 +157,7 @@ public class SwingSwitchTest {
 
     @Test
     public void toggledDrawing() {
-        final SwingSwitch testee = SwingSwitch.create(middle).toggle(toggler);
+        final SwingSwitch testee = new RealSwitch(middle).toggle(toggler);
         testee.paint(g);
         // Assert
         verify(g, times(4)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
@@ -166,7 +169,7 @@ public class SwingSwitchTest {
 
     @Test
     public void testInvertedView() {
-        final SwingSwitch testee = SwingSwitch.create(middle).invertView(true);
+        final SwingSwitch testee = new RealSwitch(middle).invertView(true);
         testee.paint(g);
         // Assert
         verify(g, times(4)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());

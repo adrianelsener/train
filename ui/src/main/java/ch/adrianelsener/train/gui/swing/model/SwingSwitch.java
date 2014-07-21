@@ -4,6 +4,7 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
+import ch.adrianelsener.train.gui.swing.common.RotationCalculator;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,7 +30,7 @@ public abstract class SwingSwitch implements TrackPart {
     protected SwingSwitch(final Point center, final double angle) {
         this.center = center;
         this.angle = angle;
-
+        final RotationCalculator rotationCalculator = new RotationCalculator(center, angle);
         final double sin = Math.sin(Math.toRadians(angle));
         final double cos = Math.cos(Math.toRadians(angle));
 
@@ -68,20 +69,11 @@ public abstract class SwingSwitch implements TrackPart {
         throw new IllegalArgumentException("Could not determine switch");
     }
 
-    public static RealSwitch create(final Point point) {
-        return new RealSwitch(point);
-    }
-
-    public static SwingSwitch createDummy(final Point point) {
-        return new DummySwitch(point);
-    }
-
     @Override
     public void paint(final Graphics2D g) {
         drawLable(g);
         drawSwitch(g);
         drawDirection(g);
-
     }
 
     private void drawSwitch(final Graphics2D g) {

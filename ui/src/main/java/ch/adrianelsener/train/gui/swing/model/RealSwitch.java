@@ -63,6 +63,7 @@ public class RealSwitch extends SwingSwitch {
         callback.toggleSwitch(switchId, boardId, on);
     }
 
+    @Override
     protected void drawDirection(final Graphics2D g) {
         g.setColor(Color.red);
         if ((on && (TrackView.Default == switchView)) || ((!on) && (TrackView.Inverted == switchView))) {

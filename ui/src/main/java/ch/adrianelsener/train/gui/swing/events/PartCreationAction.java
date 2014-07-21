@@ -1,8 +1,6 @@
 package ch.adrianelsener.train.gui.swing.events;
 
-import ch.adrianelsener.train.gui.swing.model.SwingSwitch;
-import ch.adrianelsener.train.gui.swing.model.Track;
-import ch.adrianelsener.train.gui.swing.model.TrackPart;
+import ch.adrianelsener.train.gui.swing.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +65,7 @@ public abstract class PartCreationAction extends CreationAction{
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final SwingSwitch swingSwitch = SwingSwitch.create(getEndPoint());
+            final SwingSwitch swingSwitch = new RealSwitch(getEndPoint());
             logger.debug("created switch '{}' to send to ui", swingSwitch);
             return swingSwitch;
         }
@@ -81,7 +79,7 @@ public abstract class PartCreationAction extends CreationAction{
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final SwingSwitch dummySwitch = SwingSwitch.createDummy(getEndPoint());
+            final SwingSwitch dummySwitch = new DummySwitch(getEndPoint());
             logger.debug("created dummy switch '{}' to send to ui", dummySwitch);
             return dummySwitch;
         }
