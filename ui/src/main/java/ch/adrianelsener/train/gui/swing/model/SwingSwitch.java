@@ -153,7 +153,7 @@ public abstract class SwingSwitch implements TrackPart {
     protected abstract SwingSwitch createNew(final Point center, final double angle);
 
     @Override
-    public SwingSwitch createMirror() {
+    public SwingSwitch rotate() {
         return createNew(center, angle + 45);
     }
 

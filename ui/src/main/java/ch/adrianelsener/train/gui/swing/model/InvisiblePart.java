@@ -39,8 +39,8 @@ public class InvisiblePart implements TrackPart {
     }
 
     @Override
-    public TrackPart createMirror() {
-        throw new IllegalStateException("createMirror is not available on InvisiblePart");
+    public TrackPart rotate() {
+        throw new IllegalStateException("rotate is not available on InvisiblePart");
     }
 
     @Override

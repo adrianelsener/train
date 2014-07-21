@@ -45,7 +45,7 @@ public class TripleSwitch implements TrackPart {
     }
 
     @Override
-    public TrackPart createMirror() {
+    public TrackPart rotate() {
         return null;
     }
 

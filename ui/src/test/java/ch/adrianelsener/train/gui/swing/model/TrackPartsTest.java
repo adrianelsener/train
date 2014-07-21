@@ -108,14 +108,14 @@ public class TrackPartsTest {
         final TrackPart part1 = createMockTrackPart();
         final TrackPart part2 = createMockTrackPart();
         when(part2.isNear(Mockito.any(Point.class))).thenReturn(true);
-        when(part2.createMirror()).thenReturn(part1);
+        when(part2.rotate()).thenReturn(part1);
         testee.add(part1);
         testee.add(part2);
         final Point resPoint = new Point(6, 6);
         // Act
         testee.mirrorNextTo(resPoint);
         // Assert
-        verify(part2).createMirror();
+        verify(part2).rotate();
     }
 
     @Test
@@ -124,7 +124,7 @@ public class TrackPartsTest {
         final TrackPart part1 = createMockTrackPart();
         final TrackPart part2 = createMockTrackPart();
         when(part2.isNear(Mockito.any(Point.class))).thenReturn(true);
-        when(part2.createMirror()).thenReturn(part1);
+        when(part2.rotate()).thenReturn(part1);
         testee.add(part2);
         final Point resPoint = new Point(6, 6);
         // Act
@@ -171,7 +171,7 @@ public class TrackPartsTest {
         final TrackPart part1 = createMockTrackPart();
         final TrackPart part2 = createMockTrackPart();
         when(part2.isNear(Mockito.any(Point.class))).thenReturn(true);
-        when(part2.createMirror()).thenReturn(part1);
+        when(part2.rotate()).thenReturn(part1);
         testee.add(part1);
         testee.add(part2);
         final Point resPoint = new Point(6, 6);

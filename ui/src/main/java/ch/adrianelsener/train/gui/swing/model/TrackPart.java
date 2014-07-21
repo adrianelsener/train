@@ -11,7 +11,7 @@ import java.awt.Point;
 
 public interface TrackPart extends Nearby, Paintable, Datacontainer {
 
-    TrackPart createMirror();
+    TrackPart rotate();
 
     /**
      * Toggles the part. This means, the drawn part will change its state and the physical has to change the state.

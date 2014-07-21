@@ -3,7 +3,6 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableCollection;
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.awt.*;
@@ -135,7 +134,7 @@ public class SimpleTrackTest {
     public void createMirrorReturnsItself() {
         final Track testee = new SimpleTrack(startPoint, endPoint);
         // Act
-        final Track result = testee.createMirror();
+        final Track result = testee.rotate();
         // Assert
         assertThat(result, is(equalTo(testee)));
     }

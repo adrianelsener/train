@@ -141,7 +141,7 @@ public abstract class Track implements TrackPart {
     }
 
     @Override
-    public Track createMirror() {
+    public Track rotate() {
         return this;
     }
 

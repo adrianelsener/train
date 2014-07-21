@@ -159,7 +159,7 @@ public class SwitchTrackTest {
     public void createMirrorReturnsItself() {
         final Track testee = new SwitchTrack(startPoint, endPoint);
         // Act
-        final Track result = testee.createMirror();
+        final Track result = testee.rotate();
         // Assert
         assertThat(result, is(equalTo(testee)));
     }

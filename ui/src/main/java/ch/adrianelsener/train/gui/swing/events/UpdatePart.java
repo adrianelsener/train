@@ -47,7 +47,7 @@ public abstract class UpdatePart {
         @Override
         public void doTransformation(Odb<TrackPart> db, PointCalculator pointCalc, Optional<Point> startPoint) {
             final Point rasterPoint = pointCalc.calculatePoint(getPoint());
-            db.replace(part -> part.isNear(rasterPoint), TrackPart::createMirror);
+            db.replace(part -> part.isNear(rasterPoint), TrackPart::rotate);
         }
     }
 

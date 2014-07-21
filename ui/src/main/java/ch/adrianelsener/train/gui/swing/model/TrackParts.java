@@ -48,7 +48,7 @@ public class TrackParts implements Iterable<TrackPart> {
         logger.debug("Mirroring object next to {}", point);
         for (final TrackPart part : parts) {
             if (part.isNear(point)) {
-                final TrackPart mirrored = part.createMirror();
+                final TrackPart mirrored = part.rotate();
                 replace(part, mirrored);
                 break;
             }

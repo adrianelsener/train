@@ -1,13 +1,11 @@
 package ch.adrianelsener.train.gui.swing.model;
 
-import ch.adrianelsener.testing.MockInitializer;
 import ch.adrianelsener.testing.RulesForTestNg;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import com.google.common.collect.Collections2;
-import org.junit.Rule;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -125,7 +123,7 @@ public class RealSwitchTest extends RulesForTestNg {
     public void createMirrorReturnsMirrored() {
         final SwingSwitch testee = new RealSwitch(middle);
         // Act
-        final SwingSwitch result = testee.createMirror();
+        final SwingSwitch result = testee.rotate();
         // Assert
         final SwingSwitch mirrored = new RealSwitch(middle, 45, SwitchId.createDummy(), BoardId.createDummy(), false, TrackView.Default);
         assertThat(result, is(equalTo(mirrored)));
