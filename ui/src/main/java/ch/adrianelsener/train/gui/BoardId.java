@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.gui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,6 +25,10 @@ public abstract class BoardId implements PersistableId {
     public abstract String toSerializable();
 
     public abstract String toUiString();
+
+    public static BoardId create(String first, String second) {
+        return new MultiBoardId(first, second);
+    }
 
     private static class DummyBoardId extends BoardId {
 
@@ -64,7 +69,9 @@ public abstract class BoardId implements PersistableId {
     }
 
     public static BoardId fromValue(final String idOrNot) {
-        if (NumberUtils.isNumber(idOrNot)) {
+        if (StringUtils.contains(idOrNot, "/")) {
+            return new MultiBoardId(idOrNot);
+        } else if (NumberUtils.isNumber(idOrNot)) {
             return create(idOrNot);
         } else {
             return createDummy();
@@ -91,4 +98,30 @@ public abstract class BoardId implements PersistableId {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
     }
 
+    private static class MultiBoardId extends BoardId {
+        private final String first;
+        private final String second;
+
+        public MultiBoardId(String first, String second) {
+            super();
+            this.first = first;
+            this.second = second;
+        }
+
+        public MultiBoardId(String idOrNot) {
+            final String[] strings = idOrNot.split("/");
+            this.first = strings[0];
+            this.second = strings[1];
+        }
+
+        @Override
+        public String toSerializable() {
+            return first + "/" + second;
+        }
+
+        @Override
+        public String toUiString() {
+            return first + "/" + second;
+        }
+    }
 }
