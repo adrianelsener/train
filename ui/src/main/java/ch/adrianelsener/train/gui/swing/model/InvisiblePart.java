@@ -4,6 +4,7 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,13 +81,13 @@ public class InvisiblePart implements TrackPart {
     }
 
     @Override
-    public SwitchId getId() {
-        return SwitchId.createDummy();
+    public Collection<SwitchId> getId() {
+        return Lists.newArrayList(SwitchId.createDummy());
     }
 
     @Override
-    public BoardId getBoardId() {
-        return BoardId.createDummy();
+    public Collection<BoardId> getBoardId() {
+        return Lists.newArrayList(BoardId.createDummy());
     }
 
     @Override

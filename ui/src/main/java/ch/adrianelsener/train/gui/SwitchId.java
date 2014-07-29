@@ -7,10 +7,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class SwitchId implements PersistableId {
-
+    private final static Logger logger = LoggerFactory.getLogger(SwitchId.class);
     public abstract SwitchWithState mapToWeicheMitState(final boolean isOn);
 
     private static class NumberbasedSwitchId extends SwitchId {
@@ -68,6 +70,11 @@ public abstract class SwitchId implements PersistableId {
             return "Na";
         }
 
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        }
+
     }
 
     public static SwitchId create(final int id) {
@@ -79,6 +86,7 @@ public abstract class SwitchId implements PersistableId {
     }
 
     public static SwitchId fromValue(final String idOrNot) {
+        logger.debug("create SwitchId from '{}'", idOrNot);
         if (NumberUtils.isNumber(idOrNot)) {
             return create(NumberUtils.toInt(idOrNot));
         } else {

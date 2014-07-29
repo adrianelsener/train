@@ -4,8 +4,8 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.TrackView;
-import com.beust.jcommander.internal.Lists;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -46,8 +46,8 @@ public class SwitchTrack extends Track {
     }
 
     @Override
-    public SwitchId getId() {
-        return trackId;
+    public Collection<SwitchId> getId() {
+        return Lists.newArrayList(trackId);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class SwitchTrack extends Track {
     }
 
     @Override
-    public BoardId getBoardId() {
-        return boardId;
+    public Collection<BoardId> getBoardId() {
+        return Lists.newArrayList(boardId);
     }
 
     @Override
@@ -65,15 +65,16 @@ public class SwitchTrack extends Track {
         return new SwitchTrack(startPoint, endPoint, trackId, BoardId.fromValue(boardId), trackState, trackView);
     }
 
+    @Nonnull
     @Override
-    public SwitchTrack toggle(final SwitchCallback toggler) {
-        toggler.toggleSwitch(getId(), getBoardId(), trackState.isOn());
+    public SwitchTrack toggle(@Nonnull final SwitchCallback toggler) {
+        toggler.toggleSwitch(trackId, boardId, trackState.isOn());
         return new SwitchTrack(startPoint, endPoint, trackId, boardId, trackState.other(), trackView);
     }
 
     @Override
     public void applyState(@Nonnull SwitchCallback callback) {
-        callback.toggleSwitch(getId(), getBoardId(), getTrackState().isOn());
+        callback.toggleSwitch(trackId, boardId, getTrackState().isOn());
     }
 
     @Override
@@ -96,14 +97,14 @@ public class SwitchTrack extends Track {
         int centerY = Math.max(getStart().y, getEnd().y) - (Math.abs(getStart().y - getEnd().y) / 2) + 5;
 
         g.setColor(Color.black);
-        g.drawString(getBoardId().toUiString() + "/" + getId().toUiString(), centerX - 10, centerY - 10);
+        g.drawString(boardId.toUiString() + "/" + trackId.toUiString(), centerX - 10, centerY - 10);
     }
 
     @Override
     protected Collection<Object> individualStorageProperties() {
         final List<Object> ownProps = Lists.newArrayList();
-        ownProps.add(getId().toSerializable());
-        ownProps.add(getBoardId().toSerializable());
+        ownProps.add(trackId.toSerializable());
+        ownProps.add(boardId.toSerializable());
         ownProps.add(trackState);
         ownProps.add(trackView);
         return ownProps;

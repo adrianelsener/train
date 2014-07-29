@@ -1,5 +1,8 @@
 package ch.adrianelsener.train.gui.swing.common;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.awt.*;
 
 public class RotationCalculator {
@@ -27,5 +30,10 @@ public class RotationCalculator {
 
     public Point calc(int x, int y) {
         return calc(new Point(x, y));
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

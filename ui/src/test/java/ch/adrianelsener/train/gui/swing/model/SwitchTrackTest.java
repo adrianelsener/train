@@ -13,11 +13,14 @@ import org.testng.annotations.Test;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -213,7 +216,7 @@ public class SwitchTrackTest {
         // act
         testee.toggle(toggler);
         // assert
-        verify(toggler).toggleSwitch(testee.getId(), testee.getBoardId(), false);
+        verify(toggler).toggleSwitch(SwitchId.create(42), BoardId.create(24), false);
     }
 
     @Test
@@ -222,7 +225,7 @@ public class SwitchTrackTest {
         // act
         final SwitchTrack result = testee.toggle(toggler);
         // assert
-        assertThat(result, both(hasId(testee.getBoardId())).and(hasId(testee.getId())).and(hasState(SwitchTrack.TrackState.On)));
+        assertThat(result, both(hasId(BoardId.create(24))).and(hasId(SwitchId.create(42))).and(hasState(SwitchTrack.TrackState.On)));
     }
 
     @Test
@@ -231,7 +234,7 @@ public class SwitchTrackTest {
         // Act
         testee.applyState(toggler);
         // assert
-        verify(toggler).toggleSwitch(testee.getId(), testee.getBoardId(), false);
+        verify(toggler).toggleSwitch(SwitchId.create(24), BoardId.create(42), false);
     }
 
     private FeatureMatcher<SwitchTrack, SwitchTrack.TrackState> hasState(SwitchTrack.TrackState s) {
@@ -242,19 +245,19 @@ public class SwitchTrackTest {
             }
         };
     }
-    private FeatureMatcher<SwitchTrack, SwitchId> hasId(SwitchId s) {
-        return new FeatureMatcher<SwitchTrack, SwitchId>(equalTo(s), "getId", "getId") {
+    private FeatureMatcher<SwitchTrack, Collection<SwitchId>> hasId(SwitchId s) {
+        return new FeatureMatcher<SwitchTrack, Collection<SwitchId>>(containsInAnyOrder(s), "getId", "getId") {
             @Override
-            protected SwitchId featureValueOf(SwitchTrack o) {
+            protected Collection<SwitchId> featureValueOf(SwitchTrack o) {
                 return o.getId();
             }
         };
     }
 
-    private FeatureMatcher<SwitchTrack, BoardId> hasId(BoardId s) {
-        return new FeatureMatcher<SwitchTrack, BoardId>(equalTo(s), "getBoardId", "getBoardId") {
+    private FeatureMatcher<SwitchTrack, Collection<BoardId>> hasId(BoardId s) {
+        return new FeatureMatcher<SwitchTrack, Collection<BoardId>>(contains(s), "getBoardId", "getBoardId") {
             @Override
-            protected BoardId featureValueOf(SwitchTrack o) {
+            protected Collection<BoardId> featureValueOf(SwitchTrack o) {
                 return o.getBoardId();
             }
         };

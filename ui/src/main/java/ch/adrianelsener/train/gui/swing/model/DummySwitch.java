@@ -3,7 +3,7 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
-import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +71,8 @@ public class DummySwitch extends SwingSwitch {
     }
 
     @Override
-    public SwitchId getId() {
-        return SwitchId.createDummy();
+    public Collection<SwitchId> getId() {
+        return Lists.newArrayList(SwitchId.createDummy());
     }
 
 
@@ -93,8 +93,8 @@ public class DummySwitch extends SwingSwitch {
     }
 
     @Override
-    public BoardId getBoardId() {
-        return BoardId.createDummy();
+    public Collection<BoardId> getBoardId() {
+        return Lists.newArrayList(BoardId.createDummy());
     }
 
 }

@@ -3,6 +3,7 @@ package ch.adrianelsener.train.gui.swing;
 import ch.adrianelsener.train.gui.swing.events.UpdateApplyListener;
 import ch.adrianelsener.train.gui.swing.events.UpdateDetails;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
+import com.google.common.base.Joiner;
 import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;
@@ -70,8 +71,13 @@ public class DetailWindow extends JFrame {
     }
 
     public void setDetails(final TrackPart details) {
-        id.setText(details.getId().toUiString());
-        board.setText(details.getBoardId().toUiString());
+        final StringBuilder uiString = new StringBuilder();
+        details.getId().forEach(id -> uiString.append(id.toUiString()).append("/"));
+        id.setText(uiString.deleteCharAt(uiString.length()).toString());
+
+        final StringBuilder boardIdUi = new StringBuilder();
+        details.getBoardId().forEach(id -> boardIdUi.append(id.toUiString()).append("/"));
+        board.setToolTipText(boardIdUi.deleteCharAt(boardIdUi.length()).toString());
         inverted.setSelected(details.isInverted());
     }
 

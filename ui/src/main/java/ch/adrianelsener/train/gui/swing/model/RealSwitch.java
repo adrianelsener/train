@@ -4,11 +4,12 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.TrackView;
-import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Lists;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class RealSwitch extends SwingSwitch {
 
@@ -48,14 +49,14 @@ public class RealSwitch extends SwingSwitch {
     }
 
     @Override
-    protected ch.adrianelsener.train.gui.swing.model.RealSwitch createNew(Point center, double angle) {
-        return new ch.adrianelsener.train.gui.swing.model.RealSwitch(center, angle, switchId, boardId, on, switchView);
+    protected RealSwitch createNew(Point center, double angle) {
+        return new RealSwitch(center, angle, switchId, boardId, on, switchView);
     }
 
     @Override
-    public ch.adrianelsener.train.gui.swing.model.RealSwitch toggle(final SwitchCallback toggler) {
+    public RealSwitch toggle(final SwitchCallback toggler) {
         toggler.toggleSwitch(switchId, boardId, on);
-        return new ch.adrianelsener.train.gui.swing.model.RealSwitch(super.center, super.angle, switchId, boardId, !on, switchView);
+        return new RealSwitch(super.center, super.angle, switchId, boardId, !on, switchView);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class RealSwitch extends SwingSwitch {
 
     @Override
     public Collection<Object> getDataToPersist() {
-        final java.util.List<Object> objects = Lists.newArrayList();
+        final List<Object> objects = Lists.newArrayList();
         objects.add("S");
         objects.add(super.center.x);
         objects.add(super.center.y);
@@ -94,13 +95,13 @@ public class RealSwitch extends SwingSwitch {
     }
 
     @Override
-    public SwitchId getId() {
-        return switchId;
+    public Collection<SwitchId> getId() {
+        return Lists.newArrayList(switchId);
     }
 
     @Override
-    public BoardId getBoardId() {
-        return boardId;
+    public Collection<BoardId> getBoardId() {
+        return Lists.newArrayList(boardId);
     }
 
     @Override

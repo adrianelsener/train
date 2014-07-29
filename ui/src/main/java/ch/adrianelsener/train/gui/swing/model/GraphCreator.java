@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public class GraphCreator {
     private final static Logger logger = LoggerFactory.getLogger(GraphCreator.class);
@@ -22,48 +22,54 @@ public class GraphCreator {
         for (TrackPart trackPartA : trackParts) {
             logger.debug("Use as main part {}", trackPartA);
             if (!trackPartA.isPipe()) {
-                final GraphTrackPart graphParent = getOrCreateGraphPart(graphParts, trackPartA);
-                final ImmutableCollection<Point> outConnectors = trackPartA.getOutConnectors();
-                logger.debug("got this out connecotrs {}", outConnectors);
-                for (Point outConnector : outConnectors) {
-                    final Set<Point> additionalOut = Sets.newHashSet();
-                    trackParts.forEach(part -> {
-                        if (part != trackPartA) {
-                            logger.debug("check '{}' if inConnecotrs are in list", part);
-                            if (part.getInConnectors().contains(outConnector)) {
-                                logger.debug("inConnecotrs of {} are matching to outConnector of {}", part, trackPartA);
-                                if (!part.isPipe()) {
-                                    logger.debug("not a pipe -> add");
-                                    final GraphTrackPart other = getOrCreateGraphPart(graphParts, part);
-                                    graphParent.appendChild(other);
-                                } else {
-                                    logger.debug("is a pipe -> use as additional out connector points");
-                                    final ImmutableCollection<Point> pipeOutConnector = part.getOutConnectors();
-                                    final Collection<Point> points = Collections2.filter(pipeOutConnector, Predicates.not(Predicates.equalTo(outConnector)));
-                                    final Collection<TrackPart> filteredParts = Collections2.filter(trackParts, Predicates.not(Predicates.equalTo(part)));
-                                    final Collection<Point> pipedOutConnectors = followPipe(filteredParts, points);
-                                    additionalOut.addAll(pipedOutConnectors);
-//                                    additionalOut.addAll(part.getOutConnectors());
-                                }
-                            }
-                        }
-                    });
-                    additionalOut.removeAll(trackPartA.getOutConnectors());
-                    logger.debug("this are the additional points to check {}", additionalOut);
-                    additionalOut.forEach(outPoint -> {
+                final Collection<GraphTrackPart> graphParents = getOrCreateGraphPart(graphParts, trackPartA);
+                for (GraphTrackPart graphParent : graphParents) {
+                    final ImmutableCollection<Point> outConnectors = trackPartA.getOutConnectors();
+                    logger.debug("got this out connecotrs {}", outConnectors);
+                    for (Point outConnector : outConnectors) {
+                        final Set<Point> additionalOut = Sets.newHashSet();
                         trackParts.forEach(part -> {
-                            logger.debug("Check if '{}' matches to additionalOut", part);
-                            if (part != trackPartA && !part.isPipe()) {
-                                if (part.getInConnectors().contains(outPoint)) {
-                                    logger.debug("'{}' matched to additionalOut", part);
-                                    final GraphTrackPart other = getOrCreateGraphPart(graphParts, part);
-                                    graphParent.appendChild(other);
+                            if (part != trackPartA) {
+                                logger.debug("check '{}' if inConnecotrs are in list", part);
+                                if (part.getInConnectors().contains(outConnector)) {
+                                    logger.debug("inConnecotrs of {} are matching to outConnector of {}", part, trackPartA);
+                                    if (!part.isPipe()) {
+                                        logger.debug("not a pipe -> add");
+                                        final Collection<GraphTrackPart> others = getOrCreateGraphPart(graphParts, part);
+                                        for (GraphTrackPart other : others) {
+                                            graphParent.appendChild(other);
+                                        }
+                                    } else {
+                                        logger.debug("is a pipe -> use as additional out connector points");
+                                        final ImmutableCollection<Point> pipeOutConnector = part.getOutConnectors();
+                                        final Collection<Point> points = Collections2.filter(pipeOutConnector, Predicates.not(Predicates.equalTo(outConnector)));
+                                        final Collection<TrackPart> filteredParts = Collections2.filter(trackParts, Predicates.not(Predicates.equalTo(part)));
+                                        final Collection<Point> pipedOutConnectors = followPipe(filteredParts, points);
+                                        additionalOut.addAll(pipedOutConnectors);
+//                                    additionalOut.addAll(part.getOutConnectors());
+                                    }
                                 }
                             }
                         });
-                    });
+                        additionalOut.removeAll(trackPartA.getOutConnectors());
+                        logger.debug("this are the additional points to check {}", additionalOut);
+                        additionalOut.forEach(outPoint -> {
+                            trackParts.forEach(part -> {
+                                logger.debug("Check if '{}' matches to additionalOut", part);
+                                if (part != trackPartA && !part.isPipe()) {
+                                    if (part.getInConnectors().contains(outPoint)) {
+                                        logger.debug("'{}' matched to additionalOut", part);
+                                        final Collection<GraphTrackPart> others = getOrCreateGraphPart(graphParts, part);
+                                        for (GraphTrackPart other : others) {
+                                            graphParent.appendChild(other);
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    graphParts.put(graphParent.getId(), graphParent);
                 }
-                graphParts.put(graphParent.getId(), graphParent);
             }
         }
         return ImmutableSet.copyOf(graphParts.values());
@@ -75,7 +81,7 @@ public class GraphCreator {
             for (Point point : points) {
                 if (part.getInConnectors().contains(point)) {
                     if (part.isPipe()) {
-                        logger.debug("'{}' is a pipe", part );
+                        logger.debug("'{}' is a pipe", part);
                         final ImmutableCollection<Point> pipeOutConnector = part.getOutConnectors();
                         final Collection<Point> otherPoints = Collections2.filter(pipeOutConnector, Predicates.not(Predicates.equalTo(point)));
                         logger.debug("deeper check with '{}'", otherPoints);
@@ -91,11 +97,15 @@ public class GraphCreator {
         return listBuilder.build();
     }
 
-    private GraphTrackPart getOrCreateGraphPart(Map<SwitchId, GraphTrackPart> graphParts, TrackPart trackPartA) {
-        final SwitchId id = trackPartA.getId();
-        if (!graphParts.containsKey(id)) {
-            graphParts.put(id, new GraphSwitch(id));
-        }
-        return graphParts.get(id);
+    private Collection<GraphTrackPart> getOrCreateGraphPart(Map<SwitchId, GraphTrackPart> graphParts, TrackPart trackPartA) {
+        final List<GraphTrackPart> result = Lists.newArrayList();
+        trackPartA.getId().forEach(part -> {
+            final SwitchId id = part;
+            if (!graphParts.containsKey(id)) {
+                graphParts.put(id, new GraphSwitch(id));
+            }
+            result.add(graphParts.get(id));
+        });
+        return result;
     }
 }

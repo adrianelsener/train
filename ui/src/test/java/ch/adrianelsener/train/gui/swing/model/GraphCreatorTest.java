@@ -3,6 +3,7 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
@@ -15,6 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.fail;
 
 public class GraphCreatorTest {
     private GraphCreator testee = new GraphCreator();
@@ -24,8 +26,8 @@ public class GraphCreatorTest {
         final Point sharedPoint = mock(Point.class);
         final SwingSwitch swingSwitchParent = mock(SwingSwitch.class);
         final SwingSwitch swingSwitchChild = mock(SwingSwitch.class);
-        when(swingSwitchParent.getId()).thenReturn(SwitchId.create(7));
-        when(swingSwitchChild.getId()).thenReturn(SwitchId.create(8));
+        when(swingSwitchParent.getId()).thenReturn(Lists.newArrayList(SwitchId.create(7)));
+        when(swingSwitchChild.getId()).thenReturn(Lists.newArrayList(SwitchId.create(8)));
         when(swingSwitchParent.getOutConnectors()).thenReturn(ImmutableList.of(sharedPoint));
         when(swingSwitchParent.getInConnectors()).thenReturn(ImmutableList.of());
         when(swingSwitchChild.getInConnectors()).thenReturn(ImmutableList.of(sharedPoint));
@@ -34,7 +36,7 @@ public class GraphCreatorTest {
         // Act
         final ImmutableCollection<GraphTrackPart> result = testee.graphify(parts);
         // Assert
-        assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(swingSwitchChild.getId())))), childWithParent(withParent(equalTo(swingSwitchParent.getId())))));
+        assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(swingSwitchChild.getId().iterator().next())))), childWithParent(withParent(equalTo(swingSwitchParent.getId().iterator().next())))));
     }
 
     @Test
@@ -44,9 +46,9 @@ public class GraphCreatorTest {
         final SwingSwitch swingSwitchParent = mock(SwingSwitch.class);
         final SwingSwitch swingSwitchChildA = mock(SwingSwitch.class);
         final SwingSwitch swingSwitchChildB = mock(SwingSwitch.class);
-        when(swingSwitchParent.getId()).thenReturn(SwitchId.create(7));
-        when(swingSwitchChildA.getId()).thenReturn(SwitchId.create(8));
-        when(swingSwitchChildB.getId()).thenReturn(SwitchId.create(9));
+        when(swingSwitchParent.getId()).thenReturn(Lists.newArrayList(SwitchId.create(7)));
+        when(swingSwitchChildA.getId()).thenReturn(Lists.newArrayList(SwitchId.create(8)));
+        when(swingSwitchChildB.getId()).thenReturn(Lists.newArrayList(SwitchId.create(9)));
         when(swingSwitchParent.getOutConnectors()).thenReturn(ImmutableList.of(sharedPointA, sharedPointB));
         when(swingSwitchParent.getInConnectors()).thenReturn(ImmutableList.of());
         when(swingSwitchChildA.getInConnectors()).thenReturn(ImmutableList.of(sharedPointA));
@@ -57,7 +59,7 @@ public class GraphCreatorTest {
         // Act
         final ImmutableCollection<GraphTrackPart> result = testee.graphify(parts);
         // Assert
-        assertThat(result, containsInAnyOrder(parentContainingChild(containsInAnyOrder(withId(equalTo(swingSwitchChildA.getId())), withId(equalTo(swingSwitchChildB.getId())))), childWithParent(withParent(equalTo(swingSwitchParent.getId()))), childWithParent(withParent(equalTo(swingSwitchParent.getId())))));
+        assertThat(result, containsInAnyOrder(parentContainingChild(containsInAnyOrder(withId(equalTo(SwitchId.create(8))), withId(equalTo(SwitchId.create(9))))), childWithParent(withParent(equalTo(SwitchId.create(7)))), childWithParent(withParent(equalTo(SwitchId.create(7))))));
     }
 
     @Test
@@ -67,8 +69,8 @@ public class GraphCreatorTest {
         final SwingSwitch swingSwitchParent = mock(SwingSwitch.class, "Parent");
         final SwingSwitch swingSwitchChild = mock(SwingSwitch.class, "Child");
         final Track track = mock(Track.class, "Pipetrack");
-        when(swingSwitchParent.getId()).thenReturn(SwitchId.create(7));
-        when(swingSwitchChild.getId()).thenReturn(SwitchId.create(8));
+        when(swingSwitchParent.getId()).thenReturn(Lists.newArrayList(SwitchId.create(7)));
+        when(swingSwitchChild.getId()).thenReturn(Lists.newArrayList(SwitchId.create(8)));
         when(swingSwitchParent.getOutConnectors()).thenReturn(ImmutableList.of(sharedPointA));
         when(swingSwitchParent.getInConnectors()).thenReturn(ImmutableList.of());
         when(track.getInConnectors()).thenReturn(ImmutableList.of(sharedPointA, sharedPointB));
@@ -80,7 +82,7 @@ public class GraphCreatorTest {
         // Act
         final ImmutableCollection<GraphTrackPart> result = testee.graphify(parts);
         // Assert
-        assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(swingSwitchChild.getId())))), childWithParent(withParent(equalTo(swingSwitchParent.getId())))));
+        assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(SwitchId.create(8))))), childWithParent(withParent(equalTo(SwitchId.create(7))))));
     }
 
     @Test
@@ -92,8 +94,8 @@ public class GraphCreatorTest {
         final SwingSwitch swingSwitchChild = mock(SwingSwitch.class, "Child");
         final Track trackA = mock(Track.class, "PipetrackA");
         final Track trackB = mock(Track.class, "PipetrackB");
-        when(swingSwitchParent.getId()).thenReturn(SwitchId.create(7));
-        when(swingSwitchChild.getId()).thenReturn(SwitchId.create(8));
+        when(swingSwitchParent.getId()).thenReturn(Lists.newArrayList(SwitchId.create(7)));
+        when(swingSwitchChild.getId()).thenReturn(Lists.newArrayList(SwitchId.create(8)));
         when(swingSwitchParent.getOutConnectors()).thenReturn(ImmutableList.of(sharedPointA));
         when(swingSwitchParent.getInConnectors()).thenReturn(ImmutableList.of());
         when(trackA.getInConnectors()).thenReturn(ImmutableList.of(sharedPointA, sharedPointB));
@@ -108,8 +110,13 @@ public class GraphCreatorTest {
         // Act
         final ImmutableCollection<GraphTrackPart> result = testee.graphify(parts);
         // Assert
-        assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(swingSwitchChild.getId())))), childWithParent(withParent(equalTo(swingSwitchParent.getId())))));
+        assertThat(result, containsInAnyOrder(parentContainingChild(contains(withId(equalTo(SwitchId.create(8))))), childWithParent(withParent(equalTo(SwitchId.create(7))))));
 
+    }
+
+    @Test(enabled = false)
+    public void multiSwitch() {
+        fail("create test");
     }
 
     private static Matcher<? super GraphTrackPart> withId(Matcher<SwitchId> matcher) {

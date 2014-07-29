@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableCollection;
 
 import javax.annotation.Nonnull;
 import java.awt.Point;
+import java.util.Collection;
 
 public interface TrackPart extends Nearby, Paintable, Datacontainer {
 
@@ -49,11 +50,11 @@ public interface TrackPart extends Nearby, Paintable, Datacontainer {
 
     boolean isPipe();
 
-    SwitchId getId();
+    Collection<SwitchId> getId();
 
     TrackPart setId(String newId);
 
-    BoardId getBoardId();
+    Collection<BoardId> getBoardId();
 
     TrackPart setBoardId(String boardId);
 
