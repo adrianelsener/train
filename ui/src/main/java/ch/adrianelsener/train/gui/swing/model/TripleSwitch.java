@@ -136,7 +136,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public boolean isPipe() {
-        throw new IllegalStateException("Not yet implemented");
+        return false;
     }
 
     @Override

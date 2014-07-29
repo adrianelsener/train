@@ -266,4 +266,11 @@ public class TripleSwitchTest {
         final TripleSwitch expected = new TripleSwitch(moveTo);
         assertThat(result, is(equalTo(expected)));
     }
+
+    @Test
+    public void switchIsNotAPipe() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Assert
+        assertThat(testee.isPipe(), is(false));
+    }
 }
