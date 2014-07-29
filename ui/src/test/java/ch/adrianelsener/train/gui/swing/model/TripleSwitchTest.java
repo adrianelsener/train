@@ -5,6 +5,7 @@ import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
+import org.hamcrest.CoreMatchers;
 import org.mockito.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -208,5 +209,50 @@ public class TripleSwitchTest {
         final Iterator<String> iterator = strings.iterator();
         iterator.next();
         assertThat(TripleSwitch.create(iterator).build(), is(equalTo(testee)));
+    }
+
+    @Test
+    public void nearIsInside() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final boolean result = testee.isNear(middle);
+        // Assert
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void nearIsOutsideOnTop() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final boolean result = testee.isNear(new Point(30, 30 - 11));
+        // Assert
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void nearIsOutsideOnBottom() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final boolean result = testee.isNear(new Point(30, 30 + 11));
+        // Assert
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void nearIsOutsideOnLeft() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final boolean result = testee.isNear(new Point(30 - 11, 30));
+        // Assert
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void nearIsOutsideOnRight() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final boolean result = testee.isNear(new Point(30 + 16, 30));
+        // Assert
+        assertThat(result, is(false));
     }
 }

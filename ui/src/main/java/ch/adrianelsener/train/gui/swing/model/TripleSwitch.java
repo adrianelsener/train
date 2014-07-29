@@ -241,9 +241,18 @@ public class TripleSwitch implements TrackPart {
         return objects;
     }
 
+
     @Override
-    public boolean isNear(Point point) {
-        return false;
+    public boolean isNear(final Point point) {
+        return onXCoordinates(point) && onYCoordinates(point);
+    }
+
+    private boolean onYCoordinates(final Point point) {
+        return point.y >= (center.y - 10) && point.y <= (center.y + 10);
+    }
+
+    private boolean onXCoordinates(final Point point) {
+        return point.x >= (center.x - 10) && point.x <= (center.x + 15);
     }
 
     @Override
