@@ -121,7 +121,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public TripleSwitch moveTo(Point newLocation) {
-        throw new IllegalStateException("Not yet implemented");
+        return Builder.create(this).setCenter(newLocation).build();
     }
 
     @Override
@@ -136,7 +136,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public boolean isPipe() {
-        return false;
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
@@ -202,6 +202,11 @@ public class TripleSwitch implements TrackPart {
 
         public Builder setState(SwitchState state) {
             this.state = state;
+            return this;
+        }
+
+        public Builder setCenter(Point newLocation) {
+            center = newLocation;
             return this;
         }
     }

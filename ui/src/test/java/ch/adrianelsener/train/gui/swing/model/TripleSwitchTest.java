@@ -255,4 +255,15 @@ public class TripleSwitchTest {
         // Assert
         assertThat(result, is(false));
     }
+
+    @Test
+    public void move_newCoordinatesAreSet() {
+        final Point moveTo = mock(Point.class);
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final TripleSwitch result = testee.moveTo(moveTo);
+        // Assert
+        final TripleSwitch expected = new TripleSwitch(moveTo);
+        assertThat(result, is(equalTo(expected)));
+    }
 }
