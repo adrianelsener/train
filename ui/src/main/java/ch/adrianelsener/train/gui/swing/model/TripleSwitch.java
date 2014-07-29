@@ -95,28 +95,28 @@ public class TripleSwitch implements TrackPart {
     @Nonnull
     @Override
     public TripleSwitch toggle(@Nonnull SwitchCallback toggler) {
-        logger.debug("start toggle with '{}'", this);
-        switch (state) {
-            case Middle:
-                toggler.toggleSwitch(upperPart.getRight(), upperPart.getLeft(), true);
-                toggler.toggleSwitch(lowerPart.getRight(), lowerPart.getLeft(), true);
-                break;
-            case Upper:
-                toggler.toggleSwitch(upperPart.getRight(), upperPart.getLeft(), true);
-                toggler.toggleSwitch(lowerPart.getRight(), lowerPart.getLeft(), false);
-                break;
-            case Lower:
-                toggler.toggleSwitch(upperPart.getRight(), upperPart.getLeft(), false);
-                toggler.toggleSwitch(lowerPart.getRight(), lowerPart.getLeft(), true);
-                break;
-        }
-
-        return Builder.create(this).setState(state.next()).build();
+        final TripleSwitch tripleSwitch = Builder.create(this).setState(state.next()).build();
+        tripleSwitch.applyState(toggler);
+        return tripleSwitch;
     }
 
     @Override
     public void applyState(@Nonnull SwitchCallback callback) {
-        throw new IllegalStateException("Not yet implemented");
+        logger.debug("start toggle with '{}'", this);
+        switch (state) {
+            case Upper:
+                callback.toggleSwitch(upperPart.getRight(), upperPart.getLeft(), true);
+                callback.toggleSwitch(lowerPart.getRight(), lowerPart.getLeft(), true);
+                break;
+            case Lower:
+                callback.toggleSwitch(upperPart.getRight(), upperPart.getLeft(), true);
+                callback.toggleSwitch(lowerPart.getRight(), lowerPart.getLeft(), false);
+                break;
+            case Middle:
+                callback.toggleSwitch(upperPart.getRight(), upperPart.getLeft(), false);
+                callback.toggleSwitch(lowerPart.getRight(), lowerPart.getLeft(), true);
+                break;
+        }
     }
 
     @Override

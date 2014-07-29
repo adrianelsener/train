@@ -273,4 +273,18 @@ public class TripleSwitchTest {
         // Assert
         assertThat(testee.isPipe(), is(false));
     }
+
+    @Test
+    public void applyState_setStateAgain() {
+        SwitchCallback dummyCallbac = mock(SwitchCallback.class);
+        final TripleSwitch testee = new TripleSwitch(middle).setBoardId("24/25").setId("11/12").toggle(dummyCallbac);
+        // Act
+        testee.applyState(switchCallback);
+        // Assert
+        verify(switchCallback, times(2)).toggleSwitch(switchIdCaptor.capture(), boardIdCaptor.capture(), stateCaptor.capture());
+        assertThat(boardIdCaptor.getAllValues(), contains(BoardId.create(24), BoardId.create(25)));
+        assertThat(switchIdCaptor.getAllValues(), contains(SwitchId.create(11), SwitchId.create(12)));
+        assertThat(stateCaptor.getAllValues(), contains(true, true));
+
+    }
 }
