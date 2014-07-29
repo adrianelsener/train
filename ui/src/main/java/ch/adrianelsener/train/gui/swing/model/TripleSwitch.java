@@ -89,7 +89,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public TripleSwitch rotate() {
-        return null;
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Nonnull
@@ -116,22 +116,22 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public void applyState(@Nonnull SwitchCallback callback) {
-
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
     public TripleSwitch moveTo(Point newLocation) {
-        return null;
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
     public ImmutableCollection<Point> getInConnectors() {
-        return null;
+        throw new IllegalStateException("Not yet implemented"); 
     }
 
     @Override
     public ImmutableCollection<Point> getOutConnectors() {
-        return null;
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
@@ -218,7 +218,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public TripleSwitch invertView(boolean inverted) {
-        return null;
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
@@ -257,7 +257,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public Point getNextConnectionpoint(Point origin) {
-        return null;
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
