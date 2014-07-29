@@ -61,7 +61,7 @@ public class RealSwitch extends SwingSwitch {
 
     @Override
     public void applyState(@Nonnull SwitchCallback callback) {
-        callback.toggleSwitch(switchId, boardId, on);
+        callback.toggleSwitch(switchId, boardId, !on);
     }
 
     @Override

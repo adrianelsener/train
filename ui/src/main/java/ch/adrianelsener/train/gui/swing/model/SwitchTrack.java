@@ -74,7 +74,7 @@ public class SwitchTrack extends Track {
 
     @Override
     public void applyState(@Nonnull SwitchCallback callback) {
-        callback.toggleSwitch(trackId, boardId, getTrackState().isOn());
+        callback.toggleSwitch(trackId, boardId, !getTrackState().isOn());
     }
 
     @Override
