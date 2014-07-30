@@ -285,6 +285,43 @@ public class TripleSwitchTest {
         assertThat(boardIdCaptor.getAllValues(), contains(BoardId.create(24), BoardId.create(25)));
         assertThat(switchIdCaptor.getAllValues(), contains(SwitchId.create(11), SwitchId.create(12)));
         assertThat(stateCaptor.getAllValues(), contains(true, true));
-
     }
+
+    @Test
+    public void rotate_resultHasAngleFromCalc() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final TripleSwitch result = testee.rotate();
+        // Assert
+        final TripleSwitch expected = TripleSwitch.create(middle, 45);
+        assertThat(result, is(equalTo(expected)));
+    }
+
+    @Test
+    public void rotate_resultHasNewEndpoints() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        // Act
+        final TripleSwitch result = testee.rotate().rotate();
+        result.paint(g);
+        // Assert
+
+        InOrder inOrder = inOrder(g);
+        inOrder.verify(g).setColor(Color.BLUE);
+        inOrder.verify(g, times(4)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
+        inOrder.verify(g).setColor(Color.RED);
+        inOrder.verify(g, times(2)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
+
+        final Set<Integer> startXSet = Sets.newHashSet(startXCaptor.getAllValues());
+        assertThat(startXSet, containsInAnyOrder( middle.x));
+
+        final Set<Integer> endXSet = Sets.newHashSet(endXCaptor.getAllValues());
+        assertThat(endXSet, containsInAnyOrder(middle.y, middle.y - 10, middle.y + 10));
+
+        final Set<Integer> startYSet = Sets.newHashSet(startYCaptor.getAllValues());
+        assertThat(startYSet, contains(middle.x + 10, middle.x));
+
+        final Set<Integer> endYSet = Sets.newHashSet(endYCaptor.getAllValues());
+        assertThat(endYSet, containsInAnyOrder(middle.x, middle.x - 15));
+    }
+
 }

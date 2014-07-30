@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.DoubleStream;
 
 public class TripleSwitch implements TrackPart {
     private final static Logger logger = LoggerFactory.getLogger(TripleSwitch.class);
@@ -33,10 +33,6 @@ public class TripleSwitch implements TrackPart {
     private final Pair<BoardId, SwitchId> upperPart;
     private final Pair<BoardId, SwitchId> lowerPart;
 
-    private TripleSwitch(TripleSwitch orig, SwitchState next) {
-        this(orig.center, orig.angle, next);
-    }
-
     private TripleSwitch(Builder builder) {
         rotCalc = new RotationCalculator(builder.center, builder.angle);
         this.center = builder.center;
@@ -48,16 +44,16 @@ public class TripleSwitch implements TrackPart {
         final int upperY = center.y + 10;
         final int lowerY = center.y - 10;
 
-        this.topRight = new Point(rightX, upperY);
-        this.middleRight = new Point(rightX, center.y);
-        this.bottomRight = new Point(rightX, lowerY);
-        this.middleLeft = new Point(leftX, center.y);
+        this.topRight = rotCalc.calc(rightX, upperY);
+        this.middleRight = rotCalc.calc(rightX, center.y);
+        this.bottomRight = rotCalc.calc(rightX, lowerY);
+        this.middleLeft = rotCalc.calc(leftX, center.y);
         upperPart = builder.upperPart;
         lowerPart = builder.lowerPart;
     }
 
     public static TripleSwitch create(Point center, double angle) {
-        return new TripleSwitch(center, angle);
+        return new Builder().setAngle(angle).setCenter(center).build();
     }
 
     TripleSwitch(Point center, double angle, final SwitchState state) {
@@ -89,7 +85,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public TripleSwitch rotate() {
-        throw new IllegalStateException("Not yet implemented");
+        return Builder.create(this).setAngle(angle + 45).build();
     }
 
     @Nonnull
@@ -126,7 +122,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public ImmutableCollection<Point> getInConnectors() {
-        throw new IllegalStateException("Not yet implemented"); 
+        throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
@@ -176,6 +172,12 @@ public class TripleSwitch implements TrackPart {
             lowerPart = Pair.of(BoardId.create(iterator.next()), SwitchId.fromValue(iterator.next()));
         }
 
+        public Builder() {
+            upperPart = Pair.of(BoardId.createDummy(), SwitchId.createDummy());
+            lowerPart = Pair.of(BoardId.createDummy(), SwitchId.createDummy());
+            state = SwitchState.Middle;
+        }
+
         public static Builder create(TripleSwitch original) {
             return new Builder(original);
         }
@@ -207,6 +209,11 @@ public class TripleSwitch implements TrackPart {
 
         public Builder setCenter(Point newLocation) {
             center = newLocation;
+            return this;
+        }
+
+        public Builder setAngle(double angle) {
+            this.angle = angle;
             return this;
         }
     }
@@ -344,6 +351,7 @@ public class TripleSwitch implements TrackPart {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj, false);
