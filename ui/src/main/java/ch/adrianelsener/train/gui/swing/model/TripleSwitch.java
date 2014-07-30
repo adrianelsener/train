@@ -3,6 +3,7 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
+import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import ch.adrianelsener.train.gui.swing.common.RotationCalculator;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.Lists;
@@ -178,6 +179,10 @@ public class TripleSwitch implements TrackPart {
             state = SwitchState.Middle;
         }
 
+        public static Builder create(Point center) {
+            return new Builder().setCenter(center);
+        }
+
         public static Builder create(TripleSwitch original) {
             return new Builder(original);
         }
@@ -269,7 +274,18 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public Point getNextConnectionpoint(Point origin) {
-        throw new IllegalStateException("Not yet implemented");
+        final InRangeCalculator inRangeCalc = InRangeCalculator.create();
+        if (inRangeCalc.isInRange(origin, middleLeft, 10)) {
+            return middleLeft;
+        } else if (inRangeCalc.isInRange(origin, topRight, 5)) {
+            return topRight;
+        } else if (inRangeCalc.isInRange(origin, bottomRight, 5)) {
+            return bottomRight;
+        } else if (inRangeCalc.isInRange(origin, middleRight, 5)) {
+            return middleRight;
+        } else {
+            throw new IllegalArgumentException("getNextConnectionpoint soll nur aufgerufen werden wenn auch etwas in der naehe ist");
+        }
     }
 
     @Override

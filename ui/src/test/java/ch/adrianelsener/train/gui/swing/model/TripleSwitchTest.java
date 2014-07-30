@@ -5,7 +5,6 @@ import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
-import org.hamcrest.CoreMatchers;
 import org.mockito.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -312,7 +311,7 @@ public class TripleSwitchTest {
         inOrder.verify(g, times(2)).drawLine(startXCaptor.capture(), startYCaptor.capture(), endXCaptor.capture(), endYCaptor.capture());
 
         final Set<Integer> startXSet = Sets.newHashSet(startXCaptor.getAllValues());
-        assertThat(startXSet, containsInAnyOrder( middle.x));
+        assertThat(startXSet, containsInAnyOrder(middle.x));
 
         final Set<Integer> endXSet = Sets.newHashSet(endXCaptor.getAllValues());
         assertThat(endXSet, containsInAnyOrder(middle.y, middle.y - 10, middle.y + 10));
@@ -322,6 +321,53 @@ public class TripleSwitchTest {
 
         final Set<Integer> endYSet = Sets.newHashSet(endYCaptor.getAllValues());
         assertThat(endYSet, containsInAnyOrder(middle.x, middle.x - 15));
+    }
+
+    @Test
+    public void getNextConnectionPoint_leftIn() {
+        final TripleSwitch testee = TripleSwitch.Builder.create(middle).build();
+        final Point point = new Point(middle.x - 20, middle.y);
+        // Act
+        final Point result = testee.getNextConnectionpoint(point);
+        // Assert
+        assertThat(result, is(equalTo(new Point(middle.x - 10, middle.y))));
+    }
+
+    @Test
+    public void getNextConnectionPoint_topOut() {
+        final TripleSwitch testee = TripleSwitch.Builder.create(middle).build();
+        final Point point = new Point(middle.x + 20, middle.y + 15);
+        // Act
+        final Point result = testee.getNextConnectionpoint(point);
+        // Assert
+        assertThat(result, is(equalTo(new Point(middle.x + 15, middle.y + 10))));
+
+    }
+
+    @Test
+    public void getNextConnectionPoint_middleOut() {
+        final TripleSwitch testee = TripleSwitch.Builder.create(middle).build();
+        final Point point = new Point(middle.x + 20, middle.y + 4);
+        // Act
+        final Point result = testee.getNextConnectionpoint(point);
+        // Assert
+        assertThat(result, is(equalTo(new Point(middle.x + 15, middle.y))));
+    }
+
+    @Test
+    public void getNextConnectionPoint_lowerOut() {
+        final TripleSwitch testee = TripleSwitch.Builder.create(middle).build();
+        final Point point = new Point(middle.x + 20, middle.y - 15);
+        // Act
+        final Point result = testee.getNextConnectionpoint(point);
+        // Assert
+        assertThat(result, is(equalTo(new Point(middle.x + 15, middle.y - 10))));
+
+    }
+
+    @Test
+    public void getNextConnectionPoint_throwsExceptionIfNothingInRange() {
+
     }
 
 }
