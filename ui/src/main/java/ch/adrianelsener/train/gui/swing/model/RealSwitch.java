@@ -18,7 +18,7 @@ public class RealSwitch extends SwingSwitch {
     private final BoardId boardId;
     private final boolean on;
 
-    public static ch.adrianelsener.train.gui.swing.model.RealSwitch create(final Iterator<String> iterator) {
+    public static RealSwitch create(final Iterator<String> iterator) {
         final Point center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
         final Double drawAngle = Double.valueOf(iterator.next());
         final SwitchId readSwitchId = SwitchId.fromValue(iterator.next());
@@ -28,7 +28,7 @@ public class RealSwitch extends SwingSwitch {
         final TrackView switchView = TrackView.valueOf(iterator.next());
         switch (mode) {
             case Real:
-                return new ch.adrianelsener.train.gui.swing.model.RealSwitch(center, drawAngle, readSwitchId, readBoardId, state, switchView);
+                return new RealSwitch(center, drawAngle, readSwitchId, readBoardId, state, switchView);
             default:
                 throw new IllegalArgumentException("Could not determine switch");
         }
