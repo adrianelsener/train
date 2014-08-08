@@ -29,6 +29,25 @@ public abstract class PartCreationAction extends CreationAction{
         return new DummySwitchCreationAction(point);
     }
 
+    public static PartCreationAction createTripleSwitch(Point point) {
+        return new TripleSwitchCreationAction(point);
+    }
+
+    private static class TripleSwitchCreationAction extends PartCreationAction {
+        private static final Logger logger = LoggerFactory.getLogger(TripleSwitchCreationAction.class);
+
+        public TripleSwitchCreationAction(Point point) {
+            super(point);
+        }
+
+        @Override
+        public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
+            final TripleSwitch tripleSwitch = TripleSwitch.Builder.create(getEndPoint()).build();
+            logger.debug("created switch '{}' to send to ui", tripleSwitch);
+            return tripleSwitch;
+        }
+    }
+
     private static class SwitchTrackCreationAction extends PartCreationAction {
         private static final Logger logger = LoggerFactory.getLogger(SwitchTrackCreationAction.class);
         public SwitchTrackCreationAction(Point point) {

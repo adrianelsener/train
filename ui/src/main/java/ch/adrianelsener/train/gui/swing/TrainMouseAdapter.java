@@ -46,6 +46,9 @@ class TrainMouseAdapter  extends MouseAdapter {
             case DummySwitch:
                 bus.post(DraftPartCreationAction.createDummySwitch(e.getPoint()));
                 break;
+            case TripleSwitch:
+                bus.post(DraftPartCreationAction.createTripleSwitch(e.getPoint()));
+                break;
             case NoOp:
             case Toggle:
                 bus.post(UpdatePart.createToggle(e.getPoint()));
@@ -74,6 +77,9 @@ class TrainMouseAdapter  extends MouseAdapter {
             case DummySwitch:
                 bus.post(DraftPartCreationAction.createDummySwitch(e.getPoint()));
                 break;
+            case TripleSwitch:
+                bus.post(DraftPartCreationAction.createTripleSwitch(e.getPoint()));
+                break;
             case Rotate:
             case Toggle:
             case Delete:
@@ -101,6 +107,9 @@ class TrainMouseAdapter  extends MouseAdapter {
                 break;
             case Switch:
                 bus.post(PartCreationAction.createSwitch(e.getPoint()));
+                break;
+            case TripleSwitch:
+                bus.post(PartCreationAction.createTripleSwitch(e.getPoint()));
                 break;
             case DummySwitch:
                 bus.post(PartCreationAction.createDummySwitch(e.getPoint()));

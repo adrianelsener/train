@@ -29,6 +29,10 @@ public abstract class DraftPartCreationAction extends CreationAction {
         return new DraftDummySwitchCreationAction(point);
     }
 
+    public static DraftPartCreationAction createTripleSwitch(Point point) {
+        return new DraftTripleSwitchCreateionAction(point);
+    }
+
     private static class DraftSwitchTrackCreationAction extends DraftPartCreationAction {
         public DraftSwitchTrackCreationAction(Point point) {
             super(point);
@@ -74,6 +78,21 @@ public abstract class DraftPartCreationAction extends CreationAction {
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
             return new DummySwitch(pointCalculator.calculatePoint(getEndPoint()));
+        }
+    }
+
+    private static class DraftTripleSwitchCreateionAction extends DraftPartCreationAction {
+        private final static Logger logger = LoggerFactory.getLogger(DraftTripleSwitchCreateionAction.class);
+
+        public DraftTripleSwitchCreateionAction(Point point) {
+            super(point);
+        }
+
+        @Override
+        public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
+            final TrackPart tripleSwitch = TripleSwitch.Builder.create(getEndPoint()).build();
+            logger.debug("Create {}", tripleSwitch);
+            return tripleSwitch;
         }
     }
 }

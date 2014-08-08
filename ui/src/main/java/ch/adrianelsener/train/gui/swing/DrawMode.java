@@ -10,7 +10,8 @@ enum DrawMode {
     Delete, //
     Detail, //
     DummySwitch(true),//
-    SwitchTrack(true);
+    SwitchTrack(true),//
+    TripleSwitch(true); ;
 
     private boolean isDraft;
 
