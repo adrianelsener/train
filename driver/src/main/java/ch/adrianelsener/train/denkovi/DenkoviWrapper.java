@@ -78,7 +78,6 @@ public class DenkoviWrapper implements Board {
         target.setCommunity(Community);
         target.setObjectID(OID.getAddress());
         final String result = target.snmpGet();
-        address.
         return result;
     }
 
