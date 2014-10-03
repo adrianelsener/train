@@ -431,8 +431,12 @@ public class SwingUi extends JComponent {
 
     @Subscribe
     public void toggle(UpdatePart.TogglePart toggleAction) {
-        toggleAction.toggle(toggler, db);
-        repaint();
+        if (toggler.isReady()) {
+            toggleAction.toggle(toggler, db);
+            repaint();
+        } else {
+            // TODO notify statusbar...
+        }
     }
 
     @Subscribe

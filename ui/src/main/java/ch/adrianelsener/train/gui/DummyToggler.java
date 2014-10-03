@@ -10,6 +10,11 @@ public class DummyToggler implements SwitchCallback {
     private final static Logger logger = LoggerFactory.getLogger(DummyToggler.class);
 
     @Override
+    public boolean isReady() {
+        return true;
+    }
+
+    @Override
     public void toggleSwitch(final SwitchId switchId, final BoardId boardId, final boolean on) {
         logger.info("Toggle command for board {} switchId {} and state {}", boardId, switchId, on);
     }

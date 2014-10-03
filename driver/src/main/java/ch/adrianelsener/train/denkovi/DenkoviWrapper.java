@@ -2,8 +2,11 @@ package ch.adrianelsener.train.denkovi;
 
 import com.adventnet.snmp.beans.SnmpTarget;
 import com.adventnet.snmp.snmp2.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DenkoviWrapper implements Board {
+    private final static Logger logger = LoggerFactory.getLogger(DenkoviWrapper.class);
     private final IpAddress address;
     private SnmpAPI api;
     private SnmpSession session;
@@ -75,20 +78,29 @@ public class DenkoviWrapper implements Board {
         target.setCommunity(Community);
         target.setObjectID(OID.getAddress());
         final String result = target.snmpGet();
+        address.
         return result;
     }
 
     @Override
     public void set(final PinState relays) {
         final String snmp_GET = SNMP_GET(161, relays.pin.getJp(), "private");
-        final int oldState = Integer.parseInt(snmp_GET);
-
-        SNMP_SET(161, relays.pin.getJp(), relays.pin.getType(), relays.state.getValue(relays.pin, oldState), "private");
+        if (null == snmp_GET) {
+            logger.error("Got no value as response from targer!!!");
+        } else {
+            final int oldState = Integer.parseInt(snmp_GET);
+            SNMP_SET(161, relays.pin.getJp(), relays.pin.getType(), relays.state.getValue(relays.pin, oldState), "private");
+        }
     }
 
     @Override
     public int read(Pin pin) {
         return 0;
+    }
+
+    @Override
+    public boolean isReady() {
+        return true;
     }
 
     public static class PinNotFoundException extends RuntimeException {

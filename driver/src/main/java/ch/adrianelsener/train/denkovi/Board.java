@@ -12,4 +12,8 @@ public interface Board {
 
     int read(Pin pin);
 
+    /**
+     * If the board is ready for operation it will be return true
+     **/
+    boolean isReady();
 }

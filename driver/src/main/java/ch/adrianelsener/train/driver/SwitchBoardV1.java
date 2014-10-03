@@ -27,6 +27,11 @@ public class SwitchBoardV1 extends AbstractBoard implements SwitchBoardDriver {
         togglePin(togglePin);
     }
 
+    @Override
+    public boolean isRead() {
+        return true;
+    }
+
     private void setStatePins(final SwitchWithState statedRelay) {
         for (int i = 0; i < 4; i++) {
             setStatePin(statedRelay, i);

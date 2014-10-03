@@ -4,9 +4,6 @@ import ch.adrianelsener.train.denkovi.Pin;
 import ch.adrianelsener.train.denkovi.PinState;
 import com.google.common.collect.ImmutableList;
 
-/**
- * Created by els on 7/11/14.
- */
 public enum SwitchWithState {
     _01L(State.On, State.On, State.On, State.On)//
     , _01R(State.Off, State.On, State.On, State.On)//

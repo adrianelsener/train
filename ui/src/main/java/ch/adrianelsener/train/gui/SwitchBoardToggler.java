@@ -3,6 +3,7 @@ package ch.adrianelsener.train.gui;
 import java.util.Map;
 
 import ch.adrianelsener.train.driver.SwitchBoardDriver;
+import ch.adrianelsener.train.driver.SwitchWithState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +18,18 @@ public class SwitchBoardToggler implements SwitchCallback {
     }
 
     @Override
+    public boolean isReady() {
+        return boards.values().stream().allMatch(board -> board.isRead());
+    }
+
+    @Override
     public void toggleSwitch(final SwitchId switchId, final BoardId boardId, final boolean isOn) {
         logger.debug("Send signal switch {} , board {}", switchId, boardId);
-        boards.get(boardId).turn(switchId.mapToWeicheMitState(isOn));
+        final SwitchBoardDriver boardDriver = boards.get(boardId);
+        logger.debug("got board driver {}", boardDriver);
+        final SwitchWithState weicheMitState = switchId.mapToWeicheMitState(isOn);
+        logger.debug("found weicheMitState {}", weicheMitState);
+        boardDriver.turn(weicheMitState);
     }
 
     public static SwitchCallback create() {

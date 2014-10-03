@@ -7,14 +7,30 @@ import ch.adrianelsener.train.denkovi.Pin;
 import ch.adrianelsener.train.denkovi.PinState;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hamcrest.MatcherAssert;
 import org.mockito.InOrder;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SwitchBoardV1Test {
+
+    @Test
+    public void isReady_returnsTrue_ifConnectionIsOk() {
+        final Board board = mock(Board.class);
+        when(board.isReady()).thenReturn(true);
+        final Config config = createSampleConfig();
+        final SwitchBoardV1 testee = new SwitchBoardV1(board, config, 0);
+        // act
+        boolean result = testee.isRead();
+        // assert
+        assertThat(result, is(true));
+    }
 
     @DataProvider(name = "leftAndRight", parallel = true)
     public Object[][] createLeftRightData() {

@@ -90,6 +90,11 @@ public class SwingBoard implements Board {
         return 0;
     }
 
+    @Override
+    public boolean isReady() {
+        return true;
+    }
+
     private void applyStates(Map<Pin, State> currentState) {
 
         PinKey key = new PinKey(new PinState(Pin._09, currentState.get(Pin._09))//
