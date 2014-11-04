@@ -57,6 +57,13 @@ class TrainMouseAdapter  extends MouseAdapter {
             case Delete:
                 break;
         }
+        bus.post(MousePositionEvent.create(e.getPoint()));
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        super.mouseMoved(e);
+        bus.post(MousePositionEvent.create(e.getPoint()));
     }
 
     @Override
@@ -87,6 +94,7 @@ class TrainMouseAdapter  extends MouseAdapter {
             case NoOp:
                 break;
         }
+        bus.post(MousePositionEvent.create(e.getPoint()));
     }
 
     @Override

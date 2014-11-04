@@ -63,6 +63,8 @@ public class SwingUi extends JComponent {
     private DetailWindow details;
     private CheckSwitch switchChecker = new CheckSwitch();
     private Optional<File> currentShowing = Optional.empty();
+    private ShowDrawingCrossEvent showDrawingCross = ShowDrawingCrossEvent.SHOW;
+    private Point currentMousePosition;
 
     SwingUi() {
         Odb<TrackPart> theDb = CsvOdb.create(TrackPart.class).build();
@@ -126,6 +128,11 @@ public class SwingUi extends JComponent {
         paintOptionalRaster(g2d);
         paintParts(g2d);
         paintOptionalMousePart(g2d);
+        paintDrawingCross(g2d);
+    }
+
+    private void paintDrawingCross(Graphics2D g2d) {
+        showDrawingCross.draw(g2d, frame.getSize(), currentMousePosition);
     }
 
     private void paintOptionalMousePart(final Graphics2D g2d) {
@@ -225,7 +232,20 @@ public class SwingUi extends JComponent {
     private JMenu createMenuTools() {
         final JMenu toolsMenu = new JMenu("Tools");
         toolsMenu.add(createResendSwitchStates());
+        toolsMenu.add(createShowCrossWhileDrawing());
         return toolsMenu;
+    }
+
+    private JMenuItem createShowCrossWhileDrawing() {
+        final JCheckBoxMenuItem showCross = new JCheckBoxMenuItem("Show drawing cross", true);
+        showCross.addActionListener(e -> {
+            if (showCross.isSelected()) {
+                bus.post(ShowDrawingCrossEvent.SHOW);
+            } else {
+                bus.post(ShowDrawingCrossEvent.HIDE);
+            }
+            });
+        return showCross;
     }
 
     private JMenuItem createResendSwitchStates() {
@@ -377,6 +397,11 @@ public class SwingUi extends JComponent {
     private Optional<Point> creationStartPoint = Optional.empty();
 
     @Subscribe
+    public void showDrawingCross(ShowDrawingCrossEvent showCrossEvent) {
+        showDrawingCross = showCrossEvent;
+    }
+
+    @Subscribe
     public void updateAllParts(UpdateAllSwitches updateAll) {
         db.getAll().forEach(part -> {
             logger.debug("Update state for {}", part);
@@ -444,5 +469,11 @@ public class SwingUi extends JComponent {
         db.getAll().forEach(part -> {
 //            part.toggle()
         });
+    }
+
+    @Subscribe
+    public void updateMousePosition(MousePositionEvent positionEvent) {
+        currentMousePosition = positionEvent.getPosition();
+        repaint();
     }
 }
