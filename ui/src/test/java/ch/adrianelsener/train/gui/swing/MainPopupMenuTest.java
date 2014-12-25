@@ -16,7 +16,7 @@ public class MainPopupMenuTest {
     public void containsAllEntriesOfDrawMode() {
         final MainPopupMenu testee = new MainPopupMenu();
         // Act
-        MatcherAssert.assertThat(testee.getComponents(), arrayWithSize(DrawMode.values().length));
+        MatcherAssert.assertThat(testee.getComponents(), arrayWithSize(DrawMode.values().length + 1));
     }
 
     @Test
