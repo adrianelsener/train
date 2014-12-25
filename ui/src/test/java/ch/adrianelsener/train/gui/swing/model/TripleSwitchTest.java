@@ -6,12 +6,16 @@ import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
 import org.mockito.*;
+import org.testng.ITestResult;
+import org.testng.TestListenerAdapter;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -22,7 +26,8 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
-public class TripleSwitchTest {
+@Listeners(TripleSwitchTest.class)
+public class TripleSwitchTest extends TestListenerAdapter {
     private final Point middle = new Point(30, 30);
     @Mock
     private Graphics2D g;
@@ -44,6 +49,7 @@ public class TripleSwitchTest {
     private ArgumentCaptor<BoardId> boardIdCaptor;
     @Captor
     private ArgumentCaptor<Boolean> stateCaptor;
+
 
     @BeforeMethod
     public void initMocks() {
@@ -367,7 +373,36 @@ public class TripleSwitchTest {
 
     @Test
     public void getNextConnectionPoint_throwsExceptionIfNothingInRange() {
+        final TripleSwitch testee = TripleSwitch.Builder.create(middle).build();
+        final Point point = new Point(30, 30 - 11);
+        // Act
+        expected = Optional.of(IllegalArgumentException.class);
+        testee.getNextConnectionpoint(point);
+        // Assert in Annotation
+    }
 
+    private Optional<Class> expected = Optional.empty();
+
+    @Override
+    public void onTestFailure(ITestResult tr) {
+        if (null != tr.getThrowable() && expected.get() == tr.getThrowable().getClass()) {
+            tr.setStatus(ITestResult.SUCCESS);
+        }
+        super.onTestFailure(tr);
+    }
+
+    @Override
+    public void onTestSuccess(ITestResult tr) {
+        if (expected.isPresent()) {
+            tr.setStatus(ITestResult.FAILURE);
+        }
+        super.onTestSuccess(tr);
+    }
+
+    @Override
+    public void onTestStart(ITestResult result) {
+        expected = Optional.empty();
+        super.onTestStart(result);
     }
 
 }

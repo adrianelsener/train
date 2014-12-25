@@ -35,12 +35,13 @@ public class MainPopupMenu extends JPopupMenu {
         logger.debug("set popup menu part to {}", newPart);
         this.optPart = newPart;
         logger.debug("evaluted part '{}' for popupmenu", optPart);
-        optPart.ifPresent(part -> {
-            txtBoardId.setText(part.getBoardId().toString());
+        if (optPart.isPresent()) {
+            txtBoardId.setText(optPart.get().getBoardId().toString());
             txtBoardId.setVisible(true);
-        });
+        } else {
+            txtBoardId.setVisible(false);
+        }
     }
-
 
     public static class PopupClickListener extends MouseAdapter {
         @Inject
@@ -67,6 +68,16 @@ public class MainPopupMenu extends JPopupMenu {
             Optional<TrackPart> partNearBy = db.filterUnique(part -> part.isNear(e.getPoint()));
             menu.setPart(partNearBy);
             menu.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
+
+    private static class JLabelWithTextField extends JComponent {
+        private final JLabel lblName;
+        private final JTextField txtValue;
+
+        public JLabelWithTextField(JLabel lblName, JTextField txtValue) {
+            this.lblName = lblName;
+            this.txtValue = txtValue;
         }
     }
 

@@ -1,8 +1,6 @@
 package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.SwitchId;
-import com.beust.jcommander.internal.Maps;
-import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Predicates;
 import com.google.common.collect.*;
 import org.slf4j.Logger;
