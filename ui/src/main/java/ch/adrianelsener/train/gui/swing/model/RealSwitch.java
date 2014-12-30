@@ -8,7 +8,8 @@ import com.google.common.collect.Lists;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class RealSwitch extends SwingSwitch {
@@ -74,6 +75,7 @@ public class RealSwitch extends SwingSwitch {
         }
     }
 
+    @Override
     protected void drawLable(final Graphics2D g) {
         g.setColor(Color.blue);
         g.drawString(boardId.toUiString() + "/" + switchId.toUiString(), super.center.x, super.center.y - 10);

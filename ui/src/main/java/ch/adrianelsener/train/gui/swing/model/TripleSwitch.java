@@ -290,8 +290,14 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public void paint(Graphics2D g) {
+        drawLable(g);
         drawMainSwitch(g);
         drawDirection(g);
+    }
+
+    private void drawLable(Graphics2D g) {
+        g.setColor(Color.blue);
+        g.drawString(upperPart.getLeft().toUiString() + "/" + upperPart.getRight().toUiString() + " : " + lowerPart.getLeft().toUiString() + "/" + lowerPart.getRight().toUiString(), center.x, center.y - 10);
     }
 
     private void drawDirection(Graphics2D g) {
