@@ -76,7 +76,7 @@
                                                 COVEREDRATIO
                                             </value>
                                             <minimum>
-                                                0.60
+                                                0.10
                                             </minimum>
                                         </limit>
                                     </limits>
