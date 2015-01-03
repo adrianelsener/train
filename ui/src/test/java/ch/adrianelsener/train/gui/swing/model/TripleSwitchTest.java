@@ -385,7 +385,7 @@ public class TripleSwitchTest extends TestListenerAdapter {
 
     @Override
     public void onTestFailure(ITestResult tr) {
-        if (null != tr.getThrowable() && expected.get() == tr.getThrowable().getClass()) {
+        if (null != tr.getThrowable() && expected.isPresent() && expected.get() == tr.getThrowable().getClass()) {
             tr.setStatus(ITestResult.SUCCESS);
         }
         super.onTestFailure(tr);
