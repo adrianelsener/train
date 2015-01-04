@@ -1,10 +1,12 @@
 package ch.adrianelsener.train.gui.swing.events;
 
+import ch.adrianelsener.train.gui.swing.model.SwitchTrack;
 import ch.adrianelsener.train.gui.swing.model.Track;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.CombinableMatcher;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.awt.*;
@@ -17,13 +19,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DraftPartCreationActionTest {
+    private Point endPoint;
+    private Optional<Point> startPoint;
+    private PointCalculator dummyCalc;
+
+    @BeforeMethod
+    public void init() {
+        endPoint = new Point(7, 14);
+        startPoint = Optional.of(new Point(12, 20));
+        dummyCalc = mock(PointCalculator.class);
+        when(dummyCalc.calculatePoint(endPoint)).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+    }
 
     @Test
     public void createTrack() throws Exception {
-        final Point endPoint = new Point(7, 14);
-        final Optional<Point> startPoint = Optional.of(new Point(12, 20));
-        final PointCalculator dummyCalc = mock(PointCalculator.class);
-        when(dummyCalc.calculatePoint(endPoint)).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
         final DraftPartCreationAction testee = DraftPartCreationAction.createTrack(endPoint);
         // act
         TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
@@ -34,7 +43,13 @@ public class DraftPartCreationActionTest {
 
     @Test
     public void createSwitchTrack() throws Exception {
-
+        final Point endPoint = new Point(7, 14);
+        final DraftPartCreationAction testee = DraftPartCreationAction.createSwitchTrack(endPoint);
+        // act
+        final TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
+        // assert
+        assertThat(result, instanceOf(SwitchTrack.class));
+        assertThat((SwitchTrack) result, CombinableMatcher.both(startPoint(equalTo(startPoint.get()))).and(endPoint(equalTo(endPoint))));
     }
 
     @Test
