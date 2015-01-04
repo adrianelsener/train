@@ -169,7 +169,7 @@ public class SwingUi extends JComponent {
         final String all = config.get(rbKey);
         final Map<String, Board> boards = Maps.newHashMap();
         toggler = SwitchBoardToggler.create();
-        for (final String boardId : all.split(",")) {
+        for (final String boardId : all.split(";")) {
             final String networkAddress = config.get(rbKey.createSubKey(boardId).createSubKey("IP"));
             final Board board;
             if (boards.containsKey(networkAddress)) {
