@@ -1,24 +1,17 @@
 package ch.adrianelsener.train.gui.swing.model;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.util.List;
-
+import ch.adrianelsener.train.gui.SwitchCallback;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
 
-import ch.adrianelsener.train.gui.SwitchCallback;
+import java.awt.*;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.mockito.Mockito.*;
 
 public class TrackPartsTest {
 

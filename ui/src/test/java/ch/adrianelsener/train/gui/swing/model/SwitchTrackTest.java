@@ -1,8 +1,8 @@
 package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
-import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
+import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.Collections2;
 import org.hamcrest.FeatureMatcher;
 import org.mockito.Mock;
@@ -10,9 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.equalTo;

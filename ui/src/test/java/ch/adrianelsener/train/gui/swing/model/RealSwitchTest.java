@@ -2,8 +2,8 @@ package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.testing.RulesForTestNg;
 import ch.adrianelsener.train.gui.BoardId;
-import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
+import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import com.google.common.collect.Collections2;
 import org.mockito.ArgumentCaptor;
@@ -13,15 +13,13 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 

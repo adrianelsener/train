@@ -1,12 +1,11 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import org.testng.annotations.Test;
+
+import java.awt.*;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
-
-import java.awt.Graphics2D;
-
-import ch.adrianelsener.train.gui.swing.model.InvisiblePart;
-import org.testng.annotations.Test;
 
 public class InvisiblePartTest {
 
