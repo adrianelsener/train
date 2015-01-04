@@ -1,8 +1,9 @@
 package ch.adrianelsener.train.config;
 
-import java.util.HashMap;
-
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
+import java.util.HashMap;
 
 public class Config {
 
@@ -39,4 +40,8 @@ public class Config {
         return get(parentKey.createSubKey(childname));
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
 }

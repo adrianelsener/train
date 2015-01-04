@@ -1,10 +1,10 @@
 package ch.adrianelsener.train.config;
 
+import org.testng.annotations.Test;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.testng.annotations.Test;
 
 public class ConfigTest {
 
@@ -39,6 +39,22 @@ public class ConfigTest {
         final String result = all.getChild("2");
         // Assert
         assertThat(result, is(equalTo("two")));
+    }
+
+    @Test
+    public void equality() {
+        final ConfKey parent = ConfKey.create("FOO");
+        final ConfKey child = ConfKey.create(parent, "1");
+        final Config a = new Config();
+        final Config b = new Config();
+        a.put(parent, "bar");
+        b.put(parent, "bar");
+        a.put(child, "one");
+        b.put(child, "one");
+        // act
+        final boolean result = a.equals(b);
+        // assert
+        assertThat(result, is(true));
     }
 
 }
