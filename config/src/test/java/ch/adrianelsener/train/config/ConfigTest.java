@@ -42,6 +42,19 @@ public class ConfigTest {
     }
 
     @Test
+    public void checkToString() {
+        final ConfKey parent = ConfKey.create("FOO");
+        final ConfKey child = ConfKey.create(parent, "1");
+        final Config testee = new Config();
+        testee.put(parent, "bar");
+        testee.put(child, "one");
+        // act
+        final String result = testee.toString();
+        // assert
+        assertThat(result, equalTo("Config[props={ConfKey.FullConfKey[string=FOO]=bar, ConfKey.FullConfKey[string=FOO.1]=one},parentKey=ConfKey.FullConfKey[string=]]"));
+    }
+
+    @Test
     public void equality() {
         final ConfKey parent = ConfKey.create("FOO");
         final ConfKey child = ConfKey.create(parent, "1");

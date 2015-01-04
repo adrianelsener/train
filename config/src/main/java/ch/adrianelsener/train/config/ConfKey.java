@@ -2,6 +2,7 @@ package ch.adrianelsener.train.config;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class ConfKey {
 
@@ -26,7 +27,7 @@ public abstract class ConfKey {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
     public static ConfKey create(final String string) {
@@ -43,12 +44,22 @@ public abstract class ConfKey {
             super(key);
         }
 
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        }
+
     }
 
     private static class BoardConfKey extends ConfKey {
 
         BoardConfKey(final String string) {
             super(string);
+        }
+
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
         }
 
     }
