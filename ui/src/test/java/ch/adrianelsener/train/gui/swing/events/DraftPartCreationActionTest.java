@@ -1,9 +1,6 @@
 package ch.adrianelsener.train.gui.swing.events;
 
-import ch.adrianelsener.train.gui.swing.model.SwingSwitch;
-import ch.adrianelsener.train.gui.swing.model.SwitchTrack;
-import ch.adrianelsener.train.gui.swing.model.Track;
-import ch.adrianelsener.train.gui.swing.model.TrackPart;
+import ch.adrianelsener.train.gui.swing.model.*;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.CombinableMatcher;
@@ -54,21 +51,29 @@ public class DraftPartCreationActionTest {
 
     @Test
     public void createSwitch() throws Exception {
-        DraftPartCreationAction testee = DraftPartCreationAction.createSwitch(endPoint);
+        final DraftPartCreationAction testee = DraftPartCreationAction.createSwitch(endPoint);
         // act
-        TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
+        final TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
         // assert
-        assertThat(result, instanceOf(SwingSwitch.class));
+        assertThat(result, instanceOf(RealSwitch.class));
     }
 
     @Test
-    public void testCreateDummySwitch() throws Exception {
-
+    public void createDummySwitch() throws Exception {
+        final DraftPartCreationAction testee = DraftPartCreationAction.createDummySwitch(endPoint);
+        // act
+        final TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
+        // assert
+        assertThat(result, instanceOf(DummySwitch.class));
     }
 
     @Test
     public void testCreateTripleSwitch() throws Exception {
-
+        final DraftPartCreationAction testee = DraftPartCreationAction.createTripleSwitch(endPoint);
+        // act
+        final TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
+        // assert
+        assertThat(result, instanceOf(TripleSwitch.class));
     }
 
     private Matcher<? super Track> endPoint(Matcher<Point> matcher) {
