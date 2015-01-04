@@ -7,16 +7,14 @@ import ch.adrianelsener.train.denkovi.Pin;
 import ch.adrianelsener.train.denkovi.PinState;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hamcrest.MatcherAssert;
 import org.mockito.InOrder;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class SwitchBoardV1Test {
 
@@ -32,9 +30,10 @@ public class SwitchBoardV1Test {
         assertThat(result, is(true));
     }
 
+    private final Config config = createSampleConfig();
+
     @DataProvider(name = "leftAndRight", parallel = true)
     public Object[][] createLeftRightData() {
-        final Config config = createSampleConfig();
         return new Object[][]{//
                 {new Testdata(SwitchWithState._01L, Pin._10.on(), Pin._11.on(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
                 , {new Testdata(SwitchWithState._01R, Pin._10.off(), Pin._11.on(), Pin._12.on(), Pin._13.on(), Pin._14, config)} //
@@ -69,6 +68,19 @@ public class SwitchBoardV1Test {
         order.verify(board).set(testData.p4);
         order.verify(board).set(PinState.Pon(testData.ptoggle));
         order.verify(board).set(PinState.Poff(testData.ptoggle));
+    }
+
+    @Test
+    public void getBoardCfg() {
+        final Board board = mock(Board.class);
+
+        final SwitchBoardV1 testee = new SwitchBoardV1(board, config, 0);
+        // Act
+        final Config result = testee.getBoardCfg();
+        // assert
+        final ConfKey boardKey = ConfKey.createForBoard("RB.00");
+        Config expectedConfig = config.getAll(boardKey);
+        assertThat(result, equalTo(expectedConfig));
     }
 
     private Config createSampleConfig() {
