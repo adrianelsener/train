@@ -116,7 +116,7 @@ public class SwitchBoardV1Test {
 
         @Override
         public String toString() {
-            return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE).toString();
+            return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
         }
     }
 }
