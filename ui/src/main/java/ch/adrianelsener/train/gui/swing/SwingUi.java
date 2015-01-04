@@ -460,6 +460,7 @@ public class SwingUi extends JComponent {
             toggleAction.toggle(toggler, db);
             repaint();
         } else {
+            logger.debug("should notify status bar");
             // TODO notify statusbar...
         }
     }
