@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -371,21 +371,21 @@ public class TripleSwitchTest extends TestListenerAdapter {
 
     }
 
-    @Test(enabled = false)
+    @Test
     public void getNextConnectionPoint_throwsExceptionIfNothingInRange() {
         final TripleSwitch testee = TripleSwitch.Builder.create(middle).build();
         final Point point = new Point(30, 30 - 11);
         // Act
-        expected = Optional.of(IllegalArgumentException.class);
+        expected.expect(IllegalArgumentException.class);
         testee.getNextConnectionpoint(point);
         // Assert in Annotation
     }
 
-    private Optional<Class> expected = Optional.empty();
+    private static ExpectedException expected = ExpectedException.none();
 
     @Override
     public void onTestFailure(ITestResult tr) {
-        if (null != tr.getThrowable() && expected.isPresent() && expected.get() == tr.getThrowable().getClass()) {
+        if (null != tr.getThrowable() && expected.isExpected(tr.getThrowable().getClass())) {
             tr.setStatus(ITestResult.SUCCESS);
         }
         super.onTestFailure(tr);
@@ -401,8 +401,34 @@ public class TripleSwitchTest extends TestListenerAdapter {
 
     @Override
     public void onTestStart(ITestResult result) {
-        expected = Optional.empty();
+        expected.reset();
         super.onTestStart(result);
+    }
+
+    private static class ExpectedException {
+
+        private Class<? extends Throwable> exceptionClass = null;
+
+        public static ExpectedException none() {
+            return new ExpectedException();
+        }
+
+        public ExpectedException expect(Class<? extends Throwable> exceptionClass) {
+            this.exceptionClass = exceptionClass;
+            return this;
+        }
+
+        public boolean isPresent() {
+            return null != exceptionClass;
+        }
+
+        public void reset() {
+            exceptionClass = null;
+        }
+
+        public boolean isExpected(Class<? extends Throwable> aClass) {
+            return Objects.equals(aClass, exceptionClass);
+        }
     }
 
 }
