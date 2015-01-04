@@ -4,6 +4,7 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.Sets;
 import org.mockito.*;
 import org.testng.ITestResult;
@@ -20,12 +21,11 @@ import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
-
 @Listeners(TripleSwitchTest.class)
 public class TripleSwitchTest extends TestListenerAdapter {
     private final Point middle = new Point(30, 30);
@@ -209,7 +209,7 @@ public class TripleSwitchTest extends TestListenerAdapter {
         final TripleSwitch testee = new TripleSwitch(middle).setBoardId("24/25").setId("11/12");
         // Act
         final Collection<Object> data = testee.getDataToPersist();
-        final Collection<String> strings = Collections2.transform(data, input -> input.toString());
+        final Collection<String> strings = Collections2.transform(data, Object::toString);
         // Assert
         final Iterator<String> iterator = strings.iterator();
         iterator.next();
@@ -379,6 +379,16 @@ public class TripleSwitchTest extends TestListenerAdapter {
         expected.expect(IllegalArgumentException.class);
         testee.getNextConnectionpoint(point);
         // Assert in Annotation
+    }
+
+    @Test
+    public void getInConnectors_onlyTheSideWithOne() {
+        final TripleSwitch testee = TripleSwitch.Builder.create(middle).build();
+        final Point expected = new Point(middle.x - 10, middle.y);
+        // act
+        final ImmutableCollection<Point> result = testee.getInConnectors();
+        // assert
+        assertThat(result, contains(equalTo(expected)));
     }
 
     private static ExpectedException expected = ExpectedException.none();

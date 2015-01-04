@@ -6,6 +6,7 @@ import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import ch.adrianelsener.train.gui.swing.common.RotationCalculator;
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -123,7 +124,7 @@ public class TripleSwitch implements TrackPart {
 
     @Override
     public ImmutableCollection<Point> getInConnectors() {
-        throw new IllegalStateException("Not yet implemented");
+        return ImmutableSet.of(middleLeft);
     }
 
     @Override
