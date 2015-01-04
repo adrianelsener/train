@@ -35,7 +35,7 @@
         <dependency>
             <groupId>ch.adrianelsener</groupId>
             <artifactId>config</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
