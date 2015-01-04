@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.gui.swing.events;
 
+import ch.adrianelsener.train.gui.swing.model.SwingSwitch;
 import ch.adrianelsener.train.gui.swing.model.SwitchTrack;
 import ch.adrianelsener.train.gui.swing.model.Track;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
@@ -43,7 +44,6 @@ public class DraftPartCreationActionTest {
 
     @Test
     public void createSwitchTrack() throws Exception {
-        final Point endPoint = new Point(7, 14);
         final DraftPartCreationAction testee = DraftPartCreationAction.createSwitchTrack(endPoint);
         // act
         final TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
@@ -53,8 +53,12 @@ public class DraftPartCreationActionTest {
     }
 
     @Test
-    public void testCreateSwitch() throws Exception {
-
+    public void createSwitch() throws Exception {
+        DraftPartCreationAction testee = DraftPartCreationAction.createSwitch(endPoint);
+        // act
+        TrackPart result = testee.createDraftPart(startPoint, dummyCalc);
+        // assert
+        assertThat(result, instanceOf(SwingSwitch.class));
     }
 
     @Test
