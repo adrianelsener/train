@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.driver;
 
+import ch.adrianelsener.train.config.ConfKey;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.denkovi.Board;
 import ch.adrianelsener.train.denkovi.Pin;
@@ -11,10 +12,25 @@ abstract class AbstractBoard {
     private final static Logger logger = LoggerFactory.getLogger(AbstractBoard.class);
     private static final long SLEEP_TIME = 10;
     private final Board board;
+    private final Config boardProps;
 
-    protected AbstractBoard(final Board board) {
+    protected AbstractBoard(final Board board, Config config, int boardNumber) {
         this.board = board;
+        final ConfKey boardKey = createBoardKey(boardNumber);
+        logger.debug("Look in config for {}", boardKey);
+        boardProps = config.getAll(boardKey);
     }
+
+
+    private ConfKey createBoardKey(int boardNumber) {
+        String rbPrefix = getBoardPrefix() + ".";
+        if (boardNumber < 10) {
+            rbPrefix += "0";
+        }
+        return ConfKey.createForBoard(rbPrefix + boardNumber);
+    }
+
+    protected abstract String getBoardPrefix();
 
     protected void togglePin(final Pin togglePin) {
         set(PinState.Pon(togglePin));
@@ -46,6 +62,8 @@ abstract class AbstractBoard {
         return upPIn;
     }
 
-    protected abstract Config getBoardCfg();
+    protected Config getBoardCfg() {
+        return boardProps;
+    }
 
 }

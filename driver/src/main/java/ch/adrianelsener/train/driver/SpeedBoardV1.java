@@ -13,9 +13,14 @@ public class SpeedBoardV1 extends AbstractBoard implements SpeedBoardDriver {
     private final Config boardCfg;
 
     public SpeedBoardV1(final Config cfg, final Board board) {
-        super(board);
+        super(board, cfg, 0);
         final ConfKey boardKey = ConfKey.createForBoard("SB.00");
         boardCfg = cfg.getAll(boardKey);
+    }
+
+    @Override
+    protected String getBoardPrefix() {
+        return "SB";
     }
 
     @Override

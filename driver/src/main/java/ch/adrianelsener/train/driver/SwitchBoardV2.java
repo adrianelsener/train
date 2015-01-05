@@ -4,13 +4,15 @@ import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.denkovi.Board;
 
 public class SwitchBoardV2 extends AbstractBoard implements SwitchBoardDriver {
-    public SwitchBoardV2(final Board board, final Config config, final int boardNummer) {
-        super(board);
+    private Config boardProps;
+
+    public SwitchBoardV2(final Board board, final Config config, final int boardNumber) {
+        super(board, config, boardNumber);
     }
 
     @Override
-    protected Config getBoardCfg() {
-        return null;
+    protected String getBoardPrefix() {
+        return "RB";
     }
 
     @Override
@@ -22,4 +24,5 @@ public class SwitchBoardV2 extends AbstractBoard implements SwitchBoardDriver {
     public boolean isRead() {
         return true;
     }
+
 }
