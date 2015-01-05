@@ -94,7 +94,7 @@ public class SwingUi extends JComponent {
                 case "TS":
                     return SwitchTrack.createSwitchTrack(iterator);
                 case "S":
-                    return SwingSwitch.createSwitch(iterator);
+                    return RealSwitch.create(iterator);
                 case "DS":
                     return DummySwitch.create(iterator);
                 default:

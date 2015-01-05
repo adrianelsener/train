@@ -129,12 +129,12 @@ public class RealSwitchTest extends RulesForTestNg {
 
     @Test
     public void asCsvStringCanBeUsedForFromCsvString() {
-        final SwingSwitch testee = new RealSwitch(middle).toggle(toggler).invertView(true);
+        final RealSwitch testee = new RealSwitch(middle).toggle(toggler).invertView(true);
         // Act
         final Collection<String> strings = Collections2.transform(testee.getDataToPersist(), input -> input.toString());
         final Iterator<String> iterator = strings.iterator();
         iterator.next();
-        final SwingSwitch result = SwingSwitch.createSwitch(iterator);
+        final RealSwitch result = RealSwitch.create(iterator);
         // Assert
         assertThat(result, is(equalTo(testee)));
     }

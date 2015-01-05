@@ -1,8 +1,5 @@
 package ch.adrianelsener.train.gui.swing.model;
 
-import ch.adrianelsener.train.gui.BoardId;
-import ch.adrianelsener.train.gui.SwitchId;
-import ch.adrianelsener.train.gui.swing.TrackView;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
 import ch.adrianelsener.train.gui.swing.common.RotationCalculator;
 import com.google.common.collect.ImmutableCollection;
@@ -13,7 +10,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.awt.*;
-import java.util.Iterator;
 
 public abstract class SwingSwitch implements TrackPart {
     protected final Point center;
@@ -48,25 +44,6 @@ public abstract class SwingSwitch implements TrackPart {
         final double bottomRightY = center.y - 10;
 
         bottomRightPoint = new Point(calcX(sin, cos, bottomRightX, bottomRightY), calcY(sin, cos, bottomRightX, bottomRightY));
-
-    }
-
-    @Deprecated // Use direct implementations
-    public static SwingSwitch createSwitch(final Iterator<String> iterator) {
-        final Point center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
-        final Double drawAngle = Double.valueOf(iterator.next());
-        final SwitchId readSwitchId = SwitchId.fromValue(iterator.next());
-        final BoardId readBoardId = BoardId.fromValue(iterator.next());
-        final boolean state = Boolean.parseBoolean(iterator.next());
-        final SwitchMode mode = SwitchMode.valueOf(iterator.next()); // Switchmode no more needed
-        final TrackView switchView = TrackView.valueOf(iterator.next());
-        switch (mode) {
-            case Real:
-                return new RealSwitch(center, drawAngle, readSwitchId, readBoardId, state, switchView);
-            case Dummy:
-                return new DummySwitch(center, drawAngle);
-        }
-        throw new IllegalArgumentException("Could not determine switch");
     }
 
     @Override
