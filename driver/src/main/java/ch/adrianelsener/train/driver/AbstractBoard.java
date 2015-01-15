@@ -33,6 +33,7 @@ abstract class AbstractBoard {
     protected abstract String getBoardPrefix();
 
     protected void togglePin(final Pin togglePin) {
+        logger.debug("Toggle with pin {}", togglePin);
         set(PinState.Pon(togglePin));
         set(PinState.Poff(togglePin));
     }
