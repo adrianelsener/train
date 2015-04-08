@@ -11,5 +11,13 @@
 
     <artifactId>pi</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-core</artifactId>
+            <version>0.0.5</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
