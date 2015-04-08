@@ -23,6 +23,7 @@ public class PwmTest {
         String line = "";
         Scanner scan = new Scanner(System.in);
         while(!line.contains("e")) {
+            System.out.println("Current is "+value);
             SoftPwm.softPwmWrite(PIN_NUMBER, value);
             line = scan.nextLine();
             if (line.contains("+")) {
