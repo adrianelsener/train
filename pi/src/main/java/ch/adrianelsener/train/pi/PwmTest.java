@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.pi;
 
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.SoftPwm;
 
@@ -10,12 +11,11 @@ import java.util.Scanner;
  * Created by els on 08.04.15.
  */
 public class PwmTest {
-    private static int PIN_NUMBER = 4;
+    private static int PIN_NUMBER = 7;
 
     public static void main(String[] args) throws Exception {
         // initialize wiringPi library, this is needed for PWM
         Gpio.wiringPiSetup();
-
         // softPwmCreate(int pin, int value, int range)
         // the range is set like (min=0 ; max=100)
         SoftPwm.softPwmCreate(PIN_NUMBER, 0, 100);
