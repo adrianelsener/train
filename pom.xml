@@ -64,6 +64,7 @@
         <module>odb</module>
         <module>csvdb</module>
         <module>testngrules</module>
+        <module>pi</module>
     </modules>
 
     <properties>
