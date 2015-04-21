@@ -17,13 +17,13 @@ int main (void)
 	
 		while (a>0){
 			OCR0A = a; 
-			_delay_ms(15);
+			_delay_ms(800);
 			a--;
 		}
 		
 		while (a<255){
 			OCR0A = a; 
-			_delay_ms(15);
+			_delay_ms(800);
 			a++;
 		}
 		
