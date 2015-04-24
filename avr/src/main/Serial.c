@@ -43,6 +43,9 @@ void Initialisierung(void) {
 
 int main(void) {
 
+	DDRD=0xff; //PORTD as OUTPUT
+    PORTD=0x00;
+
 	Initialisierung();
 
 	while(1) {
@@ -69,6 +72,8 @@ int main(void) {
 		low			= rxbuffer[0];
 		hight		= rxbuffer[1];
 		Variable	= uniq(low,hight);			// 2x 8Bit  --> 16Bit
+
+		PORTD = Variable;
 
 		_delay_ms(500);
 
