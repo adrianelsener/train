@@ -1,134 +1,127 @@
-#include<avr/io.h>
-#include<inttypes.h>
+/*#################################################################################################
+	Title	: TWI SLave
+	Author	: Martin Junghans <jtronics@gmx.de>
+	Hompage	: www.jtronics.de
+	Software: AVR-GCC / Programmers Notpad 2
+	License	: GNU General Public License
+
+	Aufgabe	:
+	Betrieb eines AVRs mit Hardware-TWI-Schnittstelle als Slave.
+	Zu Beginn muss init_twi_slave mit der gew�nschten Slave-Adresse als Parameter aufgerufen werden.
+	Der Datenaustausch mit dem Master erfolgt �ber die Buffer rxbuffer und txbuffer, auf die von Master und Slave zugegriffen werden kann.
+	rxbuffer und txbuffer sind globale Variablen (Array aus uint8_t).
+
+	Ablauf:
+	Die Ansteuerung des rxbuffers, in den der Master schreiben kann, erfolgt �hnlich wie bei einem normalen I2C-EEPROM.
+	Man sendet zun�chst die Bufferposition, an die man schreiben will, und dann die Daten. Die Bufferposition wird
+	automatisch hochgez�hlt, sodass man mehrere Datenbytes hintereinander schreiben kann, ohne jedesmal
+	die Bufferadresse zu schreiben.
+	Um den txbuffer vom Master aus zu lesen, �bertr�gt man zun�chst in einem Schreibzugriff die gew�nschte Bufferposition und
+	liest dann nach einem repeated start die Daten aus. Die Bufferposition wird automatisch hochgez�hlt, sodass man mehrere
+	Datenbytes hintereinander lesen kann, ohne jedesmal die Bufferposition zu schreiben.
+
+	Abgefangene Fehlbedienung durch den Master:
+	- Lesen �ber die Grenze des txbuffers hinaus
+	- Schreiben �ber die Grenzen des rxbuffers hinaus
+	- Angabe einer ung�ltigen Schreib/Lese-Adresse
+	- Lesezuggriff, ohne vorher Leseadresse geschrieben zu haben
+
+	LICENSE:
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+//#################################################################################################*/
+
+#include <stdlib.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+
+#include "twi/twislave.h"
+
 #ifndef F_CPU
-#define F_CPU 4000000UL
+#define F_CPU 8000000UL
 #endif
-#include<util/delay.h>
-#include<stdint.h>
+#include <util/delay.h>
+
+//###################### Slave-Adresse
+#define SLAVE_ADRESSE 0x50 								// Slave-Adresse
+
+//###################### Macros
+#define uniq(LOW,HEIGHT)	((HEIGHT << 8)|LOW)			// 2x 8Bit 	--> 16Bit
+#define LOW_BYTE(x)        	(x & 0xff)					// 16Bit 	--> 8Bit
+#define HIGH_BYTE(x)       	((x >> 8) & 0xff)			// 16Bit 	--> 8Bit
 
 
+#define sbi(ADDRESS,BIT) 	((ADDRESS) |= (1<<(BIT)))	// set Bit
+#define cbi(ADDRESS,BIT) 	((ADDRESS) &= ~(1<<(BIT)))	// clear Bit
+#define	toggle(ADDRESS,BIT)	((ADDRESS) ^= (1<<BIT))		// Bit umschalten
 
-#define BAUD 9600UL          // Baudrate
-
-// Berechnungen
-#define UBRR_VAL ((F_CPU+BAUD*8)/(BAUD*16)-1)   // clever runden
-#define BAUD_REAL (F_CPU/(16*(UBRR_VAL+1)))     // Reale Baudrate
-#define BAUD_ERROR ((BAUD_REAL*1000)/BAUD)      // Fehler in Promille, 1000 = kein Fehler.
-
-#if ((BAUD_ERROR<990) || (BAUD_ERROR>1010))
-  #error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch!
-#endif
+#define	bis(ADDRESS,BIT)	(ADDRESS & (1<<BIT))		// bit is set?
+#define	bic(ADDRESS,BIT)	(!(ADDRESS & (1<<BIT)))		// bit is clear?
 
 
+//###################### Variablen
+	uint16_t 	Variable=2345;				//Z�hler
+	uint16_t	buffer;
+	uint16_t	low, hight;
 
+//################################################################################################### Initialisierung
+void Initialisierung(void)
+	{
+	cli();
+	//### PORTS
 
+	//### TWI
+	init_twi_slave(SLAVE_ADRESSE);			//TWI als Slave mit Adresse slaveadr starten
 
-void uart_init(void)
+	sei();
+	}
+
+//################################################################################################### Hauptprogramm
+int main(void)
 {
-  UBRRH = UBRR_VAL >> 8;
-  UBRRL = UBRR_VAL;
+
+Initialisierung();
+
+while(1)
+    {
+	//############################ write Data in txbuffer
+
+	// 8Bit variable
+	txbuffer[2]=3;
+	txbuffer[3]=4;
+	txbuffer[4]=5;
+	txbuffer[5]=6;
+
+	// 16Bit Variable --> 2x 8Bit Variable
+	buffer		= Variable;
+	txbuffer[0]	= LOW_BYTE(buffer);			//16bit --> 8bit
+	txbuffer[1]	= HIGH_BYTE(buffer);		//16bit --> 8bit
 
 
-     /*Set Frame Format
+	//############################ read Data form rxbuffer
 
+	// 8Bit variable
+	Variable	= rxbuffer[2];
 
-     >> Asynchronous mode
-     >> No Parity
-     >> 1 StopBit
-     >> char size 8
+	// 2x 8Bit Variable -->16Bit Variable
+	low			= rxbuffer[0];
+	hight		= rxbuffer[1];
+	Variable	= uniq(low,hight);			// 2x 8Bit  --> 16Bit
 
-     */
+	_delay_ms(500);
 
-     UCSRC=(1<<URSEL)|(3<<UCSZ0);
-
-
-     //Enable The receiver and transmitter
-     UCSRB=(1<<RXEN)|(1<<TXEN);
-//
-//    UCSRC = (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);  // Asynchron 8N1
-//    UCSRB |= (1<<RXEN);                        // UART RX einschalten
-}
-
-
-char USARTReadChar()
-{
-   //Wait untill a data is available
-
-   while(!(UCSRA & (1<<RXC)))
-   {
-      //Do nothing
-   }
-
-   //Now USART has got data from host
-   //and is available is buffer
-
-   return UDR;
-}
-
-//
-///* Zeichen empfangen */
-//uint8_t uart_getc(void)
-//{
-//    while (!(UCSRA & (1<<RXC)))   // warten bis Zeichen verfuegbar
-//        ;
-//    return UDR;                   // Zeichen aus UDR an Aufrufer zurueckgeben
-//}
-//
-
-
-//This fuction writes the given "data" to
-//the USART which then transmit it via TX line
-void USARTWriteChar(char data)
-{
-   //Wait untill the transmitter is ready
-
-   while(!(UCSRA & (1<<UDRE)))
-   {
-      //Do nothing
-   }
-
-   //Now write the data to USART buffer
-
-   UDR=data;
-}
+	//############################
+	} //end.while
+} //end.main
 
 
 
-int main(void) {
-    uart_init();
-
-    char data;
-
-    while (1) {
-       //Read data
-       data=USARTReadChar();
-
-       /* Now send the same data but but surround it in
-       square bracket. For example if user sent 'a' our
-       system will echo back '[a]'.
-
-       */
-
-       USARTWriteChar('[');
-       USARTWriteChar(data);
-       USARTWriteChar(']');
- }
-
-//  while (1)
-//  {
-//    if ( (UCSRA & (1<<RXC)) )
-//    {
-//      // Zeichen wurde empfangen, jetzt abholen
-//      uint8_t c;
-//      c = uart_getc();
-//      // hier etwas mit c machen z.B. auf PORT ausgeben
-//      DDRC = 0xFF; // PORTC Ausgang
-//      PORTC = c;
-//    }
-//    else
-//    {
-//      // Kein Zeichen empfangen, Restprogramm ausführen...
-//    }
-//  }
-  return 0; // never reached
-}
