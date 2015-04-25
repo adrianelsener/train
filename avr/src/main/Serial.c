@@ -46,8 +46,28 @@ int main(void) {
 	DDRD=0xff; //PORTD as OUTPUT
     PORTD=0x00;
 
+
+    DDRB = 0x06;                      // Set Port PB1 and PB2 as Output
+
+//	TCCR1A=(1<<COM0A1) | (1<<WGM00) | (1<<WGM01);	// PWM Phase Correct, Set OCR0A at TOP
+//	TCCR0B=_BV(CS01) ;							// Prescaler 8
+
+
+
+     TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
+             |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
+
+	 TCCR1B = _BV(CS10);
+
+     OCR1A = 0;                       // Dutycycle of OC1A = 25%
+//     OCR1B = 127;                      // Dutycycle of OC1B = 50%
+
+
 	Initialisierung();
 
+	int up = 0;
+	int pwmVal = 0;
+	int a = 250;
 	while(1) {
 		//############################ write Data in txbuffer
 
@@ -74,8 +94,27 @@ int main(void) {
 		Variable	= uniq(low,hight);			// 2x 8Bit  --> 16Bit
 
 		PORTD = Variable;
+		OCR1A = low;
+//		OCR1B = hight;
 
-		_delay_ms(500);
+
+		if (up == 1) {
+			if (pwmVal < 255) {
+				pwmVal++;
+			} else {
+				up = 0;
+			}
+		}
+		if (up == 0) {
+			if (pwmVal > 0) {
+				pwmVal--;
+			} else {
+				up = 1;
+			}
+		}
+		OCR1A = pwmVal;
+
+		_delay_ms(10);
 
 		//############################
 	}
