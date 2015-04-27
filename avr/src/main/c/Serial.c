@@ -93,9 +93,8 @@ int main(void) {
 		hight		= rxbuffer[1];
 		Variable	= uniq(low,hight);			// 2x 8Bit  --> 16Bit
 
-		PORTD = Variable;
+		PORTD = hight;
 		OCR1A = low;
-//		OCR1B = hight;
 
 
 		if (up == 1) {
