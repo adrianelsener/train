@@ -21,4 +21,4 @@ avr-gcc $cBaseSrcFolder$baseArtefact.c $cTwiSlaveFiles -mmcu=atmega8 -Os -o $cBa
 avr-objcopy -O ihex $cBaseTargetFolder$baseArtefact.elf $cBaseTargetFolder$baseArtefact.hex
 rm $cBaseTargetFolder$baseArtefact.elf
 echo "sudo avrdude -p atmega8 -e -c avr910 -P /dev/ttyUSB0 -U flash:w:$cBaseTargetFolder$baseArtefact.hex:i"
-#avrdude -p atmega8 -e -c avr910 -P /dev/ttyUSB0 -U flash:w:${cBaseTargetFolder}${baseArtefact}.hex:i
+avrdude -p atmega8 -e -c avr910 -P /dev/ttyUSB0 -U flash:w:$cBaseTargetFolder$baseArtefact.hex:i
