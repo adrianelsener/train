@@ -1,6 +1,6 @@
 #!/bin/bash
-if [ ! -d "target/main/led_fader_t13_code" ]; then
-  mkdir -p target/main/led_fader_t13_code
+if [ ! -d "target/main/c" ]; then
+  mkdir -p target/main/c
 fi
 
 #avr-g++ src/main/led_fader_t13_code/test1.c -mmcu=atmega8 -Os -o target/main/led_fader_t13_code/fader.elf
