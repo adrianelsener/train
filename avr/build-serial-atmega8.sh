@@ -10,6 +10,6 @@ fi
 
 avr-gcc src/main/c/Serial.c src/main/c/twi/twislave.c -mmcu=atmega8 -Os -o target/main/c/Serial.elf
 avr-objcopy -O ihex target/main/c/Serial.elf target/main/c/Serial.hex
-rm target/main/Serial.elf
+rm target/main/c/Serial.elf
 echo 'sudo avrdude -p atmega8 -e -c avr910 -P /dev/ttyUSB0 -U flash:w:target/main/c/Serial.hex:i'
 avrdude -p atmega8 -e -c avr910 -P /dev/ttyUSB0 -U flash:w:target/main/c/Serial.hex:i

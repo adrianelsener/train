@@ -43,8 +43,8 @@ void Initialisierung(void) {
 
 int main(void) {
 
-	DDRD=0xff; //PORTD as OUTPUT
-    PORTD=0x00;
+//	DDRD=0xff; //PORTD as OUTPUT
+//    PORTD=0x00;
 
 
     DDRB = 0x06;                      // Set Port PB1 and PB2 as Output
@@ -59,7 +59,7 @@ int main(void) {
 
 	 TCCR1B = _BV(CS10);
 
-     OCR1A = 0;                       // Dutycycle of OC1A = 25%
+     OCR1A = 127;                       // Dutycycle of OC1A = 50%
 //     OCR1B = 127;                      // Dutycycle of OC1B = 50%
 
 
@@ -72,15 +72,19 @@ int main(void) {
 		//############################ write Data in txbuffer
 
 		// 8Bit variable
-		txbuffer[2]=3;
-		txbuffer[3]=4;
-		txbuffer[4]=5;
-		txbuffer[5]=6;
+//		txbuffer[0]=1;
+//		txbuffer[1]=2;
+//		txbuffer[2]=3;
+//		txbuffer[3]=4;
+//		txbuffer[4]=5;
+//		txbuffer[5]=6;
 
 		// 16Bit Variable --> 2x 8Bit Variable
-		buffer		= Variable;
-		txbuffer[0]	= LOW_BYTE(buffer);			//16bit --> 8bit
-		txbuffer[1]	= HIGH_BYTE(buffer);		//16bit --> 8bit
+//		buffer		= Variable;
+		txbuffer[0]	= 0xFF;
+		txbuffer[1] = 0x09;
+//		txbuffer[0]	= LOW_BYTE(buffer);			//16bit --> 8bit
+//		txbuffer[1]	= HIGH_BYTE(buffer);		//16bit --> 8bit
 
 
 		//############################ read Data form rxbuffer
@@ -93,8 +97,10 @@ int main(void) {
 		hight		= rxbuffer[1];
 		Variable	= uniq(low,hight);			// 2x 8Bit  --> 16Bit
 
-		PORTD = hight;
-		OCR1A = low;
+//		PORTD = hight;
+		if (Variable > 0) {
+			OCR1A = Variable;
+		}
 
 
 		if (up == 1) {
@@ -111,7 +117,7 @@ int main(void) {
 				up = 1;
 			}
 		}
-		OCR1A = pwmVal;
+//		OCR1A = pwmVal;
 
 		_delay_ms(10);
 
