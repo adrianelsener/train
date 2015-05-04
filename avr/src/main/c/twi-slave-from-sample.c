@@ -57,7 +57,7 @@ int main (void)
 //					}
 //					byte[7] = TWIS_ReadNack ();
 //					printf ("Byte read: %d\n",byte[7]);
-					TWIS_Stop ();
+//					TWIS_Stop ();
 					break;
 
                  // TWI requests to write a byte to the master.
@@ -65,12 +65,13 @@ int main (void)
                  // is prepared to receive 8 bytes.
 
 				case TWIS_WriteBytes:
-					for (i=0;i<8;i++)
-						{
-							TWIS_Write (j++);
-						}
-				    TWIS_Stop ();
-				    TWIS_Init (15, 100000);
+					TWIS_Write (j);
+//					for (i=0;i<8;i++)
+//						{
+//							TWIS_Write (j++);
+//						}
+//				    TWIS_Stop ();
+//				    TWIS_Init (15, 100000);
 					break;
 			}
 		}
