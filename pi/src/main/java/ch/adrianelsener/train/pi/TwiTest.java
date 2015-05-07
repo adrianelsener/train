@@ -31,11 +31,15 @@ public class TwiTest {
         Optional<I2CDevice> i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
         System.out.printf("next value: ");
         String val = in.nextLine();
+        byte byteVal = Byte.MIN_VALUE;
         while (!val.startsWith("e")) {
-            if (StringUtils.isNumeric(val)) {
-                int intVal = Integer.parseInt(val);
-                i2CDevice.get().write((byte) intVal);
-            }
+//            if (StringUtils.isNumeric(val)) {
+//                int intVal = Integer.parseInt(val);
+//                i2CDevice.get().write((byte) intVal);
+            i2CDevice.get().write(byteVal);
+            byteVal++;
+            System.out.printf("Current val is %s", Byte.valueOf(byteVal).intValue());
+//            }
             System.out.printf("next value: ");
             val = in.nextLine();
         }
