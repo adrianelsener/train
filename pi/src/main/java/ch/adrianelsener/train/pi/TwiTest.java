@@ -29,6 +29,7 @@ public class TwiTest {
         Optional<Integer> devNr = stringLine.filter(StringUtils::isNumeric).map(Integer::valueOf);
         final Consumer<? super Integer> i2cBusConsumer;
         Optional<I2CDevice> i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
+        i2CDevice = Optional.of(i2CBus.getDevice(0x0f));
         System.out.printf("next value: ");
         String val = in.nextLine();
         byte byteVal = Byte.MIN_VALUE;
