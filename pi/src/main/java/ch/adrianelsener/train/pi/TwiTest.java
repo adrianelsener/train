@@ -32,7 +32,7 @@ public class TwiTest {
         i2CDevice = Optional.of(i2CBus.getDevice(0x0f));
         System.out.printf("next value: ");
         String val = in.nextLine();
-        byte byteVal = Byte.MIN_VALUE;
+        byte byteVal = -80;
         while (!val.startsWith("e")) {
 //            if (StringUtils.isNumeric(val)) {
 //                int intVal = Integer.parseInt(val);
