@@ -15,18 +15,6 @@ RM := rm -rf
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(strip $(CC_DEPS)),)
--include $(CC_DEPS)
-endif
-ifneq ($(strip $(C++_DEPS)),)
--include $(C++_DEPS)
-endif
-ifneq ($(strip $(C_UPPER_DEPS)),)
--include $(C_UPPER_DEPS)
-endif
-ifneq ($(strip $(CXX_DEPS)),)
--include $(CXX_DEPS)
-endif
 ifneq ($(strip $(ASM_DEPS)),)
 -include $(ASM_DEPS)
 endif
@@ -39,9 +27,6 @@ endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
 endif
-ifneq ($(strip $(CPP_DEPS)),)
--include $(CPP_DEPS)
-endif
 endif
 
 -include ../makefile.defs
@@ -49,6 +34,12 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 LSS += \
 PWM.lss \
+
+FLASH_IMAGE += \
+PWM.hex \
+
+EEPROM_IMAGE += \
+PWM.eep \
 
 SIZEDUMMY += \
 sizedummy \
@@ -60,14 +51,26 @@ all: PWM.elf secondary-outputs
 # Tool invocations
 PWM.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: AVR C++ Linker'
-	avr-g++ -Wl,-Map,PWM.map,--cref -mrelax -Wl,--gc-sections -mmcu=atmega8 -o "PWM.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: AVR C Linker'
+	avr-gcc -Wl,-Map,PWM.map -mmcu=atmega8 -o "PWM.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 PWM.lss: PWM.elf
 	@echo 'Invoking: AVR Create Extended Listing'
 	-avr-objdump -h -S PWM.elf  >"PWM.lss"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+PWM.hex: PWM.elf
+	@echo 'Create Flash image (ihex format)'
+	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex PWM.elf  "PWM.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+PWM.eep: PWM.elf
+	@echo 'Create eeprom image (ihex format)'
+	-avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex PWM.elf  "PWM.eep"
 	@echo 'Finished building: $@'
 	@echo ' '
 
@@ -79,10 +82,10 @@ sizedummy: PWM.elf
 
 # Other Targets
 clean:
-	-$(RM) $(C_UPPER_DEPS)$(S_DEPS)$(LSS)$(C_DEPS)$(CC_DEPS)$(ELFS)$(C++_DEPS)$(OBJS)$(CXX_DEPS)$(ASM_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(CPP_DEPS) PWM.elf
+	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(EEPROM_IMAGE)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) PWM.elf
 	-@echo ' '
 
-secondary-outputs: $(LSS) $(SIZEDUMMY)
+secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE) $(SIZEDUMMY)
 
 .PHONY: all clean dependents
 .SECONDARY:

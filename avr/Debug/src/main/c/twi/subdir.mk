@@ -6,11 +6,11 @@
 C_SRCS += \
 ../src/main/c/twi/twislave.c 
 
-C_DEPS += \
-./src/main/c/twi/twislave.d 
-
 OBJS += \
 ./src/main/c/twi/twislave.o 
+
+C_DEPS += \
+./src/main/c/twi/twislave.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
