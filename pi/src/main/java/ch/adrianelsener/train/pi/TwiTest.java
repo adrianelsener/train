@@ -32,20 +32,23 @@ public class TwiTest {
         i2CDevice = Optional.of(i2CBus.getDevice(0x0f));
         System.out.printf("next value: ");
         String val = in.nextLine();
-        byte byteVal = -80;
+        byte byteVal = 0;
         while (!val.startsWith("e")) {
 //            if (StringUtils.isNumeric(val)) {
 //                int intVal = Integer.parseInt(val);
 //                i2CDevice.get().write((byte) intVal);
             try {
                 int currentValue = i2CDevice.get().read();
-                System.out.printf("value was %s/n", currentValue);
+                System.out.printf("value was %s\n", currentValue);
                 i2CDevice.get().write(byteVal);
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
                 e.printStackTrace();
             }
             byteVal+=5;
+            if (byteVal < 0) {
+                byteVal = 0;
+            }
             System.out.printf("Current val is %s", Byte.valueOf(byteVal).intValue());
 //            }
             System.out.printf("next value: ");
