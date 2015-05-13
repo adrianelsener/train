@@ -65,7 +65,6 @@
         <module>csvdb</module>
         <module>testngrules</module>
         <module>pi</module>
-        <module>serial</module>
     </modules>
 
     <properties>
