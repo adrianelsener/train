@@ -37,8 +37,13 @@ public class TwiTest {
 //            if (StringUtils.isNumeric(val)) {
 //                int intVal = Integer.parseInt(val);
 //                i2CDevice.get().write((byte) intVal);
-            i2CDevice.get().write(byteVal);
-            byteVal++;
+            try {
+                i2CDevice.get().write(byteVal);
+            } catch (IOException e) {
+                System.out.printf("got an ioex...");
+                e.printStackTrace();
+            }
+            byteVal+=5;
             System.out.printf("Current val is %s", Byte.valueOf(byteVal).intValue());
 //            }
             System.out.printf("next value: ");
