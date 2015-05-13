@@ -67,7 +67,7 @@ all: PWM.elf secondary-outputs
 PWM.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C++ Linker'
-	avr-g++ -Wl,-Map,PWM.map,--cref -mrelax -Wl,--gc-sections -mmcu=atmega16 -o "PWM.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-g++ -Wl,-Map,PWM.map,--cref -mrelax -Wl,--gc-sections -mmcu=atmega8 -o "PWM.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -91,7 +91,7 @@ PWM.eep: PWM.elf
 
 sizedummy: PWM.elf
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=atmega16 PWM.elf
+	-avr-size --format=avr --mcu=atmega8 PWM.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 

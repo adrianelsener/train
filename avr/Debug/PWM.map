@@ -21,6 +21,8 @@ Discarded input sections
  .bss           0x0000000000000000        0x0 ./src/main/c/twi_sample/TWI_Slave/Delay.o
  .text          0x0000000000000000        0x0 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
  .bss           0x0000000000000000        0x0 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
+ .text.TWIS_Stop
+                0x0000000000000000       0x18 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
  .text.TWIS_ReadNack
                 0x0000000000000000       0x2e ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
  .text          0x0000000000000000        0x0 ./src/main/c/twi/twislave.o
@@ -190,7 +192,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x45c
+.text           0x0000000000000000      0x420
  *(.vectors)
  .vectors       0x0000000000000000       0x54 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm16.o
                 0x0000000000000000                __vectors
@@ -273,31 +275,28 @@ END GROUP
  .text.TWIS_Init
                 0x00000000000000be       0x90 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
                 0x00000000000000be                TWIS_Init
- .text.TWIS_Stop
-                0x000000000000014e       0x18 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x000000000000014e                TWIS_Stop
  .text.TWIS_Write
-                0x0000000000000166       0x36 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x0000000000000166                TWIS_Write
+                0x000000000000014e       0x36 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
+                0x000000000000014e                TWIS_Write
  .text.TWIS_ReadAck
-                0x000000000000019c       0x2e ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x000000000000019c                TWIS_ReadAck
+                0x0000000000000184       0x2e ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
+                0x0000000000000184                TWIS_ReadAck
  .text.TWIS_ResonseRequired
-                0x00000000000001ca       0x32 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x00000000000001ca                TWIS_ResonseRequired
+                0x00000000000001b2       0x32 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
+                0x00000000000001b2                TWIS_ResonseRequired
  .text.__vector_17
-                0x00000000000001fc      0x152 ./src/main/c/twi/twislave.o
-                0x00000000000001fc                __vector_17
- .text.main     0x000000000000034e       0xc6 ./src/main/c/twi-slave-from-sample.o
-                0x000000000000034e                main
+                0x00000000000001e4      0x152 ./src/main/c/twi/twislave.o
+                0x00000000000001e4                __vector_17
+ .text.main     0x0000000000000336       0xa2 ./src/main/c/twi-slave-from-sample.o
+                0x0000000000000336                main
  .text.libgcc.div
-                0x0000000000000414       0x44 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodsi4.o)
-                0x0000000000000414                __udivmodsi4
-                0x0000000000000458                . = ALIGN (0x2)
+                0x00000000000003d8       0x44 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodsi4.o)
+                0x00000000000003d8                __udivmodsi4
+                0x000000000000041c                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000000458        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x0000000000000458                exit
-                0x0000000000000458                _exit
+ .fini9         0x000000000000041c        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x000000000000041c                exit
+                0x000000000000041c                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -316,11 +315,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000000458        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .fini0         0x000000000000041c        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x000000000000045c                _etext = .
+                0x0000000000000420                _etext = .
 
-.data           0x0000000000800060        0x0 load address 0x000000000000045c
+.data           0x0000000000800060        0x0 load address 0x0000000000000420
                 0x0000000000800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm16.o
@@ -349,8 +348,8 @@ END GROUP
                 0x0000000000800061                txbuffer
                 0x0000000000800063                rxbuffer
                 0x0000000000800065                PROVIDE (__bss_end, .)
-                0x000000000000045c                __data_load_start = LOADADDR (.data)
-                0x000000000000045c                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000000000000420                __data_load_start = LOADADDR (.data)
+                0x0000000000000420                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0000000000800065        0x0
                 0x0000000000800065                PROVIDE (__noinit_start, .)
@@ -378,15 +377,15 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x0000000000000000     0x1278
+.stab           0x0000000000000000     0x120c
  *(.stab)
  .stab          0x0000000000000000      0x4c8 ./src/main/c/twi_sample/TWI_Slave/Delay.o
- .stab          0x00000000000004c8      0x4f8 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
+ .stab          0x00000000000004c8      0x4c8 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
                                         0x708 (size before relaxing)
- .stab          0x00000000000009c0      0x474 ./src/main/c/twi/twislave.o
+ .stab          0x0000000000000990      0x474 ./src/main/c/twi/twislave.o
                                         0x6a8 (size before relaxing)
- .stab          0x0000000000000e34      0x444 ./src/main/c/twi-slave-from-sample.o
-                                        0x678 (size before relaxing)
+ .stab          0x0000000000000e04      0x408 ./src/main/c/twi-slave-from-sample.o
+                                        0x63c (size before relaxing)
 
 .stabstr        0x0000000000000000     0x101f
  *(.stabstr)
@@ -490,7 +489,6 @@ TWIS_ReadNack                                     ./src/main/c/twi_sample/TWI_Sl
 TWIS_ResonseRequired                              ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
                                                   ./src/main/c/twi-slave-from-sample.o
 TWIS_Stop                                         ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                                                  ./src/main/c/twi-slave-from-sample.o
 TWIS_Write                                        ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
                                                   ./src/main/c/twi-slave-from-sample.o
 __bad_interrupt                                   /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm16.o
