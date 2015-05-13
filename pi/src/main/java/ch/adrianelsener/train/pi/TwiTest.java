@@ -38,6 +38,8 @@ public class TwiTest {
 //                int intVal = Integer.parseInt(val);
 //                i2CDevice.get().write((byte) intVal);
             try {
+                int currentValue = i2CDevice.get().read();
+                System.out.printf("value was %s/n", currentValue);
                 i2CDevice.get().write(byteVal);
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
