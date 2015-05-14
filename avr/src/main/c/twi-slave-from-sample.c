@@ -59,8 +59,8 @@ int main (void)
 			}
 		}
 		if (OCR1A != destOcr) {
-			if (waited >= (waits * 256)) {
-				uint8_t step;
+			if (waited >= (waits * 32)) {
+				int8_t step;
 				uint8_t nextVal = OCR1A;
 				if (OCR1A > destOcr) {
 					step = 0 - changeSpeed;
@@ -71,7 +71,7 @@ int main (void)
 				if ((nextVal > destOcr && step > 0) || (nextVal < destOcr && step < 0)) {
 					nextVal = destOcr;
 				}
-				OCR1A = destOcr;
+				OCR1A = nextVal;
 				waited = 0;
 			} else {
 				waited++;

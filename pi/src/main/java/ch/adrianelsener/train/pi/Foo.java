@@ -5,6 +5,7 @@ package ch.adrianelsener.train.pi;
  */
 public class Foo {
     public static void main(String[] args) throws Exception {
-        System.out.println("huhu");
+        boolean huh = Integer.valueOf("15").byteValue() == (byte) 15;
+        System.out.printf("%s", huh);
     }
 }

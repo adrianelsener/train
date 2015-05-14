@@ -1,14 +1,17 @@
 package ch.adrianelsener.train.pi;
 
+import com.google.common.base.Splitter;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class TwiTest {
     public static void main(String[] args) throws IOException {
@@ -24,8 +27,7 @@ public class TwiTest {
         Optional<Integer> devNr = stringLine.filter(StringUtils::isNumeric).map(Integer::valueOf);
         final Consumer<? super Integer> i2cBusConsumer;
         Optional<I2CDevice> i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
-//        i2CDevice = Optional.of(i2CBus.getDevice(0x0f));
-        System.out.printf("next value: ");
+        System.out.printf("next value (wait,steps,destination): ");
         String val = in.nextLine();
         while (!val.startsWith("e")) {
             try {
@@ -34,16 +36,15 @@ public class TwiTest {
                 System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
                 System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
                 System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
-                if (StringUtils.isNumeric(val)) {
-                    int intVal = Integer.parseInt(val);
-                    byte[] sendbytes = new byte[]{(byte)100,(byte) 1, (byte) intVal};
+                List<String> splittedStrings = Splitter.on(",").splitToList(val);
+                List<Byte> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s).byteValue()).collect(Collectors.toList());
+                    byte[] sendbytes = new byte[]{splitted.get(1), splitted.get(2), splitted.get(3)};
                     i2CDevice.get().write(sendbytes, 0, sendbytes.length);
-                }
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
                 e.printStackTrace();
             }
-            System.out.printf("next value: ");
+            System.out.printf("next value (wait,steps,destination - (e)xit): ");
             val = in.nextLine();
         }
 
