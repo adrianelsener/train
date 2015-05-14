@@ -12,11 +12,6 @@ import java.util.function.Consumer;
 
 public class TwiTest {
     public static void main(String[] args) throws IOException {
-//        Scanner in = new Scanner(System.in);
-//
-//        String val = in.nextLine();
-//        byte b = val.getBytes()[0];
-//        System.out.printf("%x", b);
         new TwiTest().sendFromConsole();
     }
 
@@ -28,19 +23,21 @@ public class TwiTest {
         Optional<String> stringLine = Optional.of(line);
         Optional<Integer> devNr = stringLine.filter(StringUtils::isNumeric).map(Integer::valueOf);
         final Consumer<? super Integer> i2cBusConsumer;
-        Optional<I2CDevice> i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
+        Optional<I2CDevice> //i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
         i2CDevice = Optional.of(i2CBus.getDevice(0x0f));
         System.out.printf("next value: ");
         String val = in.nextLine();
         byte byteVal = 0;
         while (!val.startsWith("e")) {
-//            if (StringUtils.isNumeric(val)) {
-//                int intVal = Integer.parseInt(val);
-//                i2CDevice.get().write((byte) intVal);
             try {
                 int currentValue = i2CDevice.get().read();
-                System.out.printf("value was %s\n", currentValue);
-                i2CDevice.get().write(byteVal);
+                System.out.printf("value1 was %s\n", currentValue);
+                currentValue = i2CDevice.get().read();
+                System.out.printf("value2 was %s\n", currentValue);
+                if (StringUtils.isNumeric(val)) {
+                    int intVal = Integer.parseInt(val);
+                    i2CDevice.get().write((byte) intVal);
+                }
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
                 e.printStackTrace();
@@ -49,8 +46,6 @@ public class TwiTest {
             if (byteVal < 0) {
                 byteVal = 0;
             }
-            System.out.printf("Current val is %s", Byte.valueOf(byteVal).intValue());
-//            }
             System.out.printf("next value: ");
             val = in.nextLine();
         }
