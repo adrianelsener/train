@@ -30,10 +30,10 @@ public class TwiTest {
         byte byteVal = 0;
         while (!val.startsWith("e")) {
             try {
-                int currentValue = i2CDevice.get().read();
-                System.out.printf("value1 was %s\n", currentValue);
-                currentValue = i2CDevice.get().read();
-                System.out.printf("value2 was %s\n", currentValue);
+                byte[] bytes = new byte[2];
+                int currentValue = i2CDevice.get().read(bytes, 0, 2);
+                System.out.printf("value1 was %s\n", bytes[0]);
+                System.out.printf("value2 was %s\n", bytes[1]);
                 if (StringUtils.isNumeric(val)) {
                     int intVal = Integer.parseInt(val);
                     i2CDevice.get().write((byte) intVal);
