@@ -36,7 +36,7 @@ public class TwiTest {
                 System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
                 if (StringUtils.isNumeric(val)) {
                     int intVal = Integer.parseInt(val);
-                    byte[] sendbytes = new byte[]{(byte)1,(byte) 1, (byte) intVal};
+                    byte[] sendbytes = new byte[]{(byte)100,(byte) 1, (byte) intVal};
                     i2CDevice.get().write(sendbytes, 0, sendbytes.length);
                 }
             } catch (IOException e) {

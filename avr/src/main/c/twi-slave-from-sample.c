@@ -28,14 +28,12 @@ int main (void)
     TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
              |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
 	TCCR1B = _BV(CS10);
-//    OCR1A = 100;                       // Dutycycle of OC1A < 0%
 
-    uint8_t count = 0;
 	uint8_t destOcr = 100;
 	OCR1A = destOcr;
     uint8_t changeSpeed = 0;
 	uint8_t waits = 0;
-	uint8_t waited = 0;
+	uint16_t waited = 0;
 
 	while (1) {
 
@@ -61,7 +59,7 @@ int main (void)
 			}
 		}
 		if (OCR1A != destOcr) {
-			if (waited >= waits) {
+			if (waited >= (waits * 256)) {
 				uint8_t step;
 				uint8_t nextVal = OCR1A;
 				if (OCR1A > destOcr) {
