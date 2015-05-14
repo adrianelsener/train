@@ -38,7 +38,7 @@ public class TwiTest {
                 System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
                 List<Byte> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s).byteValue()).collect(Collectors.toList());
-                    byte[] sendbytes = new byte[]{splitted.get(1), splitted.get(2), splitted.get(3)};
+                    byte[] sendbytes = new byte[]{splitted.get(0), splitted.get(1), splitted.get(2)};
                     i2CDevice.get().write(sendbytes, 0, sendbytes.length);
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
