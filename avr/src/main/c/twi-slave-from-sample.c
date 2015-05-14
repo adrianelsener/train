@@ -28,12 +28,12 @@ int main (void)
     TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
              |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
 	TCCR1B = _BV(CS10);
-    OCR1A = 100;                       // Dutycycle of OC1A < 0%
+//    OCR1A = 100;                       // Dutycycle of OC1A < 0%
 
     uint8_t count = 0;
-    uint8_t first;
+    uint8_t changeSpeed;
+	uint8_t destOcr = 100;
 
-    // Endless loop
 	while (1) {
 
         // Is something to do for the TWI slave interface ?
@@ -41,24 +41,34 @@ int main (void)
 			switch (TWIS_ResonseType) {
                 // TWI requests to read a byte from the master.
 				case TWIS_ReadBytes:
-					first = TWIS_ReadAck ();
-					OCR1A = TWIS_ReadAck();
+					changeSpeed = TWIS_ReadAck ();
+					destOcr = TWIS_ReadAck();
 							TWIS_ReadNack ();
-//					OCR1A = TWIS_ReadNack ();
-
 					TWIS_Stop ();
 					break;
 
                  // TWI requests to write a byte to the master.
-                 // It is implicitely assumed, that the master
-                 // is prepared to receive 8 bytes.
-
 				case TWIS_WriteBytes:
 					TWIS_Write (OCR1A);
-					TWIS_Write (first);
+					TWIS_Write (destOcr);
+					TWIS_Write (changeSpeed);
 				    TWIS_Stop ();
 					break;
 			}
+		}
+		if (OCR1A != destOcr) {
+			uint8_t step;
+			uint8_t nextVal = OCF1A;
+			if (OCR1A > destOcr) {
+				step = 0 - changeSpeed;
+			} else {
+				step = changeSpeed;
+			}
+			nextVal += step;
+			if (nextVal > destOcr) {
+				nextVal = destOcr;
+			}
+			OCR1A = destOcr;
 		}
 	}
 	return 0;

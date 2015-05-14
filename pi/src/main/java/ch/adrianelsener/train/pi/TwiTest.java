@@ -23,17 +23,17 @@ public class TwiTest {
         Optional<String> stringLine = Optional.of(line);
         Optional<Integer> devNr = stringLine.filter(StringUtils::isNumeric).map(Integer::valueOf);
         final Consumer<? super Integer> i2cBusConsumer;
-        Optional<I2CDevice> //i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
-        i2CDevice = Optional.of(i2CBus.getDevice(0x0f));
+        Optional<I2CDevice> i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
+//        i2CDevice = Optional.of(i2CBus.getDevice(0x0f));
         System.out.printf("next value: ");
         String val = in.nextLine();
-        byte byteVal = 0;
         while (!val.startsWith("e")) {
             try {
-                byte[] bytes = new byte[2];
-                int currentValue = i2CDevice.get().read(bytes, 0, 2);
-                System.out.printf("value1 was %s\n", Byte.toUnsignedInt(bytes[0]));
-                System.out.printf("value2 was %s\n", Byte.toUnsignedInt(bytes[1]));
+                byte[] bytes = new byte[3];
+                i2CDevice.get().read(bytes, 0, bytes.length);
+                System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
+                System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
+                System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
                 if (StringUtils.isNumeric(val)) {
                     int intVal = Integer.parseInt(val);
                     byte[] sendbytes = new byte[]{(byte)33, (byte) intVal};
@@ -42,10 +42,6 @@ public class TwiTest {
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
                 e.printStackTrace();
-            }
-            byteVal+=5;
-            if (byteVal < 0) {
-                byteVal = 0;
             }
             System.out.printf("next value: ");
             val = in.nextLine();
