@@ -6,11 +6,11 @@
 C_SRCS += \
 ../src/main/c/twi-slave-from-sample.c 
 
-C_DEPS += \
-./src/main/c/twi-slave-from-sample.d 
-
 OBJS += \
 ./src/main/c/twi-slave-from-sample.o 
+
+C_DEPS += \
+./src/main/c/twi-slave-from-sample.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

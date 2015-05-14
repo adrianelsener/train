@@ -7,13 +7,13 @@ C_SRCS += \
 ../src/main/c/twi_sample/TWI_Slave/Delay.c \
 ../src/main/c/twi_sample/TWI_Slave/TWI_Slave.c 
 
-C_DEPS += \
-./src/main/c/twi_sample/TWI_Slave/Delay.d \
-./src/main/c/twi_sample/TWI_Slave/TWI_Slave.d 
-
 OBJS += \
 ./src/main/c/twi_sample/TWI_Slave/Delay.o \
 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o 
+
+C_DEPS += \
+./src/main/c/twi_sample/TWI_Slave/Delay.d \
+./src/main/c/twi_sample/TWI_Slave/TWI_Slave.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

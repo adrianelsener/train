@@ -38,8 +38,6 @@ public class TwiTest {
                     int intVal = Integer.parseInt(val);
                     byte[] sendbytes = new byte[]{(byte)33, (byte) intVal};
                     i2CDevice.get().write(sendbytes, 0, sendbytes.length);
-//                    i2CDevice.get().write((byte) 33);
-//                    i2CDevice.get().write((byte) intVal);
                 }
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
