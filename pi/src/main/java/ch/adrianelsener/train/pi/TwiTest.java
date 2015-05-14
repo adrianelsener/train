@@ -30,24 +30,37 @@ public class TwiTest {
         System.out.printf("next value (wait,steps,destination): ");
         String val = in.nextLine();
         while (!val.startsWith("e")) {
-            try {
-                byte[] bytes = new byte[3];
-                i2CDevice.get().read(bytes, 0, bytes.length);
-                System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
-                System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
-                System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
-                List<String> splittedStrings = Splitter.on(",").splitToList(val);
-                List<Byte> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s).byteValue()).collect(Collectors.toList());
+            if (val.startsWith("r")) {
+                try {
+                    read(i2CDevice);
+                } catch (IOException e) {
+                    System.out.printf("got an ioex...");
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    read(i2CDevice);
+                    List<String> splittedStrings = Splitter.on(",").splitToList(val);
+                    List<Byte> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s).byteValue()).collect(Collectors.toList());
                     byte[] sendbytes = new byte[]{splitted.get(0), splitted.get(1), splitted.get(2)};
                     i2CDevice.get().write(sendbytes, 0, sendbytes.length);
-            } catch (IOException e) {
-                System.out.printf("got an ioex...");
-                e.printStackTrace();
+                } catch (IOException e) {
+                    System.out.printf("got an ioex...");
+                    e.printStackTrace();
+                }
             }
             System.out.printf("next value (wait,steps,destination - (e)xit): ");
             val = in.nextLine();
         }
 
+    }
+
+    private void read(Optional<I2CDevice> i2CDevice) throws IOException {
+        byte[] bytes = new byte[3];
+        i2CDevice.get().read(bytes, 0, bytes.length);
+        System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
+        System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
+        System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
     }
 
     private I2CDevice toI2CDevice(final Integer i, final I2CBus i2CBus) {
