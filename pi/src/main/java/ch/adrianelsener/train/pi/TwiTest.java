@@ -32,10 +32,11 @@ public class TwiTest {
             try {
                 byte[] bytes = new byte[2];
                 int currentValue = i2CDevice.get().read(bytes, 0, 2);
-                System.out.printf("value1 was %s\n", bytes[0]);
-                System.out.printf("value2 was %s\n", bytes[1]);
+                System.out.printf("value1 was %s\n", Byte.toUnsignedInt(bytes[0]));
+                System.out.printf("value2 was %s\n", Byte.toUnsignedInt(bytes[1]));
                 if (StringUtils.isNumeric(val)) {
                     int intVal = Integer.parseInt(val);
+                    i2CDevice.get().write((byte) 33);
                     i2CDevice.get().write((byte) intVal);
                 }
             } catch (IOException e) {
