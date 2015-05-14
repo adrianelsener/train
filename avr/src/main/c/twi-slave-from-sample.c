@@ -58,7 +58,7 @@ int main (void)
 		}
 		if (OCR1A != destOcr) {
 			uint8_t step;
-			uint8_t nextVal = OCF1A;
+			uint8_t nextVal = OCR1A;
 			if (OCR1A > destOcr) {
 				step = 0 - changeSpeed;
 			} else {
