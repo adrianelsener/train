@@ -36,8 +36,10 @@ public class TwiTest {
                 System.out.printf("value2 was %s\n", Byte.toUnsignedInt(bytes[1]));
                 if (StringUtils.isNumeric(val)) {
                     int intVal = Integer.parseInt(val);
-                    i2CDevice.get().write((byte) 33);
-                    i2CDevice.get().write((byte) intVal);
+                    byte[] sendbytes = new byte[]{(byte)33, (byte) intVal};
+                    i2CDevice.get().write(sendbytes, 0, sendbytes.length);
+//                    i2CDevice.get().write((byte) 33);
+//                    i2CDevice.get().write((byte) intVal);
                 }
             } catch (IOException e) {
                 System.out.printf("got an ioex...");
