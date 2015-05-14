@@ -31,8 +31,11 @@ int main (void)
 //    OCR1A = 100;                       // Dutycycle of OC1A < 0%
 
     uint8_t count = 0;
-    uint8_t changeSpeed;
 	uint8_t destOcr = 100;
+	OCR1A = destOcr;
+    uint8_t changeSpeed = 0;
+	uint8_t waits = 0;
+	uint8_t waited = 0;
 
 	while (1) {
 
@@ -41,6 +44,7 @@ int main (void)
 			switch (TWIS_ResonseType) {
                 // TWI requests to read a byte from the master.
 				case TWIS_ReadBytes:
+					waits = TWIS_ReadAck ();
 					changeSpeed = TWIS_ReadAck ();
 					destOcr = TWIS_ReadAck();
 							TWIS_ReadNack ();
@@ -57,18 +61,23 @@ int main (void)
 			}
 		}
 		if (OCR1A != destOcr) {
-			uint8_t step;
-			uint8_t nextVal = OCR1A;
-			if (OCR1A > destOcr) {
-				step = 0 - changeSpeed;
+			if (waited >= waits) {
+				uint8_t step;
+				uint8_t nextVal = OCR1A;
+				if (OCR1A > destOcr) {
+					step = 0 - changeSpeed;
+				} else {
+					step = changeSpeed;
+				}
+				nextVal += step;
+				if ((nextVal > destOcr && step > 0) || (nextVal < destOcr && step < 0)) {
+					nextVal = destOcr;
+				}
+				OCR1A = destOcr;
+				waited = 0;
 			} else {
-				step = changeSpeed;
+				waited++;
 			}
-			nextVal += step;
-			if (nextVal > destOcr) {
-				nextVal = destOcr;
-			}
-			OCR1A = destOcr;
 		}
 	}
 	return 0;
