@@ -1,10 +1,8 @@
-package ch.adrianelsener.train.pi;
+package ch.adrianelsener.train.pi.pwm;
 
-import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.SoftPwm;
 
-import java.io.Console;
 import java.util.Scanner;
 
 /**

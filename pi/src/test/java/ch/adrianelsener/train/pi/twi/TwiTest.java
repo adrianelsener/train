@@ -1,4 +1,4 @@
-package ch.adrianelsener.train.pi;
+package ch.adrianelsener.train.pi.twi;
 
 import com.google.common.base.Splitter;
 import com.pi4j.io.i2c.I2CBus;
@@ -49,7 +49,7 @@ public class TwiTest {
                     e.printStackTrace();
                 }
             }
-            System.out.printf("next value (wait,steps,destination - (e)xit): ");
+            System.out.printf("next value (wait,steps,destination - (e)xit) (r)ead: ");
             val = in.nextLine();
         }
 
