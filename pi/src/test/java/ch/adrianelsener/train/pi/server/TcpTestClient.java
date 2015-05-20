@@ -4,7 +4,13 @@ import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Result;
 import com.google.gson.Gson;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class TcpTestClient {
@@ -13,30 +19,36 @@ public class TcpTestClient {
     }
 
     private void send(final String message) throws IOException {
-        sendReceive();
-        sendReceive();
+        sendSetSpeed();
     }
 
-    private void sendReceive() throws IOException {
+    private Result sendSetSpeed() throws IOException {
+        Command cmd = new Command();
+        Result result = sendCommand(cmd);
+        System.out.printf("%s\n", result);
+        return result;
+    }
+
+    private Result sendCommand(final Command cmd) throws IOException {
         Socket socket = new Socket("127.0.0.1", 2323);
+        sendData(cmd, socket);
+        Result receivedDto = receiveData(socket);
+        socket.close();
+        return receivedDto;
+    }
+
+    private Result receiveData(final Socket socket) throws IOException {
+        InputStream inputStream = socket.getInputStream();
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(new DataInputStream(inputStream)));
+        String line = inputReader.readLine();
+        return new Gson().fromJson(line, Result.class);
+    }
+
+    private void sendData(final Command cmd, final Socket socket) throws IOException {
         DataOutputStream streamWriter = new DataOutputStream(socket.getOutputStream());
-        Command testDto = new Command();
-        testDto.setData("gugus");
-        String dtoAsJsonString = new Gson().toJson(testDto);
+        String dtoAsJsonString = new Gson().toJson(cmd);
         PrintWriter writer = new PrintWriter(streamWriter);
         writer.println(dtoAsJsonString);
         writer.flush();
-        System.out.printf("sent wait for response\n");
-        InputStream inputStream = socket.getInputStream();
-
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(new DataInputStream(inputStream)));
-        String line = inputReader.readLine();
-        inputReader.close();
-        streamWriter.close();
-        socket.close();
-        System.out.printf("string : %s\n", line);
-        Result receivedDto = new Gson().fromJson(line, Result.class);
-
-        System.out.printf("client received from : {%s}\n", receivedDto);
     }
 }

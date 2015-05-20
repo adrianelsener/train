@@ -5,7 +5,7 @@ public class Command {
 
     public Result execute() {
         System.out.printf("%s\n", data);
-        return Result.OK;
+        return new Result(Result.Status.OK);
     }
 
     public void setData(final String data) {
