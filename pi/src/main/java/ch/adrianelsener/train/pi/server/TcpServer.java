@@ -4,7 +4,12 @@ import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Result;
 import com.google.gson.Gson;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -42,24 +47,24 @@ public class TcpServer {
         }
 
         private void resend() {
-            try {
-                System.out.printf("started wait for connect\n");
-                Socket socket = serverSocket.accept();
+            System.out.printf("started wait for connect\n");
+            try (Socket socket = serverSocket.accept()) {
                 System.out.printf("connected\n");
-
                 Command obj = readJson(socket);
                 System.out.printf("%s\n", obj);
                 Result result = obj.execute();
                 System.out.printf("%s\n", result);
-                PrintWriter streamWriter = new PrintWriter(new DataOutputStream(socket.getOutputStream()));
-                streamWriter.println(new Gson().toJson(result));
-                streamWriter.flush();
-                streamWriter.close();
-                socket.close();
+                send(socket, result);
             } catch (IOException ioex) {
                 throw new IllegalStateException(ioex);
             }
         }
+    }
+
+    private static void send(final Socket socket, final Object data) throws IOException {
+        PrintWriter streamWriter = new PrintWriter(new DataOutputStream(socket.getOutputStream()));
+        streamWriter.println(new Gson().toJson(data));
+        streamWriter.flush();
     }
 
     static Command readJson(final Socket socket) throws IOException {
@@ -67,17 +72,5 @@ public class TcpServer {
         String line = in.readLine();
         System.out.printf("read line: %s", line);
         return new Gson().fromJson(line, Command.class);
-    }
-
-
-    String leseNachricht(Socket socket) throws IOException {
-        BufferedReader bufferedReader =
-                new BufferedReader(
-                        new InputStreamReader(
-                                socket.getInputStream()));
-        char[] buffer = new char[200];
-        int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
-        String nachricht = new String(buffer, 0, anzahlZeichen);
-        return nachricht;
     }
 }
