@@ -3,6 +3,8 @@ package ch.adrianelsener.train.pi.server;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Result;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -13,10 +15,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * Created by els on 15.05.15.
- */
 public class TcpServer {
+    private static final Logger log = LoggerFactory.getLogger(TcpServer.class);
     final int listenPort = 2323;
 
     public static void main(String[] args) throws IOException {
@@ -47,13 +47,13 @@ public class TcpServer {
         }
 
         private void resend() {
-            System.out.printf("started wait for connect\n");
+            log.info("started wait for connect");
             try (Socket socket = serverSocket.accept()) {
-                System.out.printf("connected\n");
+                log.info("connected");
                 Command obj = readJson(socket);
-                System.out.printf("%s\n", obj);
+                log.debug("cmd: {}", obj);
                 Result result = obj.execute();
-                System.out.printf("%s\n", result);
+                log.debug("Result {}", result);
                 send(socket, result);
             } catch (IOException ioex) {
                 throw new IllegalStateException(ioex);
@@ -70,7 +70,8 @@ public class TcpServer {
     static Command readJson(final Socket socket) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream())));
         String line = in.readLine();
-        System.out.printf("read line: %s", line);
-        return new Gson().fromJson(line, Command.class);
+        log.info("read line: {}", line);
+        Gson gson = new Gson();
+        return gson.fromJson(line, Command.class);
     }
 }
