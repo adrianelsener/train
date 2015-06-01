@@ -1,7 +1,13 @@
 package ch.adrianelsener.train.denkovi;
 
 import com.adventnet.snmp.beans.SnmpTarget;
-import com.adventnet.snmp.snmp2.*;
+import com.adventnet.snmp.snmp2.SnmpAPI;
+import com.adventnet.snmp.snmp2.SnmpException;
+import com.adventnet.snmp.snmp2.SnmpOID;
+import com.adventnet.snmp.snmp2.SnmpPDU;
+import com.adventnet.snmp.snmp2.SnmpSession;
+import com.adventnet.snmp.snmp2.SnmpVar;
+import com.adventnet.snmp.snmp2.SnmpVarBind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

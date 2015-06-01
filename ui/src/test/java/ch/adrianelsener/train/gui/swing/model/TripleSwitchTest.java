@@ -6,7 +6,11 @@ import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.Sets;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 import org.testng.annotations.BeforeMethod;
@@ -24,7 +28,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 @Listeners(TripleSwitchTest.class)
 public class TripleSwitchTest extends TestListenerAdapter {
     private final Point middle = new Point(30, 30);

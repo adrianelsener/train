@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * Created by els on 08.04.15.
  */
-public class PwmTest {
+public final class PwmTest {
     private static final int PIN_NUMBER = 7;
 
     public static void main(String[] args) throws Exception {

@@ -6,7 +6,6 @@ public interface SwitchBoardDriver {
 
     /**
      * Returns true if board is ready to use;
-     * @return
      */
     boolean isRead();
 }

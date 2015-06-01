@@ -15,11 +15,11 @@ enum DrawMode {
 
     private boolean isDraft;
 
-    private DrawMode() {
+    DrawMode() {
 
     }
 
-    private DrawMode(final boolean asDraft) {
+    DrawMode(final boolean asDraft) {
         isDraft = asDraft;
     }
 

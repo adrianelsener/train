@@ -12,9 +12,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by els on 4/15/14.
- */
 public class RulesForTestNgTest {
     @Test
     public void junitRulesShouldBeExecuted() {

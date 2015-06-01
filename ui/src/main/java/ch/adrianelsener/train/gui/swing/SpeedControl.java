@@ -3,15 +3,9 @@ package ch.adrianelsener.train.gui.swing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JFrame;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import java.awt.GridLayout;
-import java.awt.LayoutManager;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

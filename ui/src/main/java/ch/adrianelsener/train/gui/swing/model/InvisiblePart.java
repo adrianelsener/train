@@ -1,8 +1,8 @@
 package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
-import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
+import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;

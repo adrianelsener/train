@@ -10,12 +10,16 @@ import org.mockito.ArgumentCaptor;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.emptyCollectionOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -91,8 +95,7 @@ public class CsvOdbTest {
     }
 
     private ArgumentCaptor<Iterable<Datacontainer>> createCaptor(final Class<Iterable> iterableClass) {
-        final Class foo = iterableClass;
-        return ArgumentCaptor.forClass((Class<Iterable<Datacontainer>>) foo);
+        return ArgumentCaptor.forClass((Class<Iterable<Datacontainer>>) (Class) iterableClass);
     }
 
     @Test
