@@ -20,7 +20,7 @@ public class SpeedControl extends JFrame {
     private static final long serialVersionUID = 1L;
     private final JSlider slider;
 
-    private int currentSpeedValue = 0;
+    private final int currentSpeedValue = 0;
 
     public SpeedControl() {
         super("Speedy");

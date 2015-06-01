@@ -51,7 +51,7 @@ public class CsvOdbTest {
         final CsvReader<Datacontainer> csvReader = mock(CsvReader.class);
         final Datacontainer sample = mock(Datacontainer.class);
         when(csvReader.loadFromStorage()).thenReturn(ImmutableList.of(sample));
-        final InputStream inputStream = new ByteArrayInputStream("foo,bar".getBytes(Charsets.UTF_8));
+        new ByteArrayInputStream("foo,bar".getBytes(Charsets.UTF_8));
         final Query<Datacontainer> testee = CsvOdb.create(Datacontainer.class).storage(csvReader).build().init();
         // Act
         final Predicate<Datacontainer> predicate = datacontainer -> false;

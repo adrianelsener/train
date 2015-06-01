@@ -26,7 +26,7 @@ public abstract class SwingSwitch implements TrackPart {
     protected SwingSwitch(final Point center, final double angle) {
         this.center = center;
         this.angle = angle;
-        final RotationCalculator rotationCalculator = new RotationCalculator(center, angle);
+        new RotationCalculator(center, angle);
         final double sin = Math.sin(Math.toRadians(angle));
         final double cos = Math.cos(Math.toRadians(angle));
 

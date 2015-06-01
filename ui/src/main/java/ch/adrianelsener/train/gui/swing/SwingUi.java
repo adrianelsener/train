@@ -48,7 +48,7 @@ public class SwingUi extends JComponent {
     private final DrawModeState currentDrawMode = new DrawModeState();
     private final int rasterSize = 5;
     private final boolean detailsDefaultVisible = true;
-    private PointCalculator pointCalc;
+    private final PointCalculator pointCalc;
 
     @Inject
     private EventBus bus;

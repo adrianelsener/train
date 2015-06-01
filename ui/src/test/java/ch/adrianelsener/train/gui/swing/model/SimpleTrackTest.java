@@ -166,7 +166,7 @@ public class SimpleTrackTest {
         final SimpleTrack testee = new SimpleTrack(startPoint, endPoint);
         final SwitchCallback callback = mock(SwitchCallback.class);
         // act
-        final SimpleTrack result = testee.toggle(callback);
+        testee.toggle(callback);
         // assert
         verifyZeroInteractions(callback);
     }

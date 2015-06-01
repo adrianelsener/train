@@ -41,7 +41,7 @@ public class OccupiedBoardBetaTest {
         final OccupiedBoardBeta testee = new OccupiedBoardBeta(cfg, board);
         when(board.read(any(Pin.class))).thenReturn(42);
         // Act
-        int result = testee.read(Occupied._01);
+        testee.read(Occupied._01);
         // Assert
         verify(board).read(Pin._17);
     }

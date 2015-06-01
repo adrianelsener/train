@@ -16,7 +16,7 @@ public class SwingBoard implements Board {
     private final Map<PinKey, Integer> mapping = new HashMap<>();
 
     public static void main(String[] args) {
-        SwingBoard swingBoard = new SwingBoard();
+        new SwingBoard();
     }
 
     public SwingBoard() {

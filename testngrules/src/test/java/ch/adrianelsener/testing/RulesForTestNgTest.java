@@ -43,7 +43,7 @@ public class RulesForTestNgTest {
     }
 
     public static class TestWithJUnitRule extends RulesForTestNg{
-        private static MyWrappingTestWatcher accessToRule = mock(MyWrappingTestWatcher.class);
+        private static final MyWrappingTestWatcher accessToRule = mock(MyWrappingTestWatcher.class);
         @Rule
         public TestWatcher rule = accessToRule;
 

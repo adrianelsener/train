@@ -4,8 +4,6 @@ import ch.adrianelsener.train.driver.SwitchBoardDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.adrianelsener.train.driver.SwitchBoardV1;
-
 public class DummyToggler implements SwitchCallback {
     private final static Logger logger = LoggerFactory.getLogger(DummyToggler.class);
 

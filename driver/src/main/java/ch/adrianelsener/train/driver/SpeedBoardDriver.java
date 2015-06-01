@@ -1,11 +1,11 @@
 package ch.adrianelsener.train.driver;
 
 public interface SpeedBoardDriver {
-    public void faster();
+    void faster();
 
-    public void slower();
+    void slower();
 
-    public void setSpeed(int estimated);
+    void setSpeed(int estimated);
 
-    public int getCurrentSpeed();
+    int getCurrentSpeed();
 }

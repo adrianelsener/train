@@ -50,7 +50,8 @@ public class InvisiblePart implements TrackPart {
     }
 
     @Override
-    public TrackPart toggle(final SwitchCallback toggler) {
+    @Nonnull
+    public TrackPart toggle(@Nonnull final SwitchCallback toggler) {
         logger.warn("toggle on '{}' has no impact!", this);
         return this;
     }

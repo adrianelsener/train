@@ -3,7 +3,6 @@ package ch.adrianelsener.train.gui.swing;
 import ch.adrianelsener.train.gui.swing.events.UpdateApplyListener;
 import ch.adrianelsener.train.gui.swing.events.UpdateDetails;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
-import com.google.common.base.Joiner;
 import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;

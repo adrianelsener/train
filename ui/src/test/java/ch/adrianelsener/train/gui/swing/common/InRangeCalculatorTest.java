@@ -6,11 +6,9 @@ import java.awt.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class InRangeCalculatorTest {
-    private InRangeCalculator testee = new InRangeCalculator();
+    private final InRangeCalculator testee = new InRangeCalculator();
 
     @Test
     public void samePointIsInRange() {

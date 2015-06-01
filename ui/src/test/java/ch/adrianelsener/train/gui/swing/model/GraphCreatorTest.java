@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
 
 public class GraphCreatorTest {
-    private GraphCreator testee = new GraphCreator();
+    private final GraphCreator testee = new GraphCreator();
 
     @Test
     public void switchWithSameEndpointsDefineA_graph() {

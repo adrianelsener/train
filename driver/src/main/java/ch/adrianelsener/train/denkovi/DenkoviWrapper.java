@@ -49,7 +49,7 @@ public class DenkoviWrapper implements Board {
         pdu.setCommunity(Community);
         pdu.setCommand(SnmpAPI.SET_REQ_MSG);
         final SnmpOID oid = new SnmpOID(OID.getAddress());
-        SnmpVar var = null;
+        final SnmpVar var;
         try {
             var = SnmpVar.createVariable(SetValue, dataType);
         } catch (final SnmpException e) {

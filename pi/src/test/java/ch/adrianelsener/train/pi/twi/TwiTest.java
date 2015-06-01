@@ -25,7 +25,6 @@ public class TwiTest {
         String line = in.nextLine();
         Optional<String> stringLine = Optional.of(line);
         Optional<Integer> devNr = stringLine.filter(StringUtils::isNumeric).map(Integer::valueOf);
-        final Consumer<? super Integer> i2cBusConsumer;
         Optional<I2CDevice> i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
         System.out.printf("next value (wait,steps,destination): ");
         String val = in.nextLine();
