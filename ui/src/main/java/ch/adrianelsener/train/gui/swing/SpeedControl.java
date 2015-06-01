@@ -13,11 +13,13 @@ public class SpeedControl extends JFrame {
     private final static Logger logger = LoggerFactory.getLogger(SpeedControl.class);
     private static final long serialVersionUID = 1L;
     private final JSlider slider;
+    private int currentSpeedValue;
 
-    private final int currentSpeedValue = 0;
 
     public SpeedControl() {
         super("Speedy");
+        currentSpeedValue = 0;
+        currentSpeedValue = 0;
         setSize(50, 200);
         final LayoutManager layout = new GridLayout(4, 1);
         setLayout(layout);

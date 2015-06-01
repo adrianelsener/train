@@ -5,9 +5,6 @@ import com.pi4j.wiringpi.SoftPwm;
 
 import java.util.Scanner;
 
-/**
- * Created by els on 08.04.15.
- */
 public final class PwmTest {
     private static final int PIN_NUMBER = 7;
 
