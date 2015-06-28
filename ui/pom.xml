@@ -48,4 +48,31 @@
         </dependency>
     </dependencies>
 
+<profiles>  
+ <profile>  
+  <id>runSwingUi</id>  
+  <build>  
+   <plugins>  
+    <plugin>  
+     <groupId>org.codehaus.mojo</groupId>  
+     <artifactId>exec-maven-plugin</artifactId>  
+     <version>1.4.0</version>  
+     <executions>  
+      <execution>  
+       <phase>verify</phase>  
+       <goals>  
+        <goal>java</goal>  
+       </goals>  
+       <configuration>  
+        <mainClass>ch.adrianelsener.train.gui.swing.SwingUi</mainClass>  
+        <arguments>  
+        </arguments>  
+       </configuration>  
+      </execution>  
+     </executions>  
+    </plugin>  
+   </plugins>  
+  </build>  
+ </profile>  
+</profiles>
 </project>
