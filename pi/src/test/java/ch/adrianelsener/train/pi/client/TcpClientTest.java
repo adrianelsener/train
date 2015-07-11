@@ -4,11 +4,7 @@ import ch.adrianelsener.train.pi.dto.Command;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.*;
 
-/**
- * Created by els on 7/10/15.
- */
 public class TcpClientTest {
 
     @Test
