@@ -8,13 +8,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
-/**
- * Created by els on 7/10/15.
- */
 public class TcpClient {
     private final SocketFactory socketFactory;
     @VisibleForTesting
@@ -26,7 +27,7 @@ public class TcpClient {
         this(new SocketFactory());
     }
 
-    private Result sendSetSpeed() throws IOException {
+    private Result sendSetSpeed() {
         Gson gson = new Gson();
         Command cmd = Command.builder()//
                 .setData(ImmutableMap.of(Mode.Key.ACCELERATION, gson.toJsonTree(new AccelerationDto())))//
@@ -38,50 +39,31 @@ public class TcpClient {
     }
 
     public Result sendCommand(final Command cmd) {
-        AutoClosableSocket socket = new AutoClosableSocket("127.0.0.1", 2323);
-        sendData(cmd, socket);
-        Result receivedDto = receiveData(socket);
-        socket.close();
-        return receivedDto;
-    }
-
-
-    private class AutoClosableSocket implements AutoCloseable {
-        private final Socket socket;
-
-        public AutoClosableSocket(String address, int port) {
-            try {
-                final InetAddress inetAddress = InetAddress.getByName(address);
-                socket = new Socket(inetAddress, port);
-            } catch (IOException e) {
-                throw new RuntimeIoException(e);
-            }
-        }
-
-        @Override
-        public void close() throws Exception {
-            socket.close();
+        try (AutoClosableSocket socket = socketFactory.create("127.0.0.1", 2323)) {
+            sendData(cmd, socket);
+            Result receivedDto = receiveData(socket);
+            return receivedDto;
         }
     }
 
-    private class RuntimeIoException extends RuntimeException {
-        public RuntimeIoException(IOException e) {
-            super(e);
-        }
-    }
-
-    private Result receiveData(final Socket socket) throws IOException {
+    private Result receiveData(final AutoClosableSocket socket) {
         InputStream inputStream = socket.getInputStream();
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(new DataInputStream(inputStream)));
-        String line = inputReader.readLine();
+        String line = null;
+        try {
+            line = inputReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeIoException(e);
+        }
         return new Gson().fromJson(line, Result.class);
     }
 
-    private void sendData(final Command cmd, final Socket socket) throws IOException {
+    private void sendData(final Command cmd, final AutoClosableSocket socket) {
         DataOutputStream streamWriter = new DataOutputStream(socket.getOutputStream());
         String dtoAsJsonString = new Gson().toJson(cmd);
         PrintWriter writer = new PrintWriter(streamWriter);
         writer.println(dtoAsJsonString);
         writer.flush();
     }
+
 }
