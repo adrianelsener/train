@@ -6,29 +6,25 @@ import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 public class TcpClient {
     private final SocketFactory socketFactory;
+    private final GsonWrapper gson;
     @VisibleForTesting
-    TcpClient(SocketFactory socketFactory) {
+    TcpClient(SocketFactory socketFactory, GsonWrapper gson) {
         this.socketFactory = socketFactory;
+        this.gson = gson;
     }
 
     public TcpClient() {
-        this(new SocketFactory());
+        this(new SocketFactory(), new GsonWrapper());
     }
 
     private Result sendSetSpeed() {
-        Gson gson = new Gson();
         Command cmd = Command.builder()//
                 .setData(ImmutableMap.of(Mode.Key.ACCELERATION, gson.toJsonTree(new AccelerationDto())))//
                 .setMode(Mode.SPEED)//
@@ -48,19 +44,12 @@ public class TcpClient {
 
     private Result receiveData(final AutoClosableSocket socket) {
         InputStream inputStream = socket.getInputStream();
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(new DataInputStream(inputStream)));
-        String line = null;
-        try {
-            line = inputReader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeIoException(e);
-        }
-        return new Gson().fromJson(line, Result.class);
+        return gson.fromJson(inputStream, Result.class);
     }
 
     private void sendData(final Command cmd, final AutoClosableSocket socket) {
         DataOutputStream streamWriter = new DataOutputStream(socket.getOutputStream());
-        String dtoAsJsonString = new Gson().toJson(cmd);
+        String dtoAsJsonString = gson.toJson(cmd);
         PrintWriter writer = new PrintWriter(streamWriter);
         writer.println(dtoAsJsonString);
         writer.flush();
