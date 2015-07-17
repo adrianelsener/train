@@ -1,8 +1,5 @@
-package ch.adrianelsener.train.pi.client;
+package ch.adrianelsener.train.common.io;
 
-/**
- * Created by els on 11.07.15.
- */
 public class RuntimeIoException extends RuntimeException {
     public RuntimeIoException(final Throwable cause) {
         super(cause);

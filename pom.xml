@@ -65,6 +65,7 @@
         <module>csvdb</module>
         <module>testngrules</module>
         <module>pi</module>
+        <module>common</module>
     </modules>
 
     <properties>

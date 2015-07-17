@@ -1,4 +1,6 @@
-package ch.adrianelsener.train.pi.client;
+package ch.adrianelsener.train.common.net;
+
+import ch.adrianelsener.train.common.io.RuntimeIoException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +8,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-class AutoClosableSocket implements AutoCloseable {
+public class AutoClosableSocket implements AutoCloseable {
     private final Socket socket;
 
     public AutoClosableSocket(String address, int port) {
@@ -49,5 +51,13 @@ class AutoClosableSocket implements AutoCloseable {
         } catch (IOException e) {
             throw new RuntimeIoException(e);
         }
+    }
+
+    public InetAddress getInetAddress() {
+        return socket.getInetAddress();
+    }
+
+    public int getPort() {
+        return socket.getPort();
     }
 }
