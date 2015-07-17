@@ -28,6 +28,10 @@ public class AutoClosableSocket implements AutoCloseable {
         }
     }
 
+    public AutoClosableSocket(NetAddress address) {
+        this(address.getAddress(), address.getPort());
+    }
+
     @Override
     public void close() {
         try {

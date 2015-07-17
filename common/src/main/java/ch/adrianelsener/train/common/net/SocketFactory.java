@@ -10,4 +10,8 @@ public class SocketFactory {
     public AutoClosableSocket create(String address, int port) {
         return new AutoClosableSocket(address, port);
     }
+
+    public AutoClosableSocket create(NetAddress address) {
+        return new AutoClosableSocket(address);
+    }
 }
