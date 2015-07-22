@@ -1,5 +1,6 @@
 package ch.adrianelsener.train.pi.client;
 
+import ch.adrianelsener.train.common.io.RuntimeIoException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 

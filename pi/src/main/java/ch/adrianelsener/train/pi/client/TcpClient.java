@@ -1,5 +1,8 @@
 package ch.adrianelsener.train.pi.client;
 
+import ch.adrianelsener.train.common.net.AutoClosableSocket;
+import ch.adrianelsener.train.common.net.NetAddress;
+import ch.adrianelsener.train.common.net.SocketFactory;
 import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
@@ -12,16 +15,18 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 public class TcpClient {
+    private final NetAddress address;
     private final SocketFactory socketFactory;
     private final GsonWrapper gson;
     @VisibleForTesting
-    TcpClient(SocketFactory socketFactory, GsonWrapper gson) {
+    TcpClient(NetAddress address, SocketFactory socketFactory, GsonWrapper gson) {
+        this.address = address;
         this.socketFactory = socketFactory;
         this.gson = gson;
     }
 
-    public TcpClient() {
-        this(new SocketFactory(), new GsonWrapper());
+    public TcpClient(NetAddress address) {
+        this(address, new SocketFactory(), new GsonWrapper());
     }
 
     private Result sendSetSpeed() {
@@ -35,22 +40,22 @@ public class TcpClient {
     }
 
     public Result sendCommand(final Command cmd) {
-        try (AutoClosableSocket socket = socketFactory.create("127.0.0.1", 2323)) {
+        try (AutoClosableSocket socket = socketFactory.create(address)) {
             sendData(cmd, socket);
-            Result receivedDto = receiveData(socket);
+            final Result receivedDto = receiveData(socket);
             return receivedDto;
         }
     }
 
     private Result receiveData(final AutoClosableSocket socket) {
-        InputStream inputStream = socket.getInputStream();
+        final InputStream inputStream = socket.getInputStream();
         return gson.fromJson(inputStream, Result.class);
     }
 
     private void sendData(final Command cmd, final AutoClosableSocket socket) {
-        DataOutputStream streamWriter = new DataOutputStream(socket.getOutputStream());
-        String dtoAsJsonString = gson.toJson(cmd);
-        PrintWriter writer = new PrintWriter(streamWriter);
+        final DataOutputStream streamWriter = new DataOutputStream(socket.getOutputStream());
+        final String dtoAsJsonString = gson.toJson(cmd);
+        final PrintWriter writer = new PrintWriter(streamWriter);
         writer.println(dtoAsJsonString);
         writer.flush();
     }
