@@ -6,6 +6,9 @@ import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import com.google.common.collect.Collections2;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
+import org.hamcrest.core.CombinableMatcher;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -17,9 +20,12 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static ch.adrianelsener.train.gui.swing.model.SwitchMatchers.hasX;
+import static ch.adrianelsener.train.gui.swing.model.SwitchMatchers.hasY;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.CombinableMatcher.both;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -104,7 +110,6 @@ public class RealSwitchTest extends RulesForTestNg {
         final Point result = testee.getNextConnectionpoint(new Point(36, 32));
         // Assert
         assertThat(result, is(equalTo(new Point(45, 40))));
-
     }
 
     @Test
@@ -173,6 +178,16 @@ public class RealSwitchTest extends RulesForTestNg {
         assertThat(startYCaptor.getAllValues().get(3), is(equalTo(startYCaptor.getAllValues().get(1))));
         assertThat(endXCaptor.getAllValues().get(3), is(equalTo(endXCaptor.getAllValues().get(1))));
         assertThat(endYCaptor.getAllValues().get(3), is(equalTo(endYCaptor.getAllValues().get(1))));
+    }
+
+    @Test
+    public void move_direction_newCenterIsMoved() {
+        final RealSwitch testee = new RealSwitch(middle);
+        final Point distance = new Point(3, 5);
+        // act
+        final SwingSwitch result = testee.move(distance);
+        // assert
+        assertThat(result, both(hasX(equalTo(middle.x + 3))).and(hasY(equalTo(middle.y + 5))));
     }
 
 }

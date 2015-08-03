@@ -5,6 +5,7 @@ import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import com.google.common.collect.Collections2;
 import org.hamcrest.FeatureMatcher;
+import org.hamcrest.core.CombinableMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -13,6 +14,7 @@ import org.testng.annotations.Test;
 import java.awt.*;
 import java.util.Collection;
 
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,6 +23,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.hamcrest.core.CombinableMatcher.both;
 
 public class SwitchTrackTest {
     private final Point startPoint = new Point(30, 30);
@@ -233,6 +236,18 @@ public class SwitchTrackTest {
         testee.applyState(toggler);
         // assert
         verify(toggler).toggleSwitch(SwitchId.create(24), BoardId.create(42), true);
+    }
+
+    @Test
+    public void move_xAndY_startAndEndpointMoved() {
+        final SwitchTrack testee = new SwitchTrack(startPoint, endPoint);
+        final Point direction = new Point(7, 9);
+        // act
+        final SwitchTrack result = testee.move(direction);
+        // assert
+        assertThat(result,
+                both(hasStart(both(hasX(equalTo(startPoint.x + 7))).and(hasY(equalTo(startPoint.y + 9)))))
+                        .and(hasEnd(both(hasX(equalTo(endPoint.x + 7))).and(hasY(equalTo(endPoint.y + 9))))));
     }
 
     private FeatureMatcher<SwitchTrack, SwitchTrack.TrackState> hasState(SwitchTrack.TrackState s) {

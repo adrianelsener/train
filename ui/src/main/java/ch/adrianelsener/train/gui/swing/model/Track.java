@@ -145,6 +145,7 @@ public abstract class Track implements TrackPart {
         return this;
     }
 
+
     @Override
     public Collection<Object> getDataToPersist() {
         final List<Object> objects = Lists.newArrayList();

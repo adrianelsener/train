@@ -3,15 +3,20 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableCollection;
+import org.hamcrest.core.CombinableMatcher;
 import org.testng.annotations.Test;
 
 import java.awt.*;
 
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.*;
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasX;
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasY;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.core.CombinableMatcher.both;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -193,5 +198,17 @@ public class SimpleTrackTest {
         testee.applyState(callback);
         // assert
         verifyZeroInteractions(callback);
+    }
+
+    @Test
+    public void move_xAndY_startAndEndpointMoved() {
+        final SimpleTrack testee = new SimpleTrack(startPoint, endPoint);
+        final Point direction = new Point(7, 9);
+        // act
+        final SimpleTrack result = testee.move(direction);
+        // assert
+        assertThat(result,
+                both(hasStart(both(hasX(equalTo(startPoint.x + 7))).and(hasY(equalTo(startPoint.y + 9)))))
+                        .and(hasEnd(both(hasX(equalTo(endPoint.x + 7))).and(hasY(equalTo(endPoint.y + 9))))));
     }
 }

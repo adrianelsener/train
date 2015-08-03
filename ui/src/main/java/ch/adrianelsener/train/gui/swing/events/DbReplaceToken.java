@@ -6,9 +6,6 @@ import ch.adrianelsener.odb.api.OdbFunction;
 import ch.adrianelsener.odb.api.OdbPredicate;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 
-/**
- * Created by els on 5/20/14.
- */
 public class DbReplaceToken implements DbUpdater<TrackPart> {
     private final OdbPredicate<TrackPart> predicate;
     private final OdbFunction<TrackPart> replacement;

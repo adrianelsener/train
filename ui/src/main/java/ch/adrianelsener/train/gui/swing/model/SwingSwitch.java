@@ -140,6 +140,12 @@ public abstract class SwingSwitch implements TrackPart {
     }
 
     @Override
+    public SwingSwitch move(Point direction) {
+        final Point newCenter = new Point(center.x + direction.x, center.y + direction.y);
+        return createNew(newCenter, angle);
+    }
+
+    @Override
     public boolean isPipe() {
         return true;
     }

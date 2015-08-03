@@ -4,6 +4,8 @@ import ch.adrianelsener.csvdb.CsvOdb;
 import ch.adrianelsener.csvdb.CsvReader;
 import ch.adrianelsener.odb.api.ObjectFactory;
 import ch.adrianelsener.odb.api.Odb;
+import ch.adrianelsener.odb.api.OdbFunction;
+import ch.adrianelsener.odb.api.OdbPredicate;
 import ch.adrianelsener.train.config.ConfKey;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.config.ConfigPropertyReader;
@@ -254,9 +256,20 @@ public class SwingUi extends JComponent {
 
     private JMenu createMenuTools() {
         final JMenu toolsMenu = new JMenu("Tools");
+        toolsMenu.add(createMoveAllRight());
         toolsMenu.add(createResendSwitchStates());
         toolsMenu.add(createShowCrossWhileDrawing());
         return toolsMenu;
+    }
+
+    private JMenuItem createMoveAllRight() {
+        final JMenuItem moveAllToRight = new JMenuItem("10 >");
+        final OdbPredicate<TrackPart> predicate = part -> true;
+        OdbFunction<TrackPart> updat = part -> part.move(new Point(10, 0));
+        moveAllToRight.addActionListener(
+                e -> db.replace(predicate, updat)
+        );
+        return moveAllToRight;
     }
 
     private JMenuItem createShowCrossWhileDrawing() {
@@ -267,7 +280,7 @@ public class SwingUi extends JComponent {
             } else {
                 bus.post(ShowDrawingCrossEvent.HIDE);
             }
-            });
+        });
         return showCross;
     }
 

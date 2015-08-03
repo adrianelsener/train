@@ -23,10 +23,13 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
+import static ch.adrianelsener.train.gui.swing.model.SwitchMatchers.hasX;
+import static ch.adrianelsener.train.gui.swing.model.SwitchMatchers.hasY;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+import static org.hamcrest.core.CombinableMatcher.both;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.inOrder;
@@ -397,6 +400,18 @@ public class TripleSwitchTest extends TestListenerAdapter {
         // assert
         assertThat(result, contains(equalTo(expected)));
     }
+
+
+    @Test
+    public void move_direction_newCenterIsMoved() {
+        final TripleSwitch testee = new TripleSwitch(middle);
+        final Point distance = new Point(3, 5);
+        // act
+        final TripleSwitch result = testee.move(distance);
+        // assert
+        assertThat(result, both(TrackMatchers.hasX(equalTo(middle.x + 3))).and(hasY(equalTo(middle.y + 5))));
+    }
+
 
     private static final ExpectedException expected = ExpectedException.none();
 

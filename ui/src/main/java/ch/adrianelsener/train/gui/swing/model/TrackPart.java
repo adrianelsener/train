@@ -37,6 +37,13 @@ public interface TrackPart extends Nearby, Paintable, Datacontainer {
     TrackPart moveTo(Point newLocation);
 
     /**
+     * Moves the part in direction of Point (direction)
+     * @param direction
+     * @return
+     */
+    TrackPart move(Point direction);
+
+    /**
      * Returns all Point that are in connections to other parts
      * @return
      */
