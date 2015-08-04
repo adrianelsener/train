@@ -4,6 +4,7 @@ import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.common.InRangeCalculator;
+import ch.adrianelsener.train.gui.swing.common.PointMover;
 import ch.adrianelsener.train.gui.swing.common.RotationCalculator;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
@@ -56,9 +57,8 @@ public class TripleSwitch extends BaseSwingSwitch implements TrackPart {
     }
 
     TripleSwitch(Point center, double angle, final SwitchState state) {
+        super(center, angle);
         rotCalc = new RotationCalculator(center, angle);
-        this.center = center;
-        this.angle = angle;
         this.state = state;
 
         final int rightX = center.x + 15;
@@ -117,6 +117,11 @@ public class TripleSwitch extends BaseSwingSwitch implements TrackPart {
     @Override
     public TripleSwitch moveTo(Point newLocation) {
         return Builder.create(this).setCenter(newLocation).build();
+    }
+
+    @Override
+    public TripleSwitch move(Point direction) {
+        return Builder.create(this).setCenter(PointMover.use(center).moveTo(direction)).build();
     }
 
     @Override

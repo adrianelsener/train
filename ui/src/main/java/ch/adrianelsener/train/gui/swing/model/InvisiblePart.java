@@ -67,7 +67,7 @@ public class InvisiblePart implements TrackPart {
     }
 
     @Override
-    public TrackPart move(Point direction) {
+    public InvisiblePart move(Point direction) {
         return this;
     }
 

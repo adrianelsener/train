@@ -3,6 +3,7 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
+import ch.adrianelsener.train.gui.swing.common.PointMover;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,13 @@ public class SimpleTrack extends Track {
     @Override
     public SimpleTrack moveTo(final Point newLocation) {
         return this;
+    }
+
+    @Override
+    public TrackPart move(Point direction) {
+        Point newStart = PointMover.use(startPoint).moveTo(direction);
+        Point newEnd = PointMover.use(endPoint).moveTo(direction);
+        return new SimpleTrack(newStart, newEnd);
     }
 
     @Override
