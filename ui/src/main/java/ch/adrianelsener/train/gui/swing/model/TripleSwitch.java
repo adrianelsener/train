@@ -22,10 +22,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class TripleSwitch implements TrackPart {
+public class TripleSwitch extends BaseSwingSwitch implements TrackPart {
     private final static Logger logger = LoggerFactory.getLogger(TripleSwitch.class);
-    private final Point center;
-    private final double angle;
     private final transient RotationCalculator rotCalc;
     private final Point topRight;
     private final Point bottomRight;
@@ -36,9 +34,8 @@ public class TripleSwitch implements TrackPart {
     private final Pair<BoardId, SwitchId> lowerPart;
 
     private TripleSwitch(Builder builder) {
+        super(builder.center, builder.angle);
         rotCalc = new RotationCalculator(builder.center, builder.angle);
-        this.center = builder.center;
-        this.angle = builder.angle;
         this.state = builder.state;
 
         final int rightX = center.x + 15;

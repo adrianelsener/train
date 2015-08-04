@@ -11,9 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.awt.*;
 
-public abstract class SwingSwitch implements TrackPart {
-    protected final Point center;
-    protected final double angle;
+public abstract class SwingSwitch extends BaseSwingSwitch implements TrackPart {
     protected final Point leftPoint;
     protected final Point topRightPoint;
     protected final Point bottomRightPoint;
@@ -24,8 +22,7 @@ public abstract class SwingSwitch implements TrackPart {
     }
 
     protected SwingSwitch(final Point center, final double angle) {
-        this.center = center;
-        this.angle = angle;
+        super(center, angle);
         new RotationCalculator(center, angle);
         final double sin = Math.sin(Math.toRadians(angle));
         final double cos = Math.cos(Math.toRadians(angle));

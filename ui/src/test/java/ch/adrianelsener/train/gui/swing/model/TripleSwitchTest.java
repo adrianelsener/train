@@ -409,7 +409,7 @@ public class TripleSwitchTest extends TestListenerAdapter {
         // act
         final TripleSwitch result = testee.move(distance);
         // assert
-        assertThat(result, both(TrackMatchers.hasX(equalTo(middle.x + 3))).and(hasY(equalTo(middle.y + 5))));
+        assertThat(result, both(hasX(equalTo(middle.x + 3))).and(hasY(equalTo(middle.y + 5))));
     }
 
 

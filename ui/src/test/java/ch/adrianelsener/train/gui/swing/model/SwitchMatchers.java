@@ -7,19 +7,19 @@ public class SwitchMatchers {
     private SwitchMatchers() {
         super();
     }
-    public static Matcher<? super SwingSwitch> hasY(Matcher<Integer> integerMatcher) {
-        return new FeatureMatcher<SwingSwitch, Integer>(integerMatcher, "getY", "getY") {
+    public static Matcher<? super BaseSwingSwitch> hasY(Matcher<Integer> integerMatcher) {
+        return new FeatureMatcher<BaseSwingSwitch, Integer>(integerMatcher, "getY", "getY") {
             @Override
-            protected Integer featureValueOf(SwingSwitch swingSwitch) {
+            protected Integer featureValueOf(BaseSwingSwitch swingSwitch) {
                 return swingSwitch.center.y;
             }
         };
     }
 
-    public static Matcher<? super SwingSwitch> hasX(Matcher<Integer> integerMatcher) {
-        return new FeatureMatcher<SwingSwitch, Integer>(integerMatcher, "getX", "getX") {
+    public static Matcher<? super BaseSwingSwitch> hasX(Matcher<Integer> integerMatcher) {
+        return new FeatureMatcher<BaseSwingSwitch, Integer>(integerMatcher, "getX", "getX") {
             @Override
-            protected Integer featureValueOf(SwingSwitch trackPart) {
+            protected Integer featureValueOf(BaseSwingSwitch trackPart) {
                 return trackPart.center.x;
             }
         };

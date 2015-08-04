@@ -67,6 +67,11 @@ public class InvisiblePart implements TrackPart {
     }
 
     @Override
+    public TrackPart move(Point direction) {
+        return this;
+    }
+
+    @Override
     public ImmutableCollection<Point> getInConnectors() {
         throw new IllegalStateException("Invisible part can not be connected");
     }
