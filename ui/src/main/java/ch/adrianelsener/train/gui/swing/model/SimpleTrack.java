@@ -1,8 +1,8 @@
 package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
-import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
+import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.common.PointMover;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class SimpleTrack extends Track {
     }
 
     @Override
-    public TrackPart move(Point direction) {
+    public SimpleTrack move(Point direction) {
         Point newStart = PointMover.use(startPoint).moveTo(direction);
         Point newEnd = PointMover.use(endPoint).moveTo(direction);
         return new SimpleTrack(newStart, newEnd);
@@ -71,7 +71,9 @@ public class SimpleTrack extends Track {
     }
 
     @Override
-    public SimpleTrack toggle(final SwitchCallback toggler) {
+    public
+    @Nonnull
+    SimpleTrack toggle(@Nonnull final SwitchCallback toggler) {
         logger.debug("No toggle on simple track");
         return this;
     }

@@ -1,9 +1,10 @@
 package ch.adrianelsener.train.gui.swing.model;
 
 import ch.adrianelsener.train.gui.BoardId;
-import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.SwitchCallback;
+import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.TrackView;
+import ch.adrianelsener.train.gui.swing.common.PointMover;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 
@@ -47,7 +48,9 @@ public class SwitchTrack extends Track {
 
     @Override
     public SwitchTrack move(Point direction) {
-        return ;
+        final Point newStartPoint = PointMover.use(startPoint).moveTo(direction);
+        final Point newEndPoint = PointMover.use(endPoint).moveTo(direction);
+        return new SwitchTrack(newStartPoint, newEndPoint, trackId, boardId, trackState, trackView);
     }
 
     @Override

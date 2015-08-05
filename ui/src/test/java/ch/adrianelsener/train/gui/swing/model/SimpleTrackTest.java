@@ -3,14 +3,14 @@ package ch.adrianelsener.train.gui.swing.model;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableCollection;
-import org.hamcrest.core.CombinableMatcher;
 import org.testng.annotations.Test;
 
 import java.awt.*;
 
-import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.*;
-import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasX;
-import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasY;
+import static ch.adrianelsener.train.gui.swing.common.PointMatchers.hasX;
+import static ch.adrianelsener.train.gui.swing.common.PointMatchers.hasY;
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasEnd;
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasStart;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -148,7 +148,7 @@ public class SimpleTrackTest {
     public void asCsvStringCanBeUsedForFromCsvString() {
         final Track testee = new SimpleTrack(startPoint, endPoint);
         // Act
-        final Track result = Track.fromStringIterable(Collections2.transform(testee.getDataToPersist(), input -> input.toString()));
+        final Track result = Track.fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
         // Assert
         assertThat(result, is(equalTo(testee)));
     }

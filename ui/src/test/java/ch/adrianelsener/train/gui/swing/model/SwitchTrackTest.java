@@ -14,16 +14,17 @@ import org.testng.annotations.Test;
 import java.awt.*;
 import java.util.Collection;
 
-import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.*;
+import static ch.adrianelsener.train.gui.swing.common.PointMatchers.hasX;
+import static ch.adrianelsener.train.gui.swing.common.PointMatchers.hasY;
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasEnd;
+import static ch.adrianelsener.train.gui.swing.model.TrackMatchers.hasStart;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.hamcrest.core.CombinableMatcher.both;
 
 public class SwitchTrackTest {
     private final Point startPoint = new Point(30, 30);
@@ -226,7 +227,7 @@ public class SwitchTrackTest {
         // act
         final SwitchTrack result = testee.toggle(toggler);
         // assert
-        assertThat(result, both(hasId(BoardId.create(24))).and(hasId(SwitchId.create(42))).and(hasState(SwitchTrack.TrackState.On)));
+        assertThat(result, CombinableMatcher.both(hasId(BoardId.create(24))).and(hasId(SwitchId.create(42))).and(hasState(SwitchTrack.TrackState.On)));
     }
 
     @Test
@@ -246,8 +247,8 @@ public class SwitchTrackTest {
         final SwitchTrack result = testee.move(direction);
         // assert
         assertThat(result,
-                both(hasStart(both(hasX(equalTo(startPoint.x + 7))).and(hasY(equalTo(startPoint.y + 9)))))
-                        .and(hasEnd(both(hasX(equalTo(endPoint.x + 7))).and(hasY(equalTo(endPoint.y + 9))))));
+                CombinableMatcher.<SwitchTrack>both(hasStart(CombinableMatcher.both(hasX(equalTo(startPoint.x + 7))).and(hasY(equalTo(startPoint.y + 9)))))
+                        .and(hasEnd(CombinableMatcher.both(hasX(equalTo(endPoint.x + 7))).and(hasY(equalTo(endPoint.y + 9))))));
     }
 
     private FeatureMatcher<SwitchTrack, SwitchTrack.TrackState> hasState(SwitchTrack.TrackState s) {
