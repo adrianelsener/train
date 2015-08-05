@@ -46,6 +46,11 @@ public class SwitchTrack extends Track {
     }
 
     @Override
+    public SwitchTrack move(Point direction) {
+        return ;
+    }
+
+    @Override
     public Collection<SwitchId> getId() {
         return Lists.newArrayList(trackId);
     }
