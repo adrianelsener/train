@@ -257,15 +257,34 @@ public class SwingUi extends JComponent {
     private JMenu createMenuTools() {
         final JMenu toolsMenu = new JMenu("Tools");
         toolsMenu.add(createMoveAllRight());
+        toolsMenu.add(createMoveAllLeft());
+        toolsMenu.add(createMoveAllUp());
+        toolsMenu.add(createMoveAllDown());
         toolsMenu.add(createResendSwitchStates());
         toolsMenu.add(createShowCrossWhileDrawing());
         return toolsMenu;
     }
 
     private JMenuItem createMoveAllRight() {
-        final JMenuItem moveAllToRight = new JMenuItem("10 >");
+        return createMoveAllToDirection("10 >", new Point(10, 0));
+    }
+
+    private JMenuItem createMoveAllUp() {
+        return createMoveAllToDirection("10 ^", new Point(0, -10));
+    }
+
+    private JMenuItem createMoveAllLeft() {
+        return createMoveAllToDirection("10 <", new Point(-10, 0));
+    }
+
+    private JMenuItem createMoveAllDown() {
+        return createMoveAllToDirection("10 ", new Point(0, 10));
+    }
+
+    private JMenuItem createMoveAllToDirection(final String directionMenuName, final Point direction) {
+        final JMenuItem moveAllToRight = new JMenuItem(directionMenuName);
         final OdbPredicate<TrackPart> predicate = part -> true;
-        OdbFunction<TrackPart> updat = part -> part.move(new Point(10, 0));
+        OdbFunction<TrackPart> updat = part -> part.move(direction);
         moveAllToRight.addActionListener(
                 e -> db.replace(predicate, updat)
         );
