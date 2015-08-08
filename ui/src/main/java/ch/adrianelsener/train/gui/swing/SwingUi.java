@@ -286,7 +286,10 @@ public class SwingUi extends JComponent {
         final OdbPredicate<TrackPart> predicate = part -> true;
         OdbFunction<TrackPart> updat = part -> part.move(direction);
         moveAllToRight.addActionListener(
-                e -> db.replace(predicate, updat)
+                e -> {
+                    db.replace(predicate, updat);
+                    repaint();
+                }
         );
         return moveAllToRight;
     }
