@@ -180,7 +180,7 @@ public class CsvOdb<T extends Datacontainer> implements Odb<T> {
             final Method method1 = foo.getClass().getMethod(method.getName(), method.getParameterTypes());
             for (Annotation annot : method1.getDeclaredAnnotations()) {
                 final Class<? extends Annotation> annotationType = annot.annotationType();
-                logger.debug("Method {} has annotation {}", method.getName(), annotationType);
+                logger.trace("Method {} has annotation {}", method.getName(), annotationType);
                 if (allowedMethods.contains(annotationType)) {
                     return true;
                 }
@@ -249,7 +249,7 @@ public class CsvOdb<T extends Datacontainer> implements Odb<T> {
         @Override
         public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
             final CsvOdbState state = db.getCurrentState();
-            logger.debug("invoke method {} with rule {}", method.getName(), state);
+            logger.trace("invoke method {} with rule {}", method.getName(), state);
             if (state.isAllowed(method, db)) {
                 return method.invoke(db, args);
             }

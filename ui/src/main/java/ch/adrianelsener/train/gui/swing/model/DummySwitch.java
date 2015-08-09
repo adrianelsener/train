@@ -42,22 +42,22 @@ public class DummySwitch extends SwingSwitch {
     @Nonnull
     @Override
     public TrackPart toggle(@Nonnull SwitchCallback toggler) {
-        logger.debug("NoOp for toggle on DummySwitch");
+        logger.trace("NoOp for toggle on DummySwitch");
         return this;
     }
 
     @Override
     public void applyState(@Nonnull SwitchCallback callback) {
-        logger.debug("NoOp for applyState on DummySwitch");
+        logger.trace("NoOp for applyState on DummySwitch");
     }
 
     protected void drawDirection(final Graphics2D g) {
-        logger.debug("drawDirection nothing to do as DummySwitch");
+        logger.trace("drawDirection nothing to do as DummySwitch");
     }
 
     @Override
     protected void drawLable(Graphics2D g) {
-        logger.debug("drawLable nothing to do as DummySwitch");
+        logger.trace("drawLable nothing to do as DummySwitch");
     }
 
     @Override

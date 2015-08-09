@@ -65,7 +65,7 @@ public abstract class DraftPartCreationAction extends CreationAction {
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
             final SwingSwitch draftSwitch = new RealSwitch(pointCalculator.calculatePoint(getEndPoint()));
-            logger.debug("Create Switch {}", draftSwitch);
+            logger.trace("Create Switch {}", draftSwitch);
             return draftSwitch;
         }
     }

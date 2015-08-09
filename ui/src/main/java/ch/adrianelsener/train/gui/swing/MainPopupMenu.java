@@ -66,6 +66,7 @@ public class MainPopupMenu extends JPopupMenu {
         private void doPop(MouseEvent e) {
             menu.setBus(bus);
             Optional<TrackPart> partNearBy = db.filterUnique(part -> part.isNear(e.getPoint()));
+            logger.debug("Set part {} which is near popup menu");
             menu.setPart(partNearBy);
             menu.show(e.getComponent(), e.getX(), e.getY());
         }
