@@ -9,9 +9,43 @@
 #include "twi_sample/TWI_Slave/TWI_Slave.h"
 #include "twi_sample/TWI_Slave/Delay.h"
 
-int main (void)
-	{
+
+struct DATA {
+	uint8_t destOcr;
+	uint8_t changeSpeed;
+	uint8_t waits;
+	uint16_t waited;
+};
+
+struct DATA writeReadTwiData(struct DATA data) {
 	uint8_t		TWIS_ResonseType;
+    // Is something to do for the TWI slave interface ?
+	if (TWIS_ResonseRequired (&TWIS_ResonseType)) {
+		switch (TWIS_ResonseType) {
+            // TWI requests to read a byte from the master.
+			case TWIS_ReadBytes:
+				data.waits = TWIS_ReadAck ();
+				data.changeSpeed = TWIS_ReadAck ();
+				data.destOcr = TWIS_ReadAck();
+						TWIS_ReadNack ();
+				TWIS_Stop ();
+				break;
+
+             // TWI requests to write a byte to the master.
+			case TWIS_WriteBytes:
+				TWIS_Write (OCR1A);
+				TWIS_Write (data.destOcr);
+				TWIS_Write (data.changeSpeed);
+			    TWIS_Stop ();
+				break;
+		}
+	}
+
+	return data;
+}
+
+int main (void) {
+
 
     // Clear any interrupt
 	cli ();
@@ -22,59 +56,41 @@ int main (void)
     // Initiate the TWI slave interface
 	TWIS_Init (15, 100000);
 
-
-
     DDRB = 0x06;                      // Set Port PB1 and PB2 as Output
     TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
              |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
 	TCCR1B = _BV(CS10);
 
-	uint8_t destOcr = 100;
-	OCR1A = destOcr;
-    uint8_t changeSpeed = 0;
-	uint8_t waits = 0;
-	uint16_t waited = 0;
+	struct DATA data = {
+		.destOcr = 100,
+	    .changeSpeed = 0,
+		.waits = 0,
+		.waited = 0
+	};
+
+	OCR1A = data.destOcr;
 
 	while (1) {
 
-        // Is something to do for the TWI slave interface ?
-		if (TWIS_ResonseRequired (&TWIS_ResonseType)) {
-			switch (TWIS_ResonseType) {
-                // TWI requests to read a byte from the master.
-				case TWIS_ReadBytes:
-					waits = TWIS_ReadAck ();
-					changeSpeed = TWIS_ReadAck ();
-					destOcr = TWIS_ReadAck();
-							TWIS_ReadNack ();
-					TWIS_Stop ();
-					break;
+		data = writeReadTwiData(data);
 
-                 // TWI requests to write a byte to the master.
-				case TWIS_WriteBytes:
-					TWIS_Write (OCR1A);
-					TWIS_Write (destOcr);
-					TWIS_Write (changeSpeed);
-				    TWIS_Stop ();
-					break;
-			}
-		}
-		if (OCR1A != destOcr) {
-			if (waited >= (waits * 32)) {
+		if (OCR1A != data.destOcr) {
+			if (data.waited >= (data.waits * 32)) {
 				int8_t step;
 				uint8_t nextVal = OCR1A;
-				if (OCR1A > destOcr) {
-					step = 0 - changeSpeed;
+				if (OCR1A > data.destOcr) {
+					step = 0 - data.changeSpeed;
 				} else {
-					step = changeSpeed;
+					step = data.changeSpeed;
 				}
 				nextVal += step;
-				if ((nextVal > destOcr && step > 0) || (nextVal < destOcr && step < 0)) {
-					nextVal = destOcr;
+				if ((nextVal > data.destOcr && step > 0) || (nextVal < data.destOcr && step < 0)) {
+					nextVal = data.destOcr;
 				}
 				OCR1A = nextVal;
-				waited = 0;
+				data.waited = 0;
 			} else {
-				waited++;
+				data.waited++;
 			}
 		}
 	}

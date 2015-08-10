@@ -23,4 +23,5 @@ C_DEPS :=
 SUBDIRS := \
 src/main/c/twi_sample/TWI_Slave \
 src/main/c \
+src/main/c/adc_sample \
 

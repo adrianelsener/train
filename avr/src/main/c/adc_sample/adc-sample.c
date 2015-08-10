@@ -1,7 +1,6 @@
 #include <avr/io.h>
 
-int main(void)
-{
+int main2(void) {
 
     DDRB = 0x03;                      // Set PB0 and PB1 as output
 
