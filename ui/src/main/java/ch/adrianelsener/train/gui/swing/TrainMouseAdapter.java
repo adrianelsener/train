@@ -1,6 +1,12 @@
 package ch.adrianelsener.train.gui.swing;
 
-import ch.adrianelsener.train.gui.swing.events.*;
+import ch.adrianelsener.train.gui.swing.events.DraftPartCreationAction;
+import ch.adrianelsener.train.gui.swing.events.MousePositionEvent;
+import ch.adrianelsener.train.gui.swing.events.PartCreationAction;
+import ch.adrianelsener.train.gui.swing.events.UpdateDraftPart;
+import ch.adrianelsener.train.gui.swing.events.UpdateMoveDraftPart;
+import ch.adrianelsener.train.gui.swing.events.UpdatePart;
+import ch.adrianelsener.train.gui.swing.events.UpdatePoint;
 import ch.adrianelsener.train.gui.swing.model.InvisiblePart;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -35,7 +41,9 @@ class TrainMouseAdapter  extends MouseAdapter {
                 bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
                 break;
             case Move:
-                bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
+                final UpdatePoint.CreationStartPoint event = UpdatePoint.createCreationStartPoint(e.getPoint());
+                logger.debug("Fire event '{}'", event);
+                bus.post(event);
                 break;
             case Switch:
                 bus.post(DraftPartCreationAction.createSwitch(e.getPoint()));

@@ -39,6 +39,7 @@ import ch.adrianelsener.train.gui.swing.model.SimpleTrack;
 import ch.adrianelsener.train.gui.swing.model.SwitchTrack;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import com.google.common.collect.Maps;
+import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.AbstractModule;
@@ -394,7 +395,6 @@ public class SwingUi extends JComponent {
         return open;
     }
 
-
     private JMenuItem createSaveMenuItem() {
         final JMenuItem save = new JMenuItem("Save");
         save.addActionListener(e -> {
@@ -438,12 +438,14 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void createDraftPart(final DraftPartCreationAction action) {
         this.draftPart = action.createDraftPart(creationStartPoint, pointCalc);
         repaint();
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void setCreationStartPoint(final UpdatePoint.CreationStartPoint creationStartPoint) {
         logger.debug("creation start point set to {}", creationStartPoint);
         Point pressedPoint = pointCalc.calculatePoint(creationStartPoint.getPoint());
@@ -456,11 +458,13 @@ public class SwingUi extends JComponent {
     private Optional<Point> creationStartPoint = Optional.empty();
 
     @Subscribe
+    @AllowConcurrentEvents
     public void showDrawingCross(ShowDrawingCrossEvent showCrossEvent) {
         showDrawingCross = showCrossEvent;
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void updateAllParts(UpdateAllSwitches updateAll) {
         db.getAll().forEach(part -> {
             logger.debug("Update state for {}", part);
@@ -469,6 +473,7 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void updateDraftPart(UpdateDraftPart newDraftPart) {
         logger.debug("Event received with {}", newDraftPart);
         draftPart = newDraftPart.getDraftPart();
@@ -476,6 +481,7 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void createPart(PartCreationAction newPart) {
         db.add(newPart.createDraftPart(creationStartPoint, pointCalc));
         draftPart = InvisiblePart.create();
@@ -484,6 +490,7 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void updatePart(UpdatePart action) {
         action.doTransformation(db, pointCalc, creationStartPoint);
         currentDrawMode.setMode(DrawMode.NoOp);
@@ -491,6 +498,7 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void moveDraftPart(UpdateMoveDraftPart destination) {
         final Point currentPoint = pointCalc.calculatePoint(destination.getDestination());
         bus.post(UpdateDraftPart.create(draftPart.moveTo(currentPoint)));
@@ -498,11 +506,13 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void updateUi(UpdateMainUi updateMainUi) {
         repaint();
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void updateDetailsUi(UpdatePoint.DetailCoordinatesPoint detailsPoint) {
         final Optional<TrackPart> nextTo = db.filterUnique(part -> part.isNear(detailsPoint.getPoint()));
         if (nextTo.isPresent()) {
@@ -514,6 +524,7 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void toggle(UpdatePart.TogglePart toggleAction) {
         if (toggler.isReady()) {
             toggleAction.toggle(toggler, db);
@@ -525,6 +536,7 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void updateSwitches(UpdateStates updateStates) {
         db.getAll().forEach(part -> {
 //            part.toggle()
@@ -532,6 +544,7 @@ public class SwingUi extends JComponent {
     }
 
     @Subscribe
+    @AllowConcurrentEvents
     public void updateMousePosition(MousePositionEvent positionEvent) {
         currentMousePosition = positionEvent.getPosition();
         repaint();
