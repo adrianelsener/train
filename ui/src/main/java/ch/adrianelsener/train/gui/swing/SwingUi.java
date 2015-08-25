@@ -22,6 +22,7 @@ import ch.adrianelsener.train.gui.swing.events.DraftPartCreationAction;
 import ch.adrianelsener.train.gui.swing.events.MousePositionEvent;
 import ch.adrianelsener.train.gui.swing.events.PartCreationAction;
 import ch.adrianelsener.train.gui.swing.events.PointCalculator;
+import ch.adrianelsener.train.gui.swing.events.RasterEnabledEvent;
 import ch.adrianelsener.train.gui.swing.events.ShowDrawingCrossEvent;
 import ch.adrianelsener.train.gui.swing.events.UpdateAllSwitches;
 import ch.adrianelsener.train.gui.swing.events.UpdateApplyListener;
@@ -32,6 +33,7 @@ import ch.adrianelsener.train.gui.swing.events.UpdateMoveDraftPart;
 import ch.adrianelsener.train.gui.swing.events.UpdatePart;
 import ch.adrianelsener.train.gui.swing.events.UpdatePoint;
 import ch.adrianelsener.train.gui.swing.events.UpdateStates;
+import ch.adrianelsener.train.gui.swing.menu.ViewMenu;
 import ch.adrianelsener.train.gui.swing.model.DummySwitch;
 import ch.adrianelsener.train.gui.swing.model.InvisiblePart;
 import ch.adrianelsener.train.gui.swing.model.RealSwitch;
@@ -55,8 +57,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -73,7 +73,6 @@ public class SwingUi extends JComponent {
     private final MouseAdapter popUpListener = new MainPopupMenu.PopupClickListener();
     private final DrawModeState currentDrawMode = new DrawModeState();
     private final int rasterSize = 5;
-    private final boolean detailsDefaultVisible = true;
     private final PointCalculator pointCalc;
 
     @Inject
@@ -228,7 +227,6 @@ public class SwingUi extends JComponent {
         final DetailWindow.ApplyActionListener applyListener = text -> {
         };
         details.setApplyListener(applyListener);
-        details.setVisible(detailsDefaultVisible);
 
         switchChecker = new CheckSwitch();
         switchChecker.setVisible(false);
@@ -331,39 +329,11 @@ public class SwingUi extends JComponent {
         return setDummyBoard;
     }
 
-    public class ViewMenu extends JMenu {
-        public ViewMenu() {
-            super("View");
-            final JMenuItem showDetail = createShowDetailMenuItem();
-            final JMenuItem showSwitchChecker = createShowSwitchCheckerMenuItem();
-            final JMenuItem showRaster = createShowRasterMenuItem();
-            add(showDetail);
-            add(showSwitchChecker);
-            add(showRaster);
-        }
-    }
-
     private JMenu createMenuView() {
-        return new ViewMenu();
+        return new ViewMenu(details, switchChecker, bus);
     }
 
-    private JMenuItem createShowRasterMenuItem() {
-        JCheckBoxMenuItem show = new JCheckBoxMenuItem("Show Raster", rasterEnabled);
-        show.addActionListener(e -> rasterEnabled = show.isSelected());
-        return show;
-    }
 
-    private JMenuItem createShowSwitchCheckerMenuItem() {
-        final JCheckBoxMenuItem show = new JCheckBoxMenuItem("Show Switch Checker", switchChecker.isVisible());
-        show.addActionListener(e -> switchChecker.setVisible(show.isSelected()));
-        switchChecker.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(final WindowEvent e) {
-                show.setSelected(detailsDefaultVisible);
-            }
-        });
-        return show;
-    }
 
     private JMenu createMenuFile() {
         final JMenu menu = new JMenu("File");
@@ -378,11 +348,7 @@ public class SwingUi extends JComponent {
         return menu;
     }
 
-    private JMenuItem createShowDetailMenuItem() {
-        final JCheckBoxMenuItem show = new JCheckBoxMenuItem("Show Details");
-        show.addActionListener(e -> details.setVisible(show.isSelected()));
-        return show;
-    }
+
 
     private JMenuItem createOpenMenuItem() {
         final JMenuItem open = new JMenuItem("Open");
@@ -553,5 +519,11 @@ public class SwingUi extends JComponent {
     public void updateMousePosition(MousePositionEvent positionEvent) {
         currentMousePosition = positionEvent.getPosition();
         repaint();
+    }
+
+    @Subscribe
+    @AllowConcurrentEvents
+    public void enableRaster(RasterEnabledEvent rasterEvent) {
+        rasterEnabled = rasterEvent.isEnbaled();
     }
 }
