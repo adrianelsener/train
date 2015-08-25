@@ -450,6 +450,7 @@ public class SwingUi extends JComponent {
         logger.debug("basic calculation of start point '{}'", pressedPoint);
         this.creationStartPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(creationStartPoint.getPoint()));
         draftPart = db.filterUnique(part -> part.isNear(pressedPoint)).orElse(InvisiblePart.create());
+        logger.debug("use '{}' to update");
     }
 
     private Optional<Point> creationStartPoint = Optional.empty();
