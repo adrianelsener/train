@@ -333,79 +333,80 @@ public class SwingUi extends JComponent {
         return new ViewMenu(details, switchChecker, bus);
     }
 
-
-
     private JMenu createMenuFile() {
-        final JMenu menu = new JMenu("File");
-        final JMenuItem exit = createExitMenuItem();
-        final JMenuItem save = createSaveMenuItem();
-        final JMenuItem saveAs = createSaveAsMenuItem();
-        final JMenuItem open = createOpenMenuItem();
-        menu.add(open);
-        menu.add(save);
-        menu.add(saveAs);
-        menu.add(exit);
-        return menu;
+        return new FileMenu();
     }
 
+    public class FileMenu extends JMenu {
+        public FileMenu() {
+            super("File");
+            final JMenuItem exit = createExitMenuItem();
+            final JMenuItem save = createSaveMenuItem();
+            final JMenuItem saveAs = createSaveAsMenuItem();
+            final JMenuItem open = createOpenMenuItem();
+            add(open);
+            add(save);
+            add(saveAs);
+            add(exit);
+        }
 
+        private JMenuItem createExitMenuItem() {
+            final JMenuItem exit = new JMenuItem("Exit");
+            exit.addActionListener(e -> System.exit(0));
+            return exit;
+        }
 
-    private JMenuItem createOpenMenuItem() {
-        final JMenuItem open = new JMenuItem("Open");
-        open.addActionListener(e -> {
-            final JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                final File selectedFile;
-                selectedFile = fileChooser.getSelectedFile();
-                currentShowing = Optional.of(selectedFile);
-                final CsvReader<TrackPart> reader = CsvReader.create(selectedFile, objectFactory);
-                db.setStorage(reader).init();
-                repaint();
-            }
-        });
-        return open;
-    }
+        private JMenuItem createSaveMenuItem() {
+            final JMenuItem save = new JMenuItem("Save");
+            save.addActionListener(e -> {
+                final Optional<File> selectedFile;
+                if (currentShowing.isPresent()) {
+                    selectedFile = currentShowing;
+                } else {
+                    final JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        selectedFile = Optional.of(fileChooser.getSelectedFile());
+                    } else {
+                        selectedFile = Optional.empty();
+                    }
+                }
+                if (selectedFile.isPresent()) {
+                    db.flush();
+                } else {
+                    logger.warn("Nothing done");
+                }
 
-    private JMenuItem createSaveMenuItem() {
-        final JMenuItem save = new JMenuItem("Save");
-        save.addActionListener(e -> {
-            final Optional<File> selectedFile;
-            if (currentShowing.isPresent()) {
-                selectedFile = currentShowing;
-            } else {
+            });
+            return save;
+        }
+
+        private JMenuItem createSaveAsMenuItem() {
+            final JMenuItem save = new JMenuItem("Save As");
+            save.addActionListener(e -> {
                 final JFileChooser fileChooser = new JFileChooser();
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    selectedFile = Optional.of(fileChooser.getSelectedFile());
-                } else {
-                    selectedFile = Optional.empty();
+                    final File selectedFile = fileChooser.getSelectedFile();
+                    db.setStorage(CsvReader.create(selectedFile, objectFactory)).flush();
                 }
-            }
-            if (selectedFile.isPresent()) {
-                db.flush();
-            } else {
-                logger.warn("Nothing done");
-            }
+            });
+            return save;
+        }
 
-        });
-        return save;
-    }
-
-    private JMenuItem createSaveAsMenuItem() {
-        final JMenuItem save = new JMenuItem("Save As");
-        save.addActionListener(e -> {
-            final JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                final File selectedFile = fileChooser.getSelectedFile();
-                db.setStorage(CsvReader.create(selectedFile, objectFactory)).flush();
-            }
-        });
-        return save;
-    }
-
-    private JMenuItem createExitMenuItem() {
-        final JMenuItem exit = new JMenuItem("Exit");
-        exit.addActionListener(e -> System.exit(0));
-        return exit;
+        private JMenuItem createOpenMenuItem() {
+            final JMenuItem open = new JMenuItem("Open");
+            open.addActionListener(e -> {
+                final JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    final File selectedFile;
+                    selectedFile = fileChooser.getSelectedFile();
+                    currentShowing = Optional.of(selectedFile);
+                    final CsvReader<TrackPart> reader = CsvReader.create(selectedFile, objectFactory);
+                    db.setStorage(reader).init();
+                    repaint();
+                }
+            });
+            return open;
+        }
     }
 
     @Subscribe
