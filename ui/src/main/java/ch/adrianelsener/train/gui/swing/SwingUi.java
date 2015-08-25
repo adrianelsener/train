@@ -331,15 +331,20 @@ public class SwingUi extends JComponent {
         return setDummyBoard;
     }
 
+    public class ViewMenu extends JMenu {
+        public ViewMenu() {
+            super("View");
+            final JMenuItem showDetail = createShowDetailMenuItem();
+            final JMenuItem showSwitchChecker = createShowSwitchCheckerMenuItem();
+            final JMenuItem showRaster = createShowRasterMenuItem();
+            add(showDetail);
+            add(showSwitchChecker);
+            add(showRaster);
+        }
+    }
+
     private JMenu createMenuView() {
-        final JMenu view = new JMenu("View");
-        final JMenuItem showDetail = createShowDetailMenuItem();
-        final JMenuItem showSwitchChecker = createShowSwitchCheckerMenuItem();
-        final JMenuItem showRaster = createShowRasterMenuItem();
-        view.add(showDetail);
-        view.add(showSwitchChecker);
-        view.add(showRaster);
-        return view;
+        return new ViewMenu();
     }
 
     private JMenuItem createShowRasterMenuItem() {
