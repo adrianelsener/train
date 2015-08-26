@@ -1,8 +1,6 @@
 package ch.adrianelsener.train.gui.swing;
 
 import ch.adrianelsener.csvdb.CsvOdb;
-import ch.adrianelsener.csvdb.CsvReader;
-import ch.adrianelsener.odb.api.ObjectFactory;
 import ch.adrianelsener.odb.api.Odb;
 import ch.adrianelsener.odb.api.OdbFunction;
 import ch.adrianelsener.odb.api.OdbPredicate;
@@ -33,12 +31,9 @@ import ch.adrianelsener.train.gui.swing.events.UpdateMoveDraftPart;
 import ch.adrianelsener.train.gui.swing.events.UpdatePart;
 import ch.adrianelsener.train.gui.swing.events.UpdatePoint;
 import ch.adrianelsener.train.gui.swing.events.UpdateStates;
+import ch.adrianelsener.train.gui.swing.menu.FileMenu;
 import ch.adrianelsener.train.gui.swing.menu.ViewMenu;
-import ch.adrianelsener.train.gui.swing.model.DummySwitch;
 import ch.adrianelsener.train.gui.swing.model.InvisiblePart;
-import ch.adrianelsener.train.gui.swing.model.RealSwitch;
-import ch.adrianelsener.train.gui.swing.model.SimpleTrack;
-import ch.adrianelsener.train.gui.swing.model.SwitchTrack;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.AllowConcurrentEvents;
@@ -57,9 +52,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.io.File;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -79,7 +72,6 @@ public class SwingUi extends JComponent {
     private EventBus bus;
     @Inject
     private Odb<TrackPart> db;
-    private final ObjectFactory<TrackPart> objectFactory;
     private TrackPart draftPart = InvisiblePart.create();
     private SwitchCallback toggler;
     private boolean rasterEnabled = true;
@@ -87,7 +79,6 @@ public class SwingUi extends JComponent {
     private JFrame frame;
     private DetailWindow details;
     private CheckSwitch switchChecker = new CheckSwitch();
-    private Optional<File> currentShowing = Optional.empty();
     private ShowDrawingCrossEvent showDrawingCross = ShowDrawingCrossEvent.SHOW;
     private Point currentMousePosition;
 
@@ -110,22 +101,6 @@ public class SwingUi extends JComponent {
         final Injector injector = Guice.createInjector(busModule, dbModule);
         keyListener = new ModeKeyListener();
         mouseListener = new TrainMouseAdapter(currentDrawMode);
-        objectFactory = input -> {
-            final Iterator<String> iterator = input.iterator();
-            final String type = iterator.next();
-            switch (type) {
-                case "T":
-                    return SimpleTrack.createSimpleTrack(iterator);
-                case "TS":
-                    return SwitchTrack.createSwitchTrack(iterator);
-                case "S":
-                    return RealSwitch.create(iterator);
-                case "DS":
-                    return DummySwitch.create(iterator);
-                default:
-                    throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
-            }
-        };
         if (rasterEnabled) {
             pointCalc = new RasterEnabled(rasterSize, theDb);
         } else {
@@ -334,79 +309,7 @@ public class SwingUi extends JComponent {
     }
 
     private JMenu createMenuFile() {
-        return new FileMenu();
-    }
-
-    public class FileMenu extends JMenu {
-        public FileMenu() {
-            super("File");
-            final JMenuItem exit = createExitMenuItem();
-            final JMenuItem save = createSaveMenuItem();
-            final JMenuItem saveAs = createSaveAsMenuItem();
-            final JMenuItem open = createOpenMenuItem();
-            add(open);
-            add(save);
-            add(saveAs);
-            add(exit);
-        }
-
-        private JMenuItem createExitMenuItem() {
-            final JMenuItem exit = new JMenuItem("Exit");
-            exit.addActionListener(e -> System.exit(0));
-            return exit;
-        }
-
-        private JMenuItem createSaveMenuItem() {
-            final JMenuItem save = new JMenuItem("Save");
-            save.addActionListener(e -> {
-                final Optional<File> selectedFile;
-                if (currentShowing.isPresent()) {
-                    selectedFile = currentShowing;
-                } else {
-                    final JFileChooser fileChooser = new JFileChooser();
-                    if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        selectedFile = Optional.of(fileChooser.getSelectedFile());
-                    } else {
-                        selectedFile = Optional.empty();
-                    }
-                }
-                if (selectedFile.isPresent()) {
-                    db.flush();
-                } else {
-                    logger.warn("Nothing done");
-                }
-
-            });
-            return save;
-        }
-
-        private JMenuItem createSaveAsMenuItem() {
-            final JMenuItem save = new JMenuItem("Save As");
-            save.addActionListener(e -> {
-                final JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    final File selectedFile = fileChooser.getSelectedFile();
-                    db.setStorage(CsvReader.create(selectedFile, objectFactory)).flush();
-                }
-            });
-            return save;
-        }
-
-        private JMenuItem createOpenMenuItem() {
-            final JMenuItem open = new JMenuItem("Open");
-            open.addActionListener(e -> {
-                final JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    final File selectedFile;
-                    selectedFile = fileChooser.getSelectedFile();
-                    currentShowing = Optional.of(selectedFile);
-                    final CsvReader<TrackPart> reader = CsvReader.create(selectedFile, objectFactory);
-                    db.setStorage(reader).init();
-                    repaint();
-                }
-            });
-            return open;
-        }
+        return new FileMenu(db);
     }
 
     @Subscribe
