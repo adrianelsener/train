@@ -231,22 +231,27 @@ public class SwingUi extends JComponent {
         return new ToolsMenu(db, bus);
     }
 
-    private JMenu createMenuSettings() {
-        final JMenu settings = new JMenu("Settings");
-        settings.add(createSetDummyBoard());
-        return settings;
+    public class SettingsMenu extends JMenu {
+        public SettingsMenu() {
+            super("Settings");
+            add(createSetDummyBoard());
+        }
+
+        private JMenuItem createSetDummyBoard() {
+            final JCheckBoxMenuItem setDummyBoard = new JCheckBoxMenuItem("Use Dummyboard", false);
+            setDummyBoard.addActionListener(e -> {
+                if (setDummyBoard.isSelected()) {
+                    toggler = DummyToggler.create();
+                } else {
+                    toggler = SwitchBoardToggler.create();
+                }
+            });
+            return setDummyBoard;
+        }
     }
 
-    private JMenuItem createSetDummyBoard() {
-        final JCheckBoxMenuItem setDummyBoard = new JCheckBoxMenuItem("Use Dummyboard", false);
-        setDummyBoard.addActionListener(e -> {
-            if (setDummyBoard.isSelected()) {
-                toggler = DummyToggler.create();
-            } else {
-                toggler = SwitchBoardToggler.create();
-            }
-        });
-        return setDummyBoard;
+    private JMenu createMenuSettings() {
+        return new SettingsMenu();
     }
 
     private JMenu createMenuView() {
