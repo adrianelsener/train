@@ -2,8 +2,6 @@ package ch.adrianelsener.train.gui.swing;
 
 import ch.adrianelsener.csvdb.CsvOdb;
 import ch.adrianelsener.odb.api.Odb;
-import ch.adrianelsener.odb.api.OdbFunction;
-import ch.adrianelsener.odb.api.OdbPredicate;
 import ch.adrianelsener.train.config.ConfKey;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.config.ConfigPropertyReader;
@@ -32,6 +30,7 @@ import ch.adrianelsener.train.gui.swing.events.UpdatePart;
 import ch.adrianelsener.train.gui.swing.events.UpdatePoint;
 import ch.adrianelsener.train.gui.swing.events.UpdateStates;
 import ch.adrianelsener.train.gui.swing.menu.FileMenu;
+import ch.adrianelsener.train.gui.swing.menu.ToolsMenu;
 import ch.adrianelsener.train.gui.swing.menu.ViewMenu;
 import ch.adrianelsener.train.gui.swing.model.InvisiblePart;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
@@ -229,61 +228,7 @@ public class SwingUi extends JComponent {
     }
 
     private JMenu createMenuTools() {
-        final JMenu toolsMenu = new JMenu("Tools");
-        toolsMenu.add(createMoveAllRight());
-        toolsMenu.add(createMoveAllLeft());
-        toolsMenu.add(createMoveAllUp());
-        toolsMenu.add(createMoveAllDown());
-        toolsMenu.add(createResendSwitchStates());
-        toolsMenu.add(createShowCrossWhileDrawing());
-        return toolsMenu;
-    }
-
-    private JMenuItem createMoveAllRight() {
-        return createMoveAllToDirection("10 >", new Point(10, 0));
-    }
-
-    private JMenuItem createMoveAllUp() {
-        return createMoveAllToDirection("10 ^", new Point(0, -10));
-    }
-
-    private JMenuItem createMoveAllLeft() {
-        return createMoveAllToDirection("10 <", new Point(-10, 0));
-    }
-
-    private JMenuItem createMoveAllDown() {
-        return createMoveAllToDirection("10 ", new Point(0, 10));
-    }
-
-    private JMenuItem createMoveAllToDirection(final String directionMenuName, final Point direction) {
-        final JMenuItem moveAllToRight = new JMenuItem(directionMenuName);
-        final OdbPredicate<TrackPart> predicate = part -> true;
-        OdbFunction<TrackPart> updat = part -> part.move(direction);
-        moveAllToRight.addActionListener(
-                e -> {
-                    db.replace(predicate, updat);
-                    repaint();
-                }
-        );
-        return moveAllToRight;
-    }
-
-    private JMenuItem createShowCrossWhileDrawing() {
-        final JCheckBoxMenuItem showCross = new JCheckBoxMenuItem("Show drawing cross", true);
-        showCross.addActionListener(e -> {
-            if (showCross.isSelected()) {
-                bus.post(ShowDrawingCrossEvent.SHOW);
-            } else {
-                bus.post(ShowDrawingCrossEvent.HIDE);
-            }
-        });
-        return showCross;
-    }
-
-    private JMenuItem createResendSwitchStates() {
-        final JMenuItem resendSwitchStates = new JMenuItem("Resend switch states");
-        resendSwitchStates.addActionListener(e -> bus.post(UpdateAllSwitches.create()));
-        return resendSwitchStates;
+        return new ToolsMenu(db, bus);
     }
 
     private JMenu createMenuSettings() {
