@@ -10,7 +10,6 @@ import ch.adrianelsener.train.denkovi.DenkoviWrapper;
 import ch.adrianelsener.train.denkovi.IpAddress;
 import ch.adrianelsener.train.driver.SwitchBoardV1;
 import ch.adrianelsener.train.gui.BoardId;
-import ch.adrianelsener.train.gui.DummyToggler;
 import ch.adrianelsener.train.gui.SwitchBoardToggler;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.swing.events.DbUpdateHandler;
@@ -30,6 +29,7 @@ import ch.adrianelsener.train.gui.swing.events.UpdatePart;
 import ch.adrianelsener.train.gui.swing.events.UpdatePoint;
 import ch.adrianelsener.train.gui.swing.events.UpdateStates;
 import ch.adrianelsener.train.gui.swing.menu.FileMenu;
+import ch.adrianelsener.train.gui.swing.menu.SettingsMenu;
 import ch.adrianelsener.train.gui.swing.menu.ToolsMenu;
 import ch.adrianelsener.train.gui.swing.menu.ViewMenu;
 import ch.adrianelsener.train.gui.swing.model.InvisiblePart;
@@ -216,50 +216,17 @@ public class SwingUi extends JComponent {
 
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
-        final JMenu menu = createMenuFile();
-        menuBar.add(menu);
-        final JMenu view = createMenuView();
-        menuBar.add(view);
-        final JMenu settings = createMenuSettings();
-        menuBar.add(settings);
-        final JMenu tools = createMenuTools();
-        menuBar.add(tools);
+        menuBar.add(new FileMenu(db));
+        menuBar.add(new ViewMenu(details, switchChecker, bus));
+        menuBar.add(new SettingsMenu(bus));
+        menuBar.add(new ToolsMenu(db, bus));
         return menuBar;
     }
 
-    private JMenu createMenuTools() {
-        return new ToolsMenu(db, bus);
-    }
-
-    public class SettingsMenu extends JMenu {
-        public SettingsMenu() {
-            super("Settings");
-            add(createSetDummyBoard());
-        }
-
-        private JMenuItem createSetDummyBoard() {
-            final JCheckBoxMenuItem setDummyBoard = new JCheckBoxMenuItem("Use Dummyboard", false);
-            setDummyBoard.addActionListener(e -> {
-                if (setDummyBoard.isSelected()) {
-                    toggler = DummyToggler.create();
-                } else {
-                    toggler = SwitchBoardToggler.create();
-                }
-            });
-            return setDummyBoard;
-        }
-    }
-
-    private JMenu createMenuSettings() {
-        return new SettingsMenu();
-    }
-
-    private JMenu createMenuView() {
-        return new ViewMenu(details, switchChecker, bus);
-    }
-
-    private JMenu createMenuFile() {
-        return new FileMenu(db);
+    @Subscribe
+    @AllowConcurrentEvents
+    public void setToggler(SwitchCallback toggler) {
+        this.toggler = toggler;
     }
 
     @Subscribe
