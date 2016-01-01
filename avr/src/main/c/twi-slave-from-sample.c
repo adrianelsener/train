@@ -14,7 +14,8 @@ struct DATA {
 	uint8_t destOcr;
 	uint8_t changeSpeed;
 	uint8_t waits;
-	uint16_t waited;
+	uint8_t waited; // indicates duration of single wait
+	uint8_t direction; // [1,2]
 };
 
 struct DATA writeReadTwiData(struct DATA data) {
@@ -24,29 +25,27 @@ struct DATA writeReadTwiData(struct DATA data) {
 		switch (TWIS_ResonseType) {
             // TWI requests to read a byte from the master.
 			case TWIS_ReadBytes:
-				data.waits = TWIS_ReadAck ();
-				data.changeSpeed = TWIS_ReadAck ();
+				data.waits = TWIS_ReadAck();
+				data.changeSpeed = TWIS_ReadAck();
 				data.destOcr = TWIS_ReadAck();
-						TWIS_ReadNack ();
-				TWIS_Stop ();
+				data.direction = TWIS_ReadAck();
+				TWIS_ReadNack();
+				TWIS_Stop();
 				break;
-
              // TWI requests to write a byte to the master.
 			case TWIS_WriteBytes:
-				TWIS_Write (OCR1A);
-				TWIS_Write (data.destOcr);
-				TWIS_Write (data.changeSpeed);
-			    TWIS_Stop ();
+				TWIS_Write(OCR1A);
+				TWIS_Write(data.destOcr);
+				TWIS_Write(data.changeSpeed);
+				TWIS_Write(data.direction);
+			    TWIS_Stop();
 				break;
 		}
 	}
-
 	return data;
 }
 
 int main (void) {
-
-
     // Clear any interrupt
 	cli ();
 
@@ -65,7 +64,8 @@ int main (void) {
 		.destOcr = 100,
 	    .changeSpeed = 0,
 		.waits = 0,
-		.waited = 0
+		.waited = 0,
+		.direction = 1
 	};
 
 	OCR1A = data.destOcr;

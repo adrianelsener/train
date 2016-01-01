@@ -25,8 +25,7 @@ public class TwiTest {
         Optional<String> stringLine = Optional.of(line);
         Optional<Integer> devNr = stringLine.filter(StringUtils::isNumeric).map(Integer::valueOf);
         Optional<I2CDevice> i2CDevice = devNr.map(i -> toI2CDevice(i, i2CBus));
-        System.out.printf("next value (wait,steps,destination): ");
-        String val = in.nextLine();
+        String val = readNextStepWithOutput(in);
         while (!val.startsWith("e")) {
             if (val.startsWith("r")) {
                 try {
@@ -40,17 +39,26 @@ public class TwiTest {
                     read(i2CDevice);
                     List<String> splittedStrings = Splitter.on(",").splitToList(val);
                     List<Byte> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s).byteValue()).collect(Collectors.toList());
-                    byte[] sendbytes = new byte[]{splitted.get(0), splitted.get(1), splitted.get(2)};
+                    byte[] sendbytes = new byte[splitted.size()];
+                    for (int i = 0; i < splitted.size(); i++) {
+                        sendbytes[i] = splitted.get(i);
+                    }
                     i2CDevice.get().write(sendbytes, 0, sendbytes.length);
                 } catch (IOException e) {
                     System.out.printf("got an ioex...");
                     e.printStackTrace();
                 }
             }
-            System.out.printf("next value (wait,steps,destination - (e)xit) (r)ead: ");
-            val = in.nextLine();
+            val = readNextStepWithOutput(in);
         }
 
+    }
+
+    private String readNextStepWithOutput(final Scanner in) {
+        final String val;
+        System.out.printf("next value (wait,steps,destination,direction[1,2]) - (e)xit) (r)ead: ");
+        val = in.nextLine();
+        return val;
     }
 
     private void read(Optional<I2CDevice> i2CDevice) throws IOException {
@@ -59,6 +67,7 @@ public class TwiTest {
         System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
         System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
         System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
+        System.out.printf("direction %s\n", Byte.toUnsignedInt(bytes[3]));
     }
 
     private I2CDevice toI2CDevice(final Integer i, final I2CBus i2CBus) {
