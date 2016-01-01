@@ -1,0 +1,27 @@
+"sudo raspi-config"
+Select 'Advanced Options' and then select the relevant option.
+
+Old way:
+Edit the modules file
+"sudo nano /etc/modules"
+
+Add these lines
+"
+i2c-bcm2708
+i2c-dev
+"
+
+Exit and save
+
+Now edit the modules blacklist file:
+
+"sudo nano /etc/modprobe.d/raspi-blacklist.conf"
+
+Add a '#' character to this line so it commented out:
+"#blacklist i2c-bcm2708"
+
+Exit and save
+
+Finally install the I2C utilities:
+"sudo apt-get install python-smbus i2c-tools"
+
