@@ -9,6 +9,7 @@
 #include "twi_sample/TWI_Slave/TWI_Slave.h"
 #include "twi_sample/TWI_Slave/Delay.h"
 
+#define CLIENT_NR 15
 
 struct DATA {
 	uint8_t destOcr;
@@ -45,6 +46,48 @@ struct DATA writeReadTwiData(struct DATA data) {
 	return data;
 }
 
+void setDirectionToForward() {
+	//PB3 / PB4
+    PORTB |= (1 << PB3);  //PB3 im PORTB setzen
+    PORTB &= ~(1 << PB4); //PB4 im PORTB löschen
+}
+
+void setDirectionToBackward() {
+    PORTB &= ~(1 << PB3); //PB3 im PORTB löschen
+    PORTB |= (1 << PB4);  //PB4 im PORTB setzen
+}
+
+void setDirection(struct DATA data) {
+	if (1 == data.direction) {
+		setDirectionToForward();
+	} else if (2 == data.direction) {
+		setDirectionToBackward();
+	}
+}
+
+struct DATA setOcr(struct DATA data) {
+	if (OCR1A != data.destOcr) {
+		if (data.waited >= (data.waits * 32)) {
+			int8_t step;
+			uint8_t nextVal = OCR1A;
+			if (OCR1A > data.destOcr) {
+				step = 0 - data.changeSpeed;
+			} else {
+				step = data.changeSpeed;
+			}
+			nextVal += step;
+			if ((nextVal > data.destOcr && step > 0) || (nextVal < data.destOcr && step < 0)) {
+				nextVal = data.destOcr;
+			}
+			OCR1A = nextVal;
+			data.waited = 0;
+		} else {
+			data.waited++;
+		}
+	}
+	return data;
+}
+
 int main (void) {
     // Clear any interrupt
 	cli ();
@@ -53,9 +96,13 @@ int main (void) {
 	Delay_ms (500);
 
     // Initiate the TWI slave interface
-	TWIS_Init (15, 100000);
+	TWIS_Init (CLIENT_NR, 100000);
 
-    DDRB = 0x06;                      // Set Port PB1 and PB2 as Output
+
+    DDRB = 0x06;                      // Set Port PB1 and PB2 as Output (0x06 -> 110b)
+	DDRB |= (1 << PB3);					// PB3 as Output
+	DDRB |= (1 << PB4);					// PB4 as Output
+
     TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
              |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
 	TCCR1B = _BV(CS10);
@@ -71,28 +118,9 @@ int main (void) {
 	OCR1A = data.destOcr;
 
 	while (1) {
-
 		data = writeReadTwiData(data);
-
-		if (OCR1A != data.destOcr) {
-			if (data.waited >= (data.waits * 32)) {
-				int8_t step;
-				uint8_t nextVal = OCR1A;
-				if (OCR1A > data.destOcr) {
-					step = 0 - data.changeSpeed;
-				} else {
-					step = data.changeSpeed;
-				}
-				nextVal += step;
-				if ((nextVal > data.destOcr && step > 0) || (nextVal < data.destOcr && step < 0)) {
-					nextVal = data.destOcr;
-				}
-				OCR1A = nextVal;
-				data.waited = 0;
-			} else {
-				data.waited++;
-			}
-		}
+		setDirection(data);
+		data = setOcr(data);
 	}
 	return 0;
 }
