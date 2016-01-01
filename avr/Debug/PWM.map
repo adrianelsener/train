@@ -122,11 +122,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-<<<<<<< HEAD
-.text           0x0000000000000000      0x694
-=======
-.text           0x0000000000000000      0x522
->>>>>>> d2a268d44a931495cf68f96b05640e99c0bd13b6
+.text           0x0000000000000000      0x700
  *(.vectors)
  .vectors       0x0000000000000000       0x26 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
                 0x0000000000000000                __vectors
@@ -233,105 +229,66 @@ END GROUP
  .text.main2    0x0000000000000202       0x86 ./src/main/c/adc_sample/adc-sample.o
                 0x0000000000000202                main2
  .text.writeReadTwiData
-<<<<<<< HEAD
                 0x0000000000000288      0x112 ./src/main/c/twi-slave-from-sample.o
                 0x0000000000000288                writeReadTwiData
  .text.setDirectionToForward
-                0x000000000000039a        0xe ./src/main/c/twi-slave-from-sample.o
+                0x000000000000039a       0x32 ./src/main/c/twi-slave-from-sample.o
                 0x000000000000039a                setDirectionToForward
  .text.setDirectionToBackward
-                0x00000000000003a8        0xe ./src/main/c/twi-slave-from-sample.o
-                0x00000000000003a8                setDirectionToBackward
+                0x00000000000003cc       0x32 ./src/main/c/twi-slave-from-sample.o
+                0x00000000000003cc                setDirectionToBackward
  .text.setDirection
-                0x00000000000003b6       0x3a ./src/main/c/twi-slave-from-sample.o
-                0x00000000000003b6                setDirection
- .text.setOcr   0x00000000000003f0      0x16a ./src/main/c/twi-slave-from-sample.o
-                0x00000000000003f0                setOcr
- .text.main     0x000000000000055a       0xf2 ./src/main/c/twi-slave-from-sample.o
-                0x000000000000055a                main
+                0x00000000000003fe       0x3a ./src/main/c/twi-slave-from-sample.o
+                0x00000000000003fe                setDirection
+ .text.setOcr   0x0000000000000438      0x16a ./src/main/c/twi-slave-from-sample.o
+                0x0000000000000438                setOcr
+ .text.main     0x00000000000005a2      0x116 ./src/main/c/twi-slave-from-sample.o
+                0x00000000000005a2                main
  .text.libgcc.mul
-                0x000000000000064c        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x00000000000006b8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.div
-                0x000000000000064c       0x44 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
-                0x000000000000064c                __udivmodsi4
- .text.libgcc   0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x00000000000006b8       0x44 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x00000000000006b8                __udivmodsi4
+ .text.libgcc   0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.prologue
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.builtins
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.fmul
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.fixed
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.mul
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc   0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+ .text.libgcc   0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.div
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
- .text.libgcc   0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.prologue
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.builtins
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.fmul
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.fixed
-                0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
-                0x0000000000000690                . = ALIGN (0x2)
+                0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                0x00000000000006fc                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000000690        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
-                0x0000000000000690                exit
-                0x0000000000000690                _exit
-=======
-                0x0000000000000272      0x10a ./src/main/c/twi-slave-from-sample.o
-                0x0000000000000272                writeReadTwiData
- .text.main     0x000000000000037c      0x15e ./src/main/c/twi-slave-from-sample.o
-                0x000000000000037c                main
- .text.libgcc.mul
-                0x00000000000004da        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .text.libgcc.div
-                0x00000000000004da       0x44 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
-                0x00000000000004da                __udivmodsi4
- .text.libgcc   0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .text.libgcc.prologue
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .text.libgcc.builtins
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .text.libgcc.fmul
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .text.libgcc.fixed
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .text.libgcc.mul
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc.div
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc   0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc.prologue
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc.builtins
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc.fmul
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc.fixed
-                0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
-                0x000000000000051e                . = ALIGN (0x2)
- *(.fini9)
- .fini9         0x000000000000051e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
-                0x000000000000051e                exit
-                0x000000000000051e                _exit
->>>>>>> d2a268d44a931495cf68f96b05640e99c0bd13b6
+ .fini9         0x00000000000006fc        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x00000000000006fc                exit
+                0x00000000000006fc                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -350,19 +307,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
-<<<<<<< HEAD
- .fini0         0x0000000000000690        0x4 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+ .fini0         0x00000000000006fc        0x4 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000000694                _etext = .
+                0x0000000000000700                _etext = .
 
-.data           0x0000000000800060        0x6 load address 0x0000000000000694
-=======
- .fini0         0x000000000000051e        0x4 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- *(.fini0)
-                0x0000000000000522                _etext = .
-
-.data           0x0000000000800060        0x0 load address 0x0000000000000522
->>>>>>> d2a268d44a931495cf68f96b05640e99c0bd13b6
+.data           0x0000000000800060        0x6 load address 0x0000000000000700
                 0x0000000000800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
@@ -396,15 +345,9 @@ END GROUP
  .bss           0x0000000000800066        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  *(.bss*)
  *(COMMON)
-<<<<<<< HEAD
                 0x0000000000800066                PROVIDE (__bss_end, .)
-                0x0000000000000694                __data_load_start = LOADADDR (.data)
-                0x000000000000069a                __data_load_end = (__data_load_start + SIZEOF (.data))
-=======
-                0x0000000000800060                PROVIDE (__bss_end, .)
-                0x0000000000000522                __data_load_start = LOADADDR (.data)
-                0x0000000000000522                __data_load_end = (__data_load_start + SIZEOF (.data))
->>>>>>> d2a268d44a931495cf68f96b05640e99c0bd13b6
+                0x0000000000000700                __data_load_start = LOADADDR (.data)
+                0x0000000000000706                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0000000000800066        0x0
                 0x0000000000800066                PROVIDE (__noinit_start, .)
@@ -432,26 +375,15 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-<<<<<<< HEAD
-.stab           0x0000000000000000     0x13c8
-=======
-.stab           0x0000000000000000     0x12d8
->>>>>>> d2a268d44a931495cf68f96b05640e99c0bd13b6
+.stab           0x0000000000000000     0x1434
  *(.stab)
  .stab          0x0000000000000000      0x4c8 ./src/main/c/twi_sample/TWI_Slave/Delay.o
  .stab          0x00000000000004c8      0x54c ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
                                         0x708 (size before relaxing)
-<<<<<<< HEAD
- .stab          0x0000000000000a14      0x330 ./src/main/c/adc_sample/adc-sample.o
-                                        0x4f8 (size before relaxing)
- .stab          0x0000000000000d44      0x684 ./src/main/c/twi-slave-from-sample.o
-                                        0x8b8 (size before relaxing)
-=======
  .stab          0x0000000000000a14      0x354 ./src/main/c/adc_sample/adc-sample.o
                                         0x570 (size before relaxing)
- .stab          0x0000000000000d68      0x570 ./src/main/c/twi-slave-from-sample.o
-                                        0x7a4 (size before relaxing)
->>>>>>> d2a268d44a931495cf68f96b05640e99c0bd13b6
+ .stab          0x0000000000000d68      0x6cc ./src/main/c/twi-slave-from-sample.o
+                                        0x900 (size before relaxing)
 
 .stabstr        0x0000000000000000     0x1059
  *(.stabstr)
