@@ -20,6 +20,8 @@ public enum Mode {
 
     public enum Key {
         ACCELERATION,//
+        DIRECTION,//
+        SPEED,//
         ;
     }
 

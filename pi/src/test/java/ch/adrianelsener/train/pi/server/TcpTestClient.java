@@ -28,7 +28,7 @@ public class TcpTestClient {
     private Result sendSetSpeed() throws IOException {
         Gson gson = new Gson();
         Command cmd = Command.builder()//
-                .setData(ImmutableMap.of(Mode.Key.ACCELERATION, gson.toJsonTree(new AccelerationDto())))//
+                .setData(ImmutableMap.of(Mode.Key.ACCELERATION, gson.toJsonTree(new AccelerationDto(0))))//
                 .setMode(Mode.SPEED)//
                 .build();
         Result result = sendCommand(cmd);
