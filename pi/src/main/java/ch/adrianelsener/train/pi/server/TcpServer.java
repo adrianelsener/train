@@ -24,7 +24,7 @@ public class TcpServer {
     }
 
     private TcpServer() {
-
+        super();
     }
 
     private void initConnection(int port) throws IOException {

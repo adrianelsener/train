@@ -1,14 +1,11 @@
 package ch.adrianelsener.train.pi.dto;
 
-import com.google.gson.JsonElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.Map;
-
 public class Command {
     private final Mode mode;
-    private final Map<Mode.Key, JsonElement> data;
+    private final AccelerationDto data;
 
     private Command(Builder builder) {
         mode = builder.mode;
@@ -30,13 +27,13 @@ public class Command {
 
     public static class Builder {
         private Mode mode;
-        public Map<Mode.Key, JsonElement> data;
+        public AccelerationDto data;
 
         private Builder() {
             super();
         }
 
-        public Builder setData(Map<Mode.Key, JsonElement> data) {
+        public Builder setData(AccelerationDto data) {
             this.data = data;
             return this;
         }

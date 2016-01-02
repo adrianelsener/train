@@ -8,7 +8,6 @@ import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableMap;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -31,7 +30,7 @@ public class TcpClient {
 
     private Result sendSetSpeed() {
         Command cmd = Command.builder()//
-                .setData(ImmutableMap.of(Mode.Key.ACCELERATION, gson.toJsonTree(new AccelerationDto(0))))//
+                .setData(new AccelerationDto())//
                 .setMode(Mode.SPEED)//
                 .build();
         Result result = sendCommand(cmd);

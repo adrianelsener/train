@@ -4,7 +4,6 @@ import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -28,7 +27,7 @@ public class TcpTestClient {
     private Result sendSetSpeed() throws IOException {
         Gson gson = new Gson();
         Command cmd = Command.builder()//
-                .setData(ImmutableMap.of(Mode.Key.ACCELERATION, gson.toJsonTree(new AccelerationDto(0))))//
+                .setData(new AccelerationDto())//
                 .setMode(Mode.SPEED)//
                 .build();
         Result result = sendCommand(cmd);

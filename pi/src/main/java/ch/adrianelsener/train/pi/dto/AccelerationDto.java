@@ -1,33 +1,59 @@
 package ch.adrianelsener.train.pi.dto;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import ch.adrianelsener.train.pi.dto.properties.Acceleration;
+import ch.adrianelsener.train.pi.dto.properties.Direction;
+import ch.adrianelsener.train.pi.dto.properties.Speed;
 
-public class AccelerationDto {
-    private final int acceleration;
+public class AccelerationDto extends AbstractDto {
+    private final Acceleration acceleration;
+    private final Speed speed;
+    private final Direction direction;
 
-    public AccelerationDto(int acceleration) {
+    public AccelerationDto() {
+        acceleration = new Acceleration();
+        speed = new Speed();
+        direction = Direction.STOP;
+    }
+
+    private AccelerationDto(AccelerationDto current, Acceleration acceleration) {
         this.acceleration = acceleration;
+        speed = current.speed;
+        direction = current.direction;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+    private AccelerationDto(final AccelerationDto current, final Speed speed) {
+        this.speed = speed;
+        acceleration = current.acceleration;
+        direction = current.direction;
     }
 
-    public int getAcceleration() {
+    private AccelerationDto(final AccelerationDto current, final Direction direction) {
+        this.direction = direction;
+        acceleration = current.acceleration;
+        speed = current.speed;
+    }
+
+    public AccelerationDto setAcceleration(Acceleration acceleration) {
+        return new AccelerationDto(this, acceleration);
+    }
+
+    public Acceleration getAcceleration() {
         return acceleration;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+    public AccelerationDto setSpeed(Speed speed) {
+        return new AccelerationDto(this, speed);
     }
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+    public Speed getSpeed() {
+        return speed;
+    }
+
+    public AccelerationDto setDirection(Direction direction) {
+        return new AccelerationDto(this, direction);
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 }
