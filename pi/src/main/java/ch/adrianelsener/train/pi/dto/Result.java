@@ -1,21 +1,52 @@
 package ch.adrianelsener.train.pi.dto;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import java.util.Optional;
 
-public class Result {
-    private final Status status;
+public abstract class Result extends AbstractDto {
 
-    public Result(final Status status) {
-        this.status = status;
+    public static Result ok(AccelerationDto acceleration) {
+        return new OkResult(acceleration);
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+    public static Result nok() {
+        return new NokResult();
     }
 
-    public enum Status {
-        OK, NOK
+    public abstract Optional<AccelerationDto> getResult();
+
+    public abstract boolean isOk();
+
+    private static class NokResult extends Result {
+        NokResult() {
+            super();
+        }
+
+        @Override
+        public Optional<AccelerationDto> getResult() {
+            return Optional.empty();
+        }
+
+        @Override
+        public boolean isOk() {
+            return false;
+        }
+    }
+
+    private static class OkResult extends Result {
+        private final AccelerationDto acceleration;
+
+        OkResult(AccelerationDto acceleration) {
+            this.acceleration = acceleration;
+        }
+
+        @Override
+        public Optional<AccelerationDto> getResult() {
+            return Optional.of(acceleration);
+        }
+
+        @Override
+        public boolean isOk() {
+            return true;
+        }
     }
 }

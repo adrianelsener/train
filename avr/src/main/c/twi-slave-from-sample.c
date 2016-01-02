@@ -38,6 +38,7 @@ struct DATA writeReadTwiData(struct DATA data) {
 				TWIS_Write(OCR1A);
 				TWIS_Write(data.destOcr);
 				TWIS_Write(data.changeSpeed);
+				TWIS_Write(data.waits);
 				TWIS_Write(data.direction);
 			    TWIS_Stop();
 				break;

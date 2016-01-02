@@ -62,12 +62,21 @@ public class TwiTest {
     }
 
     private void read(Optional<I2CDevice> i2CDevice) throws IOException {
-        byte[] bytes = new byte[4];
+        byte[] bytes = new byte[5];
         i2CDevice.get().read(bytes, 0, bytes.length);
         System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
         System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
-        System.out.printf("speed %s\n", Byte.toUnsignedInt(bytes[2]));
-        System.out.printf("direction %s\n", Byte.toUnsignedInt(bytes[3]));
+        System.out.printf("stepspeed %s\n", Byte.toUnsignedInt(bytes[2]));
+        System.out.printf("nrOfWaits %s\n", Byte.toUnsignedInt(bytes[3]));
+        System.out.printf("direction %s\n", Byte.toUnsignedInt(bytes[4]));
+        /*
+                  TWIS_Write(OCR1A);
+				TWIS_Write(data.destOcr);
+				TWIS_Write(data.changeSpeed);
+				TWIS_Write(data.waits);
+				TWIS_Write(data.direction);
+
+         */
     }
 
     private I2CDevice toI2CDevice(final Integer i, final I2CBus i2CBus) {
