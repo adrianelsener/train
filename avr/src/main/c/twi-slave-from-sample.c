@@ -10,6 +10,9 @@
 #include "twi_sample/TWI_Slave/Delay.h"
 
 #define CLIENT_NR 15
+#define TWI_SPEED 100000
+#define INITIAL_OCR_SPEED 0
+#define INITIAL_DIRECTION 1
 
 struct DATA {
 	uint8_t destOcr;
@@ -97,7 +100,7 @@ int main (void) {
 	Delay_ms (500);
 
     // Initiate the TWI slave interface
-	TWIS_Init (CLIENT_NR, 100000);
+	TWIS_Init (CLIENT_NR,TWI_SPEED);
 
 
     DDRB = 0x06;                      // Set Port PB1 and PB2 as Output (0x06 -> 110b)
@@ -109,11 +112,11 @@ int main (void) {
 	TCCR1B = _BV(CS10);
 
 	struct DATA data = {
-		.destOcr = 100,
+		.destOcr = INITIAL_OCR_SPEED,
 	    .changeSpeed = 0,
 		.waits = 0,
 		.waited = 0,
-		.direction = 1
+		.direction = INITIAL_DIRECTION
 	};
 
 	OCR1A = data.destOcr;

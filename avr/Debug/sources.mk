@@ -21,11 +21,7 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-src/main/c/adc_sample \
-src/main/c \
-<<<<<<< HEAD
-src/main/c/adc_sample \
-=======
 src/main/c/twi_sample/TWI_Slave \
->>>>>>> a142dfe9c4c2aea6c924429a20e85730ae27e837
+src/main/c \
+src/main/c/adc_sample \
 
