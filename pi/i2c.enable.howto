@@ -25,3 +25,8 @@ Exit and save
 Finally install the I2C utilities:
 "sudo apt-get install python-smbus i2c-tools"
 
+
+
+
+
+sudo bash -c "echo options i2c_bcm2708 baudrate=350000 > /etc/modprobe.d/i2c.conf"
