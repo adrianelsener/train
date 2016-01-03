@@ -16,9 +16,9 @@
 
 struct DATA {
 	uint8_t destOcr;
-	uint8_t changeSpeed;
-	uint8_t waits;
-	uint8_t waited; // indicates duration of single wait
+	uint8_t stepSize;
+	uint8_t nrOfWaitsBetweenSteps;
+	uint16_t waited; // indicates how many waits are done
 	uint8_t direction; // [1,2]
 };
 
@@ -29,8 +29,8 @@ struct DATA writeReadTwiData(struct DATA data) {
 		switch (TWIS_ResonseType) {
             // TWI requests to read a byte from the master.
 			case TWIS_ReadBytes:
-				data.waits = TWIS_ReadAck();
-				data.changeSpeed = TWIS_ReadAck();
+				data.nrOfWaitsBetweenSteps = TWIS_ReadAck();
+				data.stepSize = TWIS_ReadAck();
 				data.destOcr = TWIS_ReadAck();
 				data.direction = TWIS_ReadAck();
 				TWIS_ReadNack();
@@ -39,10 +39,10 @@ struct DATA writeReadTwiData(struct DATA data) {
              // TWI requests to write a byte to the master.
 			case TWIS_WriteBytes:
 				TWIS_Write(OCR1A);
-				TWIS_Write(data.destOcr);
-				TWIS_Write(data.changeSpeed);
-				TWIS_Write(data.waits);
-				TWIS_Write(data.direction);
+//				TWIS_Write(data.destOcr);
+//				TWIS_Write(data.changeSpeed);
+//				TWIS_Write(data.waits);
+//				TWIS_Write(data.direction);
 			    TWIS_Stop();
 				break;
 		}
@@ -71,16 +71,15 @@ void setDirection(struct DATA data) {
 
 struct DATA setOcr(struct DATA data) {
 	if (OCR1A != data.destOcr) {
-		if (data.waited >= (data.waits * 32)) {
-			int8_t step;
-			uint8_t nextVal = OCR1A;
+		if (data.waited >= (data.nrOfWaitsBetweenSteps * 32)) {
+			int8_t stepWithSign;
 			if (OCR1A > data.destOcr) {
-				step = 0 - data.changeSpeed;
+				stepWithSign = 0 - data.stepSize;
 			} else {
-				step = data.changeSpeed;
+				stepWithSign = data.stepSize;
 			}
-			nextVal += step;
-			if ((nextVal > data.destOcr && step > 0) || (nextVal < data.destOcr && step < 0)) {
+			uint8_t nextVal = OCR1A + stepWithSign;
+			if (((nextVal > data.destOcr) && (stepWithSign > 0)) || ((nextVal < data.destOcr) && (stepWithSign < 0))) {
 				nextVal = data.destOcr;
 			}
 			OCR1A = nextVal;
@@ -113,8 +112,8 @@ int main (void) {
 
 	struct DATA data = {
 		.destOcr = INITIAL_OCR_SPEED,
-	    .changeSpeed = 0,
-		.waits = 0,
+	    .stepSize = 0,
+		.nrOfWaitsBetweenSteps = 0,
 		.waited = 0,
 		.direction = INITIAL_DIRECTION
 	};
