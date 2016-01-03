@@ -15,6 +15,15 @@ public enum Mode {
             log.debug("read {}", result);
             return result;
         }
+    },//
+    READ_SPEED {
+        @Override
+        public Result apply(final AccelerationDto data) {
+            TwiAccessorFactory.TwiAccessor twiAccessor = new TwiAccessorFactory().open(15);
+            Result result = twiAccessor.read();
+            log.debug("read {}", result);
+            return result;
+        }
     };
     private final static Logger log = LoggerFactory.getLogger(Mode.class);
 

@@ -66,6 +66,7 @@
         <module>testngrules</module>
         <module>pi</module>
         <module>common</module>
+        <module>tcp</module>
     </modules>
 
     <properties>

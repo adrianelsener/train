@@ -50,6 +50,10 @@ public class AccelerationDto extends AbstractDto {
         return new AccelerationDto(this, speed);
     }
 
+    public AccelerationDto setSpeed(int speed) {
+        return new AccelerationDto(this, new Speed(speed));
+    }
+
     public Speed getSpeed() {
         return speed;
     }

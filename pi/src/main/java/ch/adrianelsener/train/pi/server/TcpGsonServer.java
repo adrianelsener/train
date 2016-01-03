@@ -15,15 +15,15 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class TcpServer {
-    private static final Logger log = LoggerFactory.getLogger(TcpServer.class);
+public class TcpGsonServer {
+    private static final Logger log = LoggerFactory.getLogger(TcpGsonServer.class);
     final int listenPort = 2323;
 
     public static void main(String[] args) throws IOException {
-        new TcpServer().initConnection(2323);
+        new TcpGsonServer().initConnection(2323);
     }
 
-    private TcpServer() {
+    private TcpGsonServer() {
         super();
     }
 

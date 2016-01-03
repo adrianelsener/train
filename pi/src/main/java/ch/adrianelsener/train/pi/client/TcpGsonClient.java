@@ -7,24 +7,25 @@ import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
+import ch.adrianelsener.train.pi.tcp.TcpClient;
 import com.google.common.annotations.VisibleForTesting;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
-public class TcpClient {
+public class TcpGsonClient implements TcpClient {
     private final NetAddress address;
     private final SocketFactory socketFactory;
     private final GsonWrapper gson;
     @VisibleForTesting
-    TcpClient(NetAddress address, SocketFactory socketFactory, GsonWrapper gson) {
+    TcpGsonClient(NetAddress address, SocketFactory socketFactory, GsonWrapper gson) {
         this.address = address;
         this.socketFactory = socketFactory;
         this.gson = gson;
     }
 
-    public TcpClient(NetAddress address) {
+    public TcpGsonClient(NetAddress address) {
         this(address, new SocketFactory(), new GsonWrapper());
     }
 

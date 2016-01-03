@@ -6,9 +6,7 @@ import ch.adrianelsener.train.common.net.SocketFactory;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Result;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.object.IsCompatibleType;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeTest;
@@ -24,7 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
-public class TcpClientTest {
+public class TcpGsonClientTest {
     @Mock
     private GsonWrapper gson;
     @Mock
@@ -58,7 +56,7 @@ public class TcpClientTest {
 
     @Test
     public void sendCommand_overClient() {
-        final TcpClient testee = new TcpClient(netAddress, socketFactory, gson);
+        final TcpGsonClient testee = new TcpGsonClient(netAddress, socketFactory, gson);
         final Command cmd = Command.builder().build();
         // act
         final Result result = testee.sendCommand(cmd);

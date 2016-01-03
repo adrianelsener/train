@@ -45,5 +45,10 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ch.adrianelsener</groupId>
+            <artifactId>pi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
