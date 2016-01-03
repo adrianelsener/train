@@ -65,10 +65,10 @@ public class TwiTest {
         byte[] bytes = new byte[5];
         i2CDevice.get().read(bytes, 0, bytes.length);
         System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
-        System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
-        System.out.printf("stepspeed %s\n", Byte.toUnsignedInt(bytes[2]));
-        System.out.printf("nrOfWaits %s\n", Byte.toUnsignedInt(bytes[3]));
-        System.out.printf("direction %s\n", Byte.toUnsignedInt(bytes[4]));
+//        System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
+//        System.out.printf("stepspeed %s\n", Byte.toUnsignedInt(bytes[2]));
+//        System.out.printf("nrOfWaits %s\n", Byte.toUnsignedInt(bytes[3]));
+//        System.out.printf("direction %s\n", Byte.toUnsignedInt(bytes[4]));
         /*
                   TWIS_Write(OCR1A);
 				TWIS_Write(data.destOcr);
