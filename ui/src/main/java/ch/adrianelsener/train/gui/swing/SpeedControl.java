@@ -26,6 +26,7 @@ public class SpeedControl extends JFrame {
 
     public SpeedControl() {
         super("Speedy");
+        // should be done somewhere later not on startup :(
         TcpClient client = new TcpGsonClient(NetAddress.create("172.16.100.120", 2323));
         speedBoardDriver = new PiTwiSpeedBoardV1(client);
         setSize(50, 400);
