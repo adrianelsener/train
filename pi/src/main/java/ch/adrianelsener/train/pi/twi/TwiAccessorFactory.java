@@ -69,7 +69,7 @@ public class TwiAccessorFactory {
         }
 
         public Result read() {
-            int bytesToRead = 5;
+            int bytesToRead = 1;
             Result result = readFromTwi(bytesToRead, byteArrayToResult());
             return result;
         }
@@ -90,8 +90,8 @@ public class TwiAccessorFactory {
         private Function<byte[], Result> byteArrayToResult() {
             return (bytes -> {
                 AccelerationDto accelerationDto = new AccelerationDto()//
-                        .setAcceleration(Byte.toUnsignedInt(bytes[3]), Byte.toUnsignedInt(bytes[2]))//
-                        .setDirection(Direction.fromTwiValue(Byte.toUnsignedInt(bytes[4])))//
+//                        .setAcceleration(Byte.toUnsignedInt(bytes[3]), Byte.toUnsignedInt(bytes[2]))//
+//                        .setDirection(Direction.fromTwiValue(Byte.toUnsignedInt(bytes[4])))//
                         .setSpeed(new Speed(Byte.toUnsignedInt(bytes[0])));
                 return Result.ok(accelerationDto);
                         /*
