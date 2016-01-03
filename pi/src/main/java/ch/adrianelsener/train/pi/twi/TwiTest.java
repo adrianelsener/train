@@ -62,7 +62,7 @@ public class TwiTest {
     }
 
     private void read(Optional<I2CDevice> i2CDevice) throws IOException {
-        byte[] bytes = new byte[5];
+        byte[] bytes = new byte[1];
         i2CDevice.get().read(bytes, 0, bytes.length);
         System.out.printf("current pwm : %s\n", Byte.toUnsignedInt(bytes[0]));
 //        System.out.printf("dest pwm %s\n", Byte.toUnsignedInt(bytes[1]));
