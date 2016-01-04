@@ -91,6 +91,28 @@ struct DATA setOcr(struct DATA data) {
 	return data;
 }
 
+struct DATA setOcr2(struct DATA data) {
+	if (OCR2 != data.destOcr) {
+		if (data.waited >= (data.nrOfWaitsBetweenSteps * 32)) {
+			int8_t stepWithSign;
+			if (OCR2 > data.destOcr) {
+				stepWithSign = 0 - data.stepSize;
+			} else {
+				stepWithSign = data.stepSize;
+			}
+			uint8_t nextVal = OCR2 + stepWithSign;
+			if (((nextVal > data.destOcr) && (stepWithSign > 0)) || ((nextVal < data.destOcr) && (stepWithSign < 0))) {
+				nextVal = data.destOcr;
+			}
+			OCR2 = nextVal;
+			data.waited = 0;
+		} else {
+			data.waited++;
+		}
+	}
+	return data;
+}
+
 int main (void) {
     // Clear any interrupt
 	cli ();
@@ -106,9 +128,19 @@ int main (void) {
 	DDRB |= (1 << PB3);					// PB3 as Output
 	DDRB |= (1 << PB4);					// PB4 as Output
 
-    TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
-             |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
-	TCCR1B = _BV(CS10);
+
+	// --------- runs... start
+//    TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
+//             |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
+//	TCCR1B = _BV(CS10);
+	// --------- runs... end
+	// --------- test... begin
+//	OCR2 = 128; // set PWM for 50% duty cycle
+	OCR2 = 0;
+	TCCR2 |= (1 << COM21); // set non-inverting mode
+	TCCR2 |= (1 << WGM21) | (1 << WGM20); // set fast PWM Mode
+	TCCR2 |= (1 << CS21); // set prescaler to 8 and starts PWM
+	// --------- test... end
 
 	struct DATA data = {
 		.destOcr = INITIAL_OCR_SPEED,
@@ -118,12 +150,13 @@ int main (void) {
 		.direction = INITIAL_DIRECTION
 	};
 
-	OCR1A = data.destOcr;
+//	OCR1A = data.destOcr;
+	OCR2 = data.destOcr;
 
 	while (1) {
 		data = writeReadTwiData(data);
 		setDirection(data);
-		data = setOcr(data);
+		data = setOcr2(data);
 	}
 	return 0;
 }
