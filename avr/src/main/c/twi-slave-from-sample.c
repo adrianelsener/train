@@ -38,7 +38,8 @@ struct DATA writeReadTwiData(struct DATA data) {
 				break;
              // TWI requests to write a byte to the master.
 			case TWIS_WriteBytes:
-				TWIS_Write(OCR1A);
+//				TWIS_Write(OCR1A);
+				TWIS_Write(OCR2);
 //				TWIS_Write(data.destOcr);
 //				TWIS_Write(data.changeSpeed);
 //				TWIS_Write(data.waits);
@@ -113,6 +114,20 @@ struct DATA setOcr2(struct DATA data) {
 	return data;
 }
 
+void initOcr() {
+	    TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
+	             |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
+		TCCR1B = _BV(CS10);
+}
+
+void initOcr2() {
+	//	OCR2 = 128; // set PWM for 50% duty cycle
+	OCR2 = 0;
+	TCCR2 |= (1 << COM21); // set non-inverting mode
+	TCCR2 |= (1 << WGM21) | (1 << WGM20); // set fast PWM Mode
+	TCCR2 |= (1 << CS21); // set prescaler to 8 and starts PWM
+}
+
 int main (void) {
     // Clear any interrupt
 	cli ();
@@ -130,16 +145,10 @@ int main (void) {
 
 
 	// --------- runs... start
-//    TCCR1A = (1<<WGM10)|(1<<COM1A1)   // Set up the two Control registers of Timer1.
-//             |(1<<COM1B1);             // Wave Form Generation is Fast PWM 8 Bit,
-//	TCCR1B = _BV(CS10);
+//	initOcr();
 	// --------- runs... end
 	// --------- test... begin
-//	OCR2 = 128; // set PWM for 50% duty cycle
-	OCR2 = 0;
-	TCCR2 |= (1 << COM21); // set non-inverting mode
-	TCCR2 |= (1 << WGM21) | (1 << WGM20); // set fast PWM Mode
-	TCCR2 |= (1 << CS21); // set prescaler to 8 and starts PWM
+	initOcr2();
 	// --------- test... end
 
 	struct DATA data = {
