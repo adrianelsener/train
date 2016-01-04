@@ -53,12 +53,12 @@ struct DATA writeReadTwiData(struct DATA data) {
 
 void setDirectionToForward() {
 	//PB3 / PB4
-    PORTB |= (1 << PB3);  //PB3 im PORTB setzen
+    PORTB |= (1 << PB5);  //PB3 im PORTB setzen
     PORTB &= ~(1 << PB4); //PB4 im PORTB löschen
 }
 
 void setDirectionToBackward() {
-    PORTB &= ~(1 << PB3); //PB3 im PORTB löschen
+    PORTB &= ~(1 << PB5); //PB3 im PORTB löschen
     PORTB |= (1 << PB4);  //PB4 im PORTB setzen
 }
 
@@ -105,7 +105,13 @@ struct DATA setOcr2(struct DATA data) {
 			if (((nextVal > data.destOcr) && (stepWithSign > 0)) || ((nextVal < data.destOcr) && (stepWithSign < 0))) {
 				nextVal = data.destOcr;
 			}
-			OCR2 = nextVal;
+			if (nextVal == 0) {
+				OCR2 = nextVal;
+				TCCR2 &= ~(1 << CS21); // set prescaler to 8 and starts PWM
+			} else {
+				TCCR2 |= (1 << CS21);
+				OCR2 = nextVal;
+			}
 			data.waited = 0;
 		} else {
 			data.waited++;
@@ -140,7 +146,8 @@ int main (void) {
 
 
     DDRB = 0x06;                      // Set Port PB1 and PB2 as Output (0x06 -> 110b)
-	DDRB |= (1 << PB3);					// PB3 as Output
+	DDRB |= (1 << PB3);					// PB4 as Output
+	DDRB |= (1 << PB5);					// PB5 as Output
 	DDRB |= (1 << PB4);					// PB4 as Output
 
 
