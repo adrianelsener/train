@@ -29,15 +29,18 @@ public class TwiTest2 {
         while (!val.startsWith("e")) {
             if (val.startsWith("r")) {
                 try {
-                    int read = i2CDevice.get().read(0x00);
-                    System.out.printf("read 0x00 -> %s", read);
+                    i2CDevice.get().write((byte) 0x00);
+                    int read1 = i2CDevice.get().read();
+                    int read2 = i2CDevice.get().read();
+                    System.out.printf("read/n0x00 -> %s/n0x01 -> %s", read1, read2);
                 } catch (IOException e) {
                     System.out.printf("got an ioex...");
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    i2CDevice.get().write(0x00, (byte) 0x17);
+                    i2CDevice.get().write((byte) 0x00);
+                    i2CDevice.get().write((byte) 0x17);
                 } catch (IOException e) {
                     System.out.printf("got an ioex...");
                     e.printStackTrace();
