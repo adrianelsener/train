@@ -31,18 +31,19 @@ public class TwiTest2 {
                 try {
                     i2CDevice.get().write((byte) 0x00);
                     int read1 = i2CDevice.get().read();
-                    int read2 = i2CDevice.get().read();
-                    System.out.printf("read\n0x00 -> %s\n0x01 -> %s\n", read1, read2);
+                    System.out.printf("read\n0x00 (current OCR) -> %s\n", read1);
                 } catch (IOException e) {
                     System.out.printf("got an ioex...");
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    byte[] data = new byte[] {0x00, 0x02};
-                    i2CDevice.get().write(data,0, data.length);
-                    byte[] data2 = new byte[] {0x01, 0x07};
-                    i2CDevice.get().write(data2,0, data.length);
+                    List<String> splittedStrings = Splitter.on(",").splitToList(val);
+                    List<Byte> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s).byteValue()).collect(Collectors.toList());
+                    for (int i = 0; i < splitted.size(); i++) {
+                        byte[] data = new byte[] {(byte) i, splitted.get(i)};
+                        i2CDevice.get().write(data,0, data.length);
+                    }
                 } catch (IOException e) {
                     System.out.printf("got an ioex...");
                     e.printStackTrace();

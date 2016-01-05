@@ -134,7 +134,7 @@ void initOcr2() {
 	TCCR2 |= (1 << CS21); // set prescaler to 8 and starts PWM
 }
 
-int main (void) {
+int _main (void) {
     // Clear any interrupt
 	cli ();
 
