@@ -39,8 +39,10 @@ public class TwiTest2 {
                 }
             } else {
                 try {
-                    i2CDevice.get().write((byte) 0x00);
-                    i2CDevice.get().write((byte) 0x17);
+                    byte[] data = new byte[] {0x00, 0x17};
+                    i2CDevice.get().write(data,0, data.length);
+                    byte[] data2 = new byte[] {0x01, 0x07};
+                    i2CDevice.get().write(data2,0, data.length);
                 } catch (IOException e) {
                     System.out.printf("got an ioex...");
                     e.printStackTrace();
