@@ -1,44 +1,3 @@
-/*#################################################################################################
-	Title	: TWI SLave
-	Author	: Martin Junghans <jtronics@gmx.de>
-	Hompage	: www.jtronics.de
-	Software: AVR-GCC / Programmers Notpad 2
-	License	: GNU General Public License 
-	
-	Aufgabe	:
-	Betrieb eines AVRs mit Hardware-TWI-Schnittstelle als Slave. 
-	Zu Beginn muss init_twi_slave mit der gew�nschten Slave-Adresse als Parameter aufgerufen werden. 
-	Der Datenaustausch mit dem Master erfolgt �ber die Buffer rxbuffer und txbuffer, auf die von Master und Slave zugegriffen werden kann. 
-	rxbuffer und txbuffer sind globale Variablen (Array aus uint8_t).
-	
-	Ablauf:
-	Die Ansteuerung des rxbuffers, in den der Master schreiben kann, erfolgt �hnlich wie bei einem normalen I2C-EEPROM.
-	Man sendet zun�chst die Bufferposition, an die man schreiben will, und dann die Daten. Die Bufferposition wird 
-	automatisch hochgez�hlt, sodass man mehrere Datenbytes hintereinander schreiben kann, ohne jedesmal
-	die Bufferadresse zu schreiben.
-	Um den txbuffer vom Master aus zu lesen, �bertr�gt man zun�chst in einem Schreibzugriff die gew�nschte Bufferposition und
-	liest dann nach einem repeated start die Daten aus. Die Bufferposition wird automatisch hochgez�hlt, sodass man mehrere
-	Datenbytes hintereinander lesen kann, ohne jedesmal die Bufferposition zu schreiben.
-
-	Abgefangene Fehlbedienung durch den Master:
-	- Lesen �ber die Grenze des txbuffers hinaus
-	- Schreiben �ber die Grenzen des rxbuffers hinaus
-	- Angabe einer ung�ltigen Schreib/Lese-Adresse
-	- Lesezuggriff, ohne vorher Leseadresse geschrieben zu haben
-	
-	LICENSE:
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-//#################################################################################################*/
-
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -54,14 +13,7 @@
 #define INITIAL_DIRECTION 1
 
 
-//###################### Slave-Adresse
-#define SLAVE_ADRESSE 0x09 								// Slave-Adresse
-
-//###################### Macros
-#define uniq(LOW,HEIGHT)	((HEIGHT << 8)|LOW)			// 2x 8Bit 	--> 16Bit
-#define LOW_BYTE(x)        	(x & 0xff)					// 16Bit 	--> 8Bit
-#define HIGH_BYTE(x)       	((x >> 8) & 0xff)			// 16Bit 	--> 8Bit
-
+#define SLAVE_ADRESSE 0x09
 
 #define sbi(ADDRESS,BIT) 	((ADDRESS) |= (1<<(BIT)))	// set Bit
 #define cbi(ADDRESS,BIT) 	((ADDRESS) &= ~(1<<(BIT)))	// clear Bit
@@ -78,30 +30,19 @@ struct DATA {
 	uint8_t direction; // [1,2]
 };
 
-////###################### Variablen
-//	uint16_t 	Variable=2345;				//Zaehler
-//	uint16_t	buffer;
-//	uint16_t	low, hight;
-
-//################################################################################################### Initialisierung
-void Initialisierung(void) {
+void initTwi(void) {
 	cli();
-	//### PORTS	
-	
-	//### TWI 
-	init_twi_slave(SLAVE_ADRESSE);			//TWI als Slave mit Adresse slaveadr starten 
-	
+	init_twi_slave(SLAVE_ADRESSE);
 	sei();
 }
 
-
-void initOcr2t() {
-	//	OCR2 = 128; // set PWM for 50% duty cycle
+void initOcr() {
 	OCR2 = 0;
 	TCCR2 |= (1 << COM21); // set non-inverting mode
 	TCCR2 |= (1 << WGM21) | (1 << WGM20); // set fast PWM Mode
 	TCCR2 |= (1 << CS21); // set prescaler to 8 and starts PWM
 }
+
 struct DATA readTwiData(struct DATA data) {
 	if (received[1] == 1) {
 				data.nrOfWaitsBetweenSteps = rxbuffer[0];
@@ -113,7 +54,7 @@ struct DATA readTwiData(struct DATA data) {
 	return data;
 }
 
-struct DATA setOcr2t(struct DATA data) {
+struct DATA setOcr(struct DATA data) {
 	if (OCR2 != data.destOcr) {
 		if (data.waited >= (data.nrOfWaitsBetweenSteps * 32)) {
 			int8_t stepWithSign;
@@ -142,27 +83,27 @@ struct DATA setOcr2t(struct DATA data) {
 	return data;
 }
 
-void setDirectionToForwardt() {
+void setDirectionToForward() {
 	//PB3 / PB4
     PORTB |= (1 << PB5);  //PB3 im PORTB setzen
     PORTB &= ~(1 << PB4); //PB4 im PORTB löschen
 }
 
-void setDirectionToBackwardt() {
+void setDirectionToBackward() {
     PORTB &= ~(1 << PB5); //PB3 im PORTB löschen
     PORTB |= (1 << PB4);  //PB4 im PORTB setzen
 }
 
-void setDirectiont(struct DATA data) {
+void setDirection(struct DATA data) {
 	if (1 == data.direction) {
-		setDirectionToForwardt();
+		setDirectionToForward();
 	} else if (2 == data.direction) {
-		setDirectionToBackwardt();
+		setDirectionToBackward();
 	}
 }
 int main(void){
  
-	Initialisierung();
+	initTwi();
 
     DDRB = 0x06;                      // Set Port PB1 and PB2 as Output (0x06 -> 110b)
 	DDRB |= (1 << PB3);					// PB4 as Output
@@ -170,7 +111,7 @@ int main(void){
 	DDRB |= (1 << PB4);					// PB4 as Output
 
 	
-	initOcr2t();
+	initOcr();
 	// --------- test... end
 
 	struct DATA data = {
@@ -185,8 +126,8 @@ int main(void){
 
 	while (1) {
 		data = readTwiData(data);
-		setDirectiont(data);
-		data = setOcr2t(data);
+		setDirection(data);
+		data = setOcr(data);
 	}
 	return 0;
 }

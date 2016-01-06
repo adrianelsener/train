@@ -39,7 +39,7 @@
 
 //#################################################################################################*/
 
-#include <util/twi.h> 								// Bezeichnungen f�r Statuscodes in TWSR
+#include <util/twi.h> 								// Bezeichnungen fuer Statuscodes in TWSR
 #include <avr/interrupt.h> 							// behandlung der Interrupts
 #include <stdint.h> 								// definiert Datentyp uint8_t
 #include "twislave.h" 								
@@ -57,8 +57,7 @@
 //########################################################################################## init_twi_slave 
 void init_twi_slave(uint8_t adr)
 {
-//	TWAR= adr; //Adresse setzen
-	TWAR= (adr << 1); //Adresse setzen -> test
+	TWAR= (adr << 1);
 	TWCR &= ~(1<<TWSTA)|(1<<TWSTO);
 	TWCR|= (1<<TWEA) | (1<<TWEN)|(1<<TWIE); 	
 	buffer_adr=0xFF;  
