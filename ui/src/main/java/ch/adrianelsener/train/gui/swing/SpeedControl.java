@@ -24,14 +24,7 @@ public class SpeedControl extends JFrame {
 
     public SpeedControl(Config config) {
         super("Speedy");
-        final String ip = config.getChild("IP");
-        final String port = config.getChild("PORT");
-        final String drvClassName = config.getChild("DRV");
-        try {
-            speedBoardDriver = SpeedBoardDriver.class.cast(Class.forName(drvClassName).getConstructor(NetAddress.class).newInstance(NetAddress.create(ip, Integer.parseInt(port))));
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalArgumentException(e);
-        }
+        speedBoardDriver = createSpeedBoardDriver(config);
         setSize(50, 400);
         final LayoutManager layout = new GridLayout(4, 1);
         setLayout(layout);
@@ -42,9 +35,7 @@ public class SpeedControl extends JFrame {
         slider.setValue(currentSpeedValue);
         slider.setSize(20, 300);
         slider.setOrientation(SwingConstants.VERTICAL);
-        final ChangeListener sliderMoveListener = e -> {
-            currentSpeedValue = slider.getValue();
-        };
+        final ChangeListener sliderMoveListener = e -> currentSpeedValue = slider.getValue();
         slider.addMouseListener(new FireOnMouseRelease(this));
         slider.addChangeListener(sliderMoveListener);
         add(slider);
@@ -53,6 +44,19 @@ public class SpeedControl extends JFrame {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         final KeyListener keyListener = new SpeedKeyListener(this);
         slider.addKeyListener(keyListener);
+    }
+
+    private SpeedBoardDriver createSpeedBoardDriver(final Config config) {
+        final SpeedBoardDriver speedBoard;
+        final String ip = config.getChild("IP");
+        final String port = config.getChild("PORT");
+        final String drvClassName = config.getChild("DRV");
+        try {
+            speedBoard = SpeedBoardDriver.class.cast(Class.forName(drvClassName).getConstructor(NetAddress.class).newInstance(NetAddress.create(ip, Integer.parseInt(port))));
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return speedBoard;
     }
 
     private static class FireOnMouseRelease implements MouseListener {
