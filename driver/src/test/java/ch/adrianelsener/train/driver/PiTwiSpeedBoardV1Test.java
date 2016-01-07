@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.driver;
 
-import ch.adrianelsener.train.pi.tcp.TcpClient;
+import ch.adrianelsener.train.common.net.NetAddress;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,8 +15,8 @@ public class PiTwiSpeedBoardV1Test {
 
     @Test
     public void setSpeed() {
-        final TcpClient tcpClient = mock(TcpClient.class);
-        PiTwiSpeedBoardV1 testee = new PiTwiSpeedBoardV1(tcpClient);
+        final NetAddress address = mock(NetAddress.class);
+        PiTwiSpeedBoardV1 testee = new PiTwiSpeedBoardV1(address);
         testee.setSpeed(14);
 
     }

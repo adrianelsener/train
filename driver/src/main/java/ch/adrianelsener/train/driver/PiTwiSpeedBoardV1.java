@@ -1,5 +1,7 @@
 package ch.adrianelsener.train.driver;
 
+import ch.adrianelsener.train.common.net.NetAddress;
+import ch.adrianelsener.train.pi.client.TcpGsonClient;
 import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
@@ -12,8 +14,8 @@ public class PiTwiSpeedBoardV1 implements SpeedBoardDriver {
     private final static Logger logger = LoggerFactory.getLogger(PiTwiSpeedBoardV1.class);
     private final TcpClient tcpClient;
 
-    public PiTwiSpeedBoardV1(final TcpClient tcpClient) {
-        this.tcpClient = tcpClient;
+    public PiTwiSpeedBoardV1(final NetAddress tcpClient) {
+        this.tcpClient = new TcpGsonClient(NetAddress.create("172.16.100.120", 2323));
     }
 
     @Override

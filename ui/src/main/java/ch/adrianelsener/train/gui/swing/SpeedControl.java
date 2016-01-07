@@ -1,10 +1,8 @@
 package ch.adrianelsener.train.gui.swing;
 
 import ch.adrianelsener.train.common.net.NetAddress;
-import ch.adrianelsener.train.driver.PiTwiSpeedBoardV1;
+import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.driver.SpeedBoardDriver;
-import ch.adrianelsener.train.pi.client.TcpGsonClient;
-import ch.adrianelsener.train.pi.tcp.TcpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +22,16 @@ public class SpeedControl extends JFrame {
     private int currentSpeedValue = 0;
     private final SpeedBoardDriver speedBoardDriver;
 
-    public SpeedControl() {
+    public SpeedControl(Config config) {
         super("Speedy");
-        // should be done somewhere later not on startup :(
-        TcpClient client = new TcpGsonClient(NetAddress.create("172.16.100.120", 2323));
-        speedBoardDriver = new PiTwiSpeedBoardV1(client);
+        final String ip = config.getChild("IP");
+        final String port = config.getChild("PORT");
+        final String drvClassName = config.getChild("DRV");
+        try {
+            speedBoardDriver = SpeedBoardDriver.class.cast(Class.forName(drvClassName).getConstructor(NetAddress.class).newInstance(NetAddress.create(ip, Integer.parseInt(port))));
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException(e);
+        }
         setSize(50, 400);
         final LayoutManager layout = new GridLayout(4, 1);
         setLayout(layout);

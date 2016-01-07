@@ -205,7 +205,7 @@ public class SwingUi extends JComponent {
         switchChecker = new CheckSwitch();
         switchChecker.setVisible(false);
 
-        SpeedControl speedControlFrame = new SpeedControl();
+        SpeedControl speedControlFrame = new SpeedControl(config.getAll(ConfKey.create("SB").createSubKey("00")));
         speedControlFrame.setLocation(frame.getLocation().x - 100, frame.getLocation().y);
         speedControlFrame.setVisible(true);
         frame.addKeyListener(keyListener);
