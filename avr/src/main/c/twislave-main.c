@@ -6,7 +6,7 @@
 #include "twislave/twislave.h"
 
 #ifndef F_CPU
-#define F_CPU 16000000UL
+#define F_CPU 8000000UL
 #endif
 
 #define INITIAL_OCR_SPEED 0
@@ -102,7 +102,7 @@ void setDirection(struct DATA data) {
 	}
 }
 int main(void){
- 
+
 	initTwi();
 
     DDRB = 0x06;                      // Set Port PB1 and PB2 as Output (0x06 -> 110b)
@@ -110,7 +110,7 @@ int main(void){
 	DDRB |= (1 << PB5);					// PB5 as Output
 	DDRB |= (1 << PB4);					// PB4 as Output
 
-	
+
 	initOcr();
 	// --------- test... end
 
