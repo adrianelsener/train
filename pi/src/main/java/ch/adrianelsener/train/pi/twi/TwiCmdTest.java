@@ -63,9 +63,10 @@ public class TwiCmdTest {
         parameters.add("1");
         parameters.add(Integer.toHexString(devNr.get()));
         parameters.add(Integer.toHexString(dataPosition));
-        parameters.add(Integer.toHexString(data));
+        parameters.add(Long.toHexString(data));
         ProcessBuilder setProcessBuilder = new ProcessBuilder(parameters);
-        parameters.forEach(param -> System.out.println(param));
+        parameters.forEach(System.out::println);
+        System.out.println("Data was : "+data);
         return setProcessBuilder.start();
     }
 
