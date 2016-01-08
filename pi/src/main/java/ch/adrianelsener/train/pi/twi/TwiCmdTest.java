@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -56,7 +57,15 @@ public class TwiCmdTest {
     }
 
     private Process createStartedSetProcess(final Optional<Integer> devNr, final int dataPosition, final int data) throws IOException {
-        ProcessBuilder setProcessBuilder = new ProcessBuilder("/usr/sbin/i2cset", "-y", "1", Integer.toHexString(devNr.get()), Integer.toHexString(dataPosition), Integer.toHexString(data));
+        List<String> parameters = new ArrayList<>();
+        parameters.add("/usr/sbin/i2cset");
+        parameters.add("-y");
+        parameters.add("1");
+        parameters.add(Integer.toHexString(devNr.get()));
+        parameters.add(Integer.toHexString(dataPosition));
+        parameters.add(Integer.toHexString(data));
+        ProcessBuilder setProcessBuilder = new ProcessBuilder(parameters);
+        parameters.forEach(param -> System.out.println(param));
         return setProcessBuilder.start();
     }
 
