@@ -29,9 +29,11 @@ public class TwiCmdTest {
             if (val.startsWith("r")) {
                 final Process setProcess = createStartedSetProcess(devNr, 0x00);
                 waitForProcess(setProcess);
-                ProcessBuilder processBuilder = new ProcessBuilder("/usr/sbin/i2cget", "-y", Integer.toHexString(devNr.get()));
+                ProcessBuilder processBuilder = new ProcessBuilder("/usr/sbin/i2cget", "-y", "1", Integer.toHexString(devNr.get()));
                 final Process getProcess = processBuilder.start();
                 final InputStream inputStream = getProcess.getInputStream();
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(getProcess.getErrorStream()));
+                errorReader.lines().forEach(l -> System.out.println("err: "+l));
                 final BufferedReader getReader = new BufferedReader(new InputStreamReader(inputStream));
                 waitForProcess(getProcess);
                 final String readLine = getReader.readLine();
@@ -49,12 +51,12 @@ public class TwiCmdTest {
     }
 
     private Process createStartedSetProcess(final Optional<Integer> devNr, final int dataPosition) throws IOException {
-        ProcessBuilder setProcessBuilder = new ProcessBuilder("/usr/sbin/i2cset", "-y", Integer.toHexString(devNr.get()), Integer.toHexString(dataPosition));
+        ProcessBuilder setProcessBuilder = new ProcessBuilder("/usr/sbin/i2cset", "-y", "1", Integer.toHexString(devNr.get()), Integer.toHexString(dataPosition));
         return setProcessBuilder.start();
     }
 
     private Process createStartedSetProcess(final Optional<Integer> devNr, final int dataPosition, final int data) throws IOException {
-        ProcessBuilder setProcessBuilder = new ProcessBuilder("/usr/sbin/i2cset", "-y", Integer.toHexString(devNr.get()), Integer.toHexString(dataPosition), Integer.toHexString(data));
+        ProcessBuilder setProcessBuilder = new ProcessBuilder("/usr/sbin/i2cset", "-y", "1", Integer.toHexString(devNr.get()), Integer.toHexString(dataPosition), Integer.toHexString(data));
         return setProcessBuilder.start();
     }
 
