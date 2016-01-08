@@ -31,9 +31,9 @@ public class TwiCmdTest {
                 waitForProcess(setProcess);
                 ProcessBuilder processBuilder = new ProcessBuilder("/usr/sbin/i2cget", "-y", Integer.toHexString(devNr.get()));
                 final Process getProcess = processBuilder.start();
-                waitForProcess(getProcess);
                 final InputStream inputStream = getProcess.getInputStream();
                 final BufferedReader getReader = new BufferedReader(new InputStreamReader(inputStream));
+                waitForProcess(getProcess);
                 final String readLine = getReader.readLine();
                 System.out.printf("PWM -> %s\n", readLine);
             } else {
