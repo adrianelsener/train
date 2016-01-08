@@ -30,7 +30,7 @@ public class TwiCmdTest {
             if (val.startsWith("r")) {
                 final Process setProcess = createStartedSetProcess(devNr, 0x00);
                 waitForProcess(setProcess);
-                ProcessBuilder processBuilder = new ProcessBuilder("/usr/sbin/i2cget", "-y", "1", Integer.toHexString(devNr.get()));
+                ProcessBuilder processBuilder = new ProcessBuilder("/usr/sbin/i2cget", "-y", "1", "0x"+Integer.toHexString(devNr.get()));
                 final Process getProcess = processBuilder.start();
                 final InputStream inputStream = getProcess.getInputStream();
                 BufferedReader errorReader = new BufferedReader(new InputStreamReader(getProcess.getErrorStream()));
@@ -52,7 +52,7 @@ public class TwiCmdTest {
     }
 
     private Process createStartedSetProcess(final Optional<Integer> devNr, final int dataPosition) throws IOException {
-        ProcessBuilder setProcessBuilder = new ProcessBuilder("/usr/sbin/i2cset", "-y", "1", Integer.toHexString(devNr.get()), Integer.toHexString(dataPosition));
+        ProcessBuilder setProcessBuilder = new ProcessBuilder("/usr/sbin/i2cset", "-y", "1", "0x"+Integer.toHexString(devNr.get()), "0x"+Integer.toHexString(dataPosition));
         return setProcessBuilder.start();
     }
 
@@ -61,9 +61,9 @@ public class TwiCmdTest {
         parameters.add("/usr/sbin/i2cset");
         parameters.add("-y");
         parameters.add("1");
-        parameters.add(Integer.toHexString(devNr.get()));
-        parameters.add(Integer.toHexString(dataPosition));
-        parameters.add(Long.toHexString(data));
+        parameters.add("0x"+Integer.toHexString(devNr.get()));
+        parameters.add("0x"+Integer.toHexString(dataPosition));
+        parameters.add("0x"+Long.toHexString(data));
         ProcessBuilder setProcessBuilder = new ProcessBuilder(parameters);
         parameters.forEach(System.out::println);
         System.out.println("Data was : "+data);
