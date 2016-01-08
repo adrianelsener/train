@@ -29,7 +29,7 @@ public class TwiTest2 {
         while (!val.startsWith("e")) {
             if (val.startsWith("r")) {
                 try {
-                    i2CDevice.get().write((byte) 0x00);
+//                    i2CDevice.get().write((byte) 0x00);
                     int read1 = i2CDevice.get().read();
                     System.out.printf("read\n0x00 (current OCR) -> %s\n", read1);
                 } catch (IOException e) {
