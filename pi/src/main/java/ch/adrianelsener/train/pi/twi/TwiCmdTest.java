@@ -41,7 +41,7 @@ public class TwiCmdTest {
                 System.out.printf("PWM -> %s\n", readLine);
             } else {
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
-                List<Byte> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s).byteValue()).collect(Collectors.toList());
+                List<Integer> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s)).collect(Collectors.toList());
                 for (int dataPosition = 0; dataPosition < splitted.size(); dataPosition++) {
                     createStartedSetProcess(devNr, dataPosition, splitted.get(dataPosition));
                 }
