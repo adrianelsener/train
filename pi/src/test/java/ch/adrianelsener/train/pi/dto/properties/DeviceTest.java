@@ -11,18 +11,18 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class DeviceTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void create_below0_Exception() {
-        new Device(-1);
+        new Device(-1, "foo");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void create_above255_Exception() {
-        new Device(256);
+        new Device(256, "foo");
     }
 
     @Test
     public void create_minimum_containsMinimum() {
         // arrange & act
-        final Device testee = new Device(0);
+        final Device testee = new Device(0, "foo");
         // assert
         assertThat(testee, is(deviceNr(equalTo(0))));
     }

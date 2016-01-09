@@ -39,6 +39,13 @@ public class AccelerationDto extends AbstractDto {
         device = current.device;
     }
 
+    private AccelerationDto(final AccelerationDto current, final Device device) {
+        acceleration = current.acceleration;
+        speed = current.speed;
+        direction = current.direction;
+        this.device = device;
+    }
+
     public AccelerationDto setAcceleration(Acceleration acceleration) {
         return new AccelerationDto(this, acceleration);
     }
@@ -70,5 +77,13 @@ public class AccelerationDto extends AbstractDto {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    public AccelerationDto setDevice(final Device device) {
+        return new AccelerationDto(this, device);
+    }
+
+    public Device getDevice() {
+        return device;
     }
 }
