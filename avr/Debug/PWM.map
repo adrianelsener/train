@@ -1,9 +1,9 @@
 Archive member included because of file (symbol)
 
-/usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
-                              ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o (__udivmodsi4)
 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
                               /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o (exit)
+/usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                              ./src/main/c/twislave-main.o (__do_copy_data)
 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
                               ./src/main/c/twislave/twislave.o (__do_clear_bss)
 
@@ -31,10 +31,7 @@ Linker script and memory map
 
 LOAD /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
 LOAD ./src/main/c/twislave/twislave.o
-LOAD ./src/main/c/twi_sample/TWI_Slave/Delay.o
-LOAD ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
 LOAD ./src/main/c/adc_sample/adc-sample.o
-LOAD ./src/main/c/twi-slave-from-sample.o
 LOAD ./src/main/c/twislave-main.o
 START GROUP
 LOAD /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a
@@ -132,7 +129,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x8fc
+.text           0x0000000000000000      0x912
  *(.vectors)
  .vectors       0x0000000000000000       0x26 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
                 0x0000000000000000                __vectors
@@ -171,8 +168,10 @@ END GROUP
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x0000000000000032       0x10 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
-                0x0000000000000032                __do_clear_bss
+ .init4         0x0000000000000032       0x16 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+                0x0000000000000032                __do_copy_data
+ .init4         0x0000000000000048       0x10 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x0000000000000048                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -183,135 +182,124 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x0000000000000042        0x4 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
+ .init9         0x0000000000000058        0x4 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
  *(.init9)
  *(.text)
- .text          0x0000000000000046        0x2 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
-                0x0000000000000046                __vector_1
-                0x0000000000000046                __vector_12
-                0x0000000000000046                __bad_interrupt
-                0x0000000000000046                __vector_6
-                0x0000000000000046                __vector_3
-                0x0000000000000046                __vector_11
-                0x0000000000000046                __vector_13
-                0x0000000000000046                __vector_7
-                0x0000000000000046                __vector_5
-                0x0000000000000046                __vector_4
-                0x0000000000000046                __vector_9
-                0x0000000000000046                __vector_2
-                0x0000000000000046                __vector_15
-                0x0000000000000046                __vector_8
-                0x0000000000000046                __vector_14
-                0x0000000000000046                __vector_10
-                0x0000000000000046                __vector_16
-                0x0000000000000046                __vector_18
- .text          0x0000000000000048        0x0 ./src/main/c/twislave/twislave.o
- .text          0x0000000000000048        0x0 ./src/main/c/twi_sample/TWI_Slave/Delay.o
- .text          0x0000000000000048        0x0 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
- .text          0x0000000000000048        0x0 ./src/main/c/adc_sample/adc-sample.o
- .text          0x0000000000000048        0x0 ./src/main/c/twi-slave-from-sample.o
- .text          0x0000000000000048        0x0 ./src/main/c/twislave-main.o
- .text          0x0000000000000048        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .text          0x0000000000000048        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text          0x0000000000000048        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
-                0x0000000000000048                . = ALIGN (0x2)
+ .text          0x000000000000005c        0x2 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
+                0x000000000000005c                __vector_1
+                0x000000000000005c                __vector_12
+                0x000000000000005c                __bad_interrupt
+                0x000000000000005c                __vector_6
+                0x000000000000005c                __vector_3
+                0x000000000000005c                __vector_11
+                0x000000000000005c                __vector_13
+                0x000000000000005c                __vector_7
+                0x000000000000005c                __vector_5
+                0x000000000000005c                __vector_4
+                0x000000000000005c                __vector_9
+                0x000000000000005c                __vector_2
+                0x000000000000005c                __vector_15
+                0x000000000000005c                __vector_8
+                0x000000000000005c                __vector_14
+                0x000000000000005c                __vector_10
+                0x000000000000005c                __vector_16
+                0x000000000000005c                __vector_18
+ .text          0x000000000000005e        0x0 ./src/main/c/twislave/twislave.o
+ .text          0x000000000000005e        0x0 ./src/main/c/adc_sample/adc-sample.o
+ .text          0x000000000000005e        0x0 ./src/main/c/twislave-main.o
+ .text          0x000000000000005e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+ .text          0x000000000000005e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+ .text          0x000000000000005e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x000000000000005e                . = ALIGN (0x2)
  *(.text.*)
  .text.init_twi_slave
-                0x0000000000000048       0x4c ./src/main/c/twislave/twislave.o
-                0x0000000000000048                init_twi_slave
+                0x000000000000005e       0x4c ./src/main/c/twislave/twislave.o
+                0x000000000000005e                init_twi_slave
  .text.__vector_17
-                0x0000000000000094      0x158 ./src/main/c/twislave/twislave.o
-                0x0000000000000094                __vector_17
- .text.Delayloop32
-                0x00000000000001ec       0x48 ./src/main/c/twi_sample/TWI_Slave/Delay.o
-                0x00000000000001ec                Delayloop32
- .text.TWIS_Init
-                0x0000000000000234       0x90 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x0000000000000234                TWIS_Init
- .text.TWIS_Stop
-                0x00000000000002c4       0x18 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x00000000000002c4                TWIS_Stop
- .text.TWIS_Write
-                0x00000000000002dc       0x36 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x00000000000002dc                TWIS_Write
- .text.TWIS_ReadAck
-                0x0000000000000312       0x2e ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x0000000000000312                TWIS_ReadAck
- .text.TWIS_ReadNack
-                0x0000000000000340       0x2e ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x0000000000000340                TWIS_ReadNack
- .text.TWIS_ResonseRequired
-                0x000000000000036e       0x32 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                0x000000000000036e                TWIS_ResonseRequired
- .text.main2    0x00000000000003a0       0x86 ./src/main/c/adc_sample/adc-sample.o
-                0x00000000000003a0                main2
- .text.initTwi  0x0000000000000426       0x16 ./src/main/c/twislave-main.o
-                0x0000000000000426                initTwi
- .text.initOcrt
-                0x000000000000043c       0x4c ./src/main/c/twislave-main.o
-                0x000000000000043c                initOcrt
+                0x00000000000000aa      0x158 ./src/main/c/twislave/twislave.o
+                0x00000000000000aa                __vector_17
+ .text.main2    0x0000000000000202       0x86 ./src/main/c/adc_sample/adc-sample.o
+                0x0000000000000202                main2
+ .text.initTwi  0x0000000000000288       0x16 ./src/main/c/twislave-main.o
+                0x0000000000000288                initTwi
+ .text.initOcr2
+                0x000000000000029e       0x4c ./src/main/c/twislave-main.o
+                0x000000000000029e                initOcr2
+ .text.initOcr1
+                0x00000000000002ea       0x4e ./src/main/c/twislave-main.o
+                0x00000000000002ea                initOcr1
  .text.readTwiData
-                0x0000000000000488       0xee ./src/main/c/twislave-main.o
-                0x0000000000000488                readTwiData
- .text.setOcr2t
-                0x0000000000000576      0x19e ./src/main/c/twislave-main.o
-                0x0000000000000576                setOcr2t
- .text.setDirectionToForwardt
-                0x0000000000000714       0x32 ./src/main/c/twislave-main.o
-                0x0000000000000714                setDirectionToForwardt
- .text.setDirectionToBackwardt
-                0x0000000000000746       0x32 ./src/main/c/twislave-main.o
-                0x0000000000000746                setDirectionToBackwardt
- .text.setDirectiont
-                0x0000000000000778       0x3e ./src/main/c/twislave-main.o
-                0x0000000000000778                setDirectiont
- .text.main     0x00000000000007b6       0xfe ./src/main/c/twislave-main.o
-                0x00000000000007b6                main
+                0x0000000000000338       0xc0 ./src/main/c/twislave-main.o
+                0x0000000000000338                readTwiData
+ .text.setOcr   0x00000000000003f8      0x240 ./src/main/c/twislave-main.o
+                0x00000000000003f8                setOcr
+ .text.setDirectionToForward1
+                0x0000000000000638       0x32 ./src/main/c/twislave-main.o
+                0x0000000000000638                setDirectionToForward1
+ .text.setDirectionToBackward1
+                0x000000000000066a       0x32 ./src/main/c/twislave-main.o
+                0x000000000000066a                setDirectionToBackward1
+ .text.setDirection1
+                0x000000000000069c       0x60 ./src/main/c/twislave-main.o
+                0x000000000000069c                setDirection1
+ .text.setDirectionToForward2
+                0x00000000000006fc       0x32 ./src/main/c/twislave-main.o
+                0x00000000000006fc                setDirectionToForward2
+ .text.setDirectionToBackward2
+                0x000000000000072e       0x32 ./src/main/c/twislave-main.o
+                0x000000000000072e                setDirectionToBackward2
+ .text.setDirection2
+                0x0000000000000760       0x60 ./src/main/c/twislave-main.o
+                0x0000000000000760                setDirection2
+ .text.initPorts
+                0x00000000000007c0       0x7a ./src/main/c/twislave-main.o
+                0x00000000000007c0                initPorts
+ .text.main     0x000000000000083a       0xd4 ./src/main/c/twislave-main.o
+                0x000000000000083a                main
  .text.libgcc.mul
-                0x00000000000008b4        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x00000000000008b4       0x44 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
-                0x00000000000008b4                __udivmodsi4
- .text.libgcc   0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+ .text.libgcc   0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.div
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .text.libgcc   0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+ .text.libgcc   0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.prologue
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.builtins
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.fmul
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.fixed
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .text.libgcc.mul
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
  .text.libgcc.div
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
- .text.libgcc   0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
  .text.libgcc.prologue
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
  .text.libgcc.builtins
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
  .text.libgcc.fmul
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
  .text.libgcc.fixed
-                0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
-                0x00000000000008f8                . = ALIGN (0x2)
+                0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+                0x000000000000090e                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000000000008f8        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
-                0x00000000000008f8                exit
-                0x00000000000008f8                _exit
+ .fini9         0x000000000000090e        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+                0x000000000000090e                exit
+                0x000000000000090e                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -330,61 +318,56 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000000000008f8        0x4 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+ .fini0         0x000000000000090e        0x4 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
  *(.fini0)
-                0x00000000000008fc                _etext = .
+                0x0000000000000912                _etext = .
 
-.data           0x0000000000800060        0x0 load address 0x00000000000008fc
+.data           0x0000000000800060        0xc load address 0x0000000000000912
                 0x0000000000800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
  .data          0x0000000000800060        0x0 ./src/main/c/twislave/twislave.o
- .data          0x0000000000800060        0x0 ./src/main/c/twi_sample/TWI_Slave/Delay.o
- .data          0x0000000000800060        0x0 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
  .data          0x0000000000800060        0x0 ./src/main/c/adc_sample/adc-sample.o
- .data          0x0000000000800060        0x0 ./src/main/c/twi-slave-from-sample.o
  .data          0x0000000000800060        0x0 ./src/main/c/twislave-main.o
- .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+ .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
  *(.data*)
  *(.rodata)
+ .rodata        0x0000000000800060        0xc ./src/main/c/twislave-main.o
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x0000000000800060                . = ALIGN (0x2)
-                0x0000000000800060                _edata = .
-                0x0000000000800060                PROVIDE (__data_end, .)
+                0x000000000080006c                . = ALIGN (0x2)
+                0x000000000080006c                _edata = .
+                0x000000000080006c                PROVIDE (__data_end, .)
 
-.bss            0x0000000000800060       0x2a
-                0x0000000000800060                PROVIDE (__bss_start, .)
+.bss            0x000000000080006c       0x2a
+                0x000000000080006c                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
- .bss           0x0000000000800060        0x0 ./src/main/c/twislave/twislave.o
- .bss           0x0000000000800060        0x0 ./src/main/c/twi_sample/TWI_Slave/Delay.o
- .bss           0x0000000000800060        0x0 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
- .bss           0x0000000000800060        0x0 ./src/main/c/adc_sample/adc-sample.o
- .bss           0x0000000000800060        0x0 ./src/main/c/twi-slave-from-sample.o
- .bss           0x0000000000800060        0x0 ./src/main/c/twislave-main.o
- .bss           0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_udivmodsi4.o)
- .bss           0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
- .bss           0x0000000000800060        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
+ .bss           0x000000000080006c        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr4/crtm8.o
+ .bss           0x000000000080006c        0x0 ./src/main/c/twislave/twislave.o
+ .bss           0x000000000080006c        0x0 ./src/main/c/adc_sample/adc-sample.o
+ .bss           0x000000000080006c        0x0 ./src/main/c/twislave-main.o
+ .bss           0x000000000080006c        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_exit.o)
+ .bss           0x000000000080006c        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_copy_data.o)
+ .bss           0x000000000080006c        0x0 /usr/lib/gcc/avr/4.8.1/avr4/libgcc.a(_clear_bss.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x0000000000800060       0x2a ./src/main/c/twislave/twislave.o
-                0x0000000000800060                buffer_adr
-                0x0000000000800061                txbuffer
-                0x0000000000800075                rxbuffer
-                0x0000000000800089                received
-                0x000000000080008a                PROVIDE (__bss_end, .)
-                0x00000000000008fc                __data_load_start = LOADADDR (.data)
-                0x00000000000008fc                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x000000000080006c       0x2a ./src/main/c/twislave/twislave.o
+                0x000000000080006c                buffer_adr
+                0x000000000080006d                txbuffer
+                0x0000000000800081                rxbuffer
+                0x0000000000800095                received
+                0x0000000000800096                PROVIDE (__bss_end, .)
+                0x0000000000000912                __data_load_start = LOADADDR (.data)
+                0x000000000000091e                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x000000000080008a        0x0
-                0x000000000080008a                PROVIDE (__noinit_start, .)
+.noinit         0x0000000000800096        0x0
+                0x0000000000800096                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x000000000080008a                PROVIDE (__noinit_end, .)
-                0x000000000080008a                _end = .
-                0x000000000080008a                PROVIDE (__heap_start, .)
+                0x0000000000800096                PROVIDE (__noinit_end, .)
+                0x0000000000800096                _end = .
+                0x0000000000800096                PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
  *(.eeprom*)
@@ -405,23 +388,17 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x0000000000000000     0x1c14
+.stab           0x0000000000000000     0x14b8
  *(.stab)
  .stab          0x0000000000000000      0x6c0 ./src/main/c/twislave/twislave.o
- .stab          0x00000000000006c0      0x300 ./src/main/c/twi_sample/TWI_Slave/Delay.o
-                                        0x4c8 (size before relaxing)
- .stab          0x00000000000009c0      0x54c ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
-                                        0x708 (size before relaxing)
- .stab          0x0000000000000f0c      0x354 ./src/main/c/adc_sample/adc-sample.o
+ .stab          0x00000000000006c0      0x3a8 ./src/main/c/adc_sample/adc-sample.o
                                         0x570 (size before relaxing)
- .stab          0x0000000000001260      0x258 ./src/main/c/twi-slave-from-sample.o
-                                        0x264 (size before relaxing)
- .stab          0x00000000000014b8      0x75c ./src/main/c/twislave-main.o
-                                        0x924 (size before relaxing)
+ .stab          0x0000000000000a68      0xa50 ./src/main/c/twislave-main.o
+                                        0xc18 (size before relaxing)
 
-.stabstr        0x0000000000000000     0x12f6
+.stabstr        0x0000000000000000     0x1186
  *(.stabstr)
- .stabstr       0x0000000000000000     0x12f6 ./src/main/c/twislave/twislave.o
+ .stabstr       0x0000000000000000     0x1186 ./src/main/c/twislave/twislave.o
 
 .stab.excl
  *(.stab.excl)
@@ -439,10 +416,7 @@ END GROUP
  *(.comment)
  .comment       0x0000000000000000       0x11 ./src/main/c/twislave/twislave.o
                                          0x12 (size before relaxing)
- .comment       0x0000000000000000       0x12 ./src/main/c/twi_sample/TWI_Slave/Delay.o
- .comment       0x0000000000000000       0x12 ./src/main/c/twi_sample/TWI_Slave/TWI_Slave.o
  .comment       0x0000000000000000       0x12 ./src/main/c/adc_sample/adc-sample.o
- .comment       0x0000000000000000       0x12 ./src/main/c/twi-slave-from-sample.o
  .comment       0x0000000000000000       0x12 ./src/main/c/twislave-main.o
 
 .note.gnu.build-id

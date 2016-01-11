@@ -4,15 +4,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/main/c/twi-slave-from-sample.c \
 ../src/main/c/twislave-main.c 
 
 OBJS += \
-./src/main/c/twi-slave-from-sample.o \
 ./src/main/c/twislave-main.o 
 
 C_DEPS += \
-./src/main/c/twi-slave-from-sample.d \
 ./src/main/c/twislave-main.d 
 
 

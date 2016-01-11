@@ -9,7 +9,6 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/main/c/twislave/subdir.mk
--include src/main/c/twi_sample/TWI_Slave/subdir.mk
 -include src/main/c/adc_sample/subdir.mk
 -include src/main/c/subdir.mk
 -include subdir.mk

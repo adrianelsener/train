@@ -23,11 +23,16 @@
 #define	bic(ADDRESS,BIT)	(!(ADDRESS & (1<<BIT)))		// bit is clear?
 
 struct DATA {
-	uint8_t destOcr;
-	uint8_t stepSize;
-	uint8_t nrOfWaitsBetweenSteps;
-	uint16_t waited; // indicates how many waits are done
-	uint8_t direction; // [1,2]
+	uint8_t destOcr1;
+	uint8_t stepSize1;
+	uint8_t nrOfWaitsBetweenSteps1;
+	uint16_t waited1; // indicates how many waits are done
+	uint8_t direction1; // [1,2]
+	uint8_t destOcr2;
+	uint8_t stepSize2;
+	uint8_t nrOfWaitsBetweenSteps2;
+	uint16_t waited2; // indicates how many waits are done
+	uint8_t direction2; // [1,2]
 };
 
 void initTwi(void) {
@@ -36,36 +41,51 @@ void initTwi(void) {
 	sei();
 }
 
-void initOcr() {
+void initOcr2() {
 	OCR2 = 0;
 	TCCR2 |= (1 << COM21); // set non-inverting mode
 	TCCR2 |= (1 << WGM21) | (1 << WGM20); // set fast PWM Mode
 	TCCR2 |= (1 << CS21); // set prescaler to 8 and starts PWM
 }
 
+void initOcr1() {
+	OCR1A = 0;
+	TCCR1A |= (1 << COM1A1); // set non-inverting mode
+//	TCCR1A |= (1 << WGM11) | (1 << WGM10); // set fast PWM Mode
+	TCCR1A |= (1 << WGM10); // set fast PWM Mode 8-bit
+	TCCR1A |= (1 << CS11); // set prescaler to 8 and starts PWM
+}
+
 struct DATA readTwiData(struct DATA data) {
 	if (received[1] == 1) {
-				data.nrOfWaitsBetweenSteps = rxbuffer[0];
-				data.stepSize = rxbuffer[1];
-				data.destOcr = rxbuffer[2];
-				data.direction = rxbuffer[3];
-				received[1] = 0;
+		if (1 == rxbuffer[4]) {
+			data.nrOfWaitsBetweenSteps1 = rxbuffer[0];
+			data.stepSize1 = rxbuffer[1];
+			data.destOcr1 = rxbuffer[2];
+			data.direction1 = rxbuffer[3];
+		} else if (2 == rxbuffer[4]) {
+			data.nrOfWaitsBetweenSteps2 = rxbuffer[0];
+			data.stepSize2 = rxbuffer[1];
+			data.destOcr2 = rxbuffer[2];
+			data.direction2 = rxbuffer[3];
+		}
+		received[1] = 0;
 	}
 	return data;
 }
 
 struct DATA setOcr(struct DATA data) {
-	if (OCR2 != data.destOcr) {
-		if (data.waited >= (data.nrOfWaitsBetweenSteps * 32)) {
+	if (OCR2 != data.destOcr2) {
+		if (data.waited2 >= (data.nrOfWaitsBetweenSteps2 * 32)) {
 			int8_t stepWithSign;
-			if (OCR2 > data.destOcr) {
-				stepWithSign = 0 - data.stepSize;
+			if (OCR2 > data.destOcr2) {
+				stepWithSign = 0 - data.stepSize2;
 			} else {
-				stepWithSign = data.stepSize;
+				stepWithSign = data.stepSize2;
 			}
 			uint8_t nextVal = OCR2 + stepWithSign;
-			if (((nextVal > data.destOcr) && (stepWithSign > 0)) || ((nextVal < data.destOcr) && (stepWithSign < 0))) {
-				nextVal = data.destOcr;
+			if (((nextVal > data.destOcr2) && (stepWithSign > 0)) || ((nextVal < data.destOcr2) && (stepWithSign < 0))) {
+				nextVal = data.destOcr2;
 			}
 			if (nextVal == 0) {
 				OCR2 = nextVal;
@@ -74,96 +94,117 @@ struct DATA setOcr(struct DATA data) {
 				TCCR2 |= (1 << CS21);
 				OCR2 = nextVal;
 			}
-			data.waited = 0;
+			data.waited2 = 0;
 		} else {
-			data.waited++;
+			data.waited2++;
 		}
-		txbuffer[0] = OCR2;
 	}
+	if (OCR1A != data.destOcr1) {
+		if (data.waited1 >= (data.nrOfWaitsBetweenSteps1 * 32)) {
+			int8_t stepWithSign;
+			if (OCR1A > data.destOcr1) {
+				stepWithSign = 0 - data.stepSize1;
+			} else {
+				stepWithSign = data.stepSize1;
+			}
+			uint8_t nextVal = OCR1A + stepWithSign;
+			if (((nextVal > data.destOcr1) && (stepWithSign > 0)) || ((nextVal < data.destOcr1) && (stepWithSign < 0))) {
+				nextVal = data.destOcr1;
+			}
+			if (nextVal == 0) {
+				OCR1A = nextVal;
+				TCCR1A &= ~(1 << CS11); // set prescaler to 8 and starts PWM
+			} else {
+				TCCR1A |= (1 << CS11);
+				OCR1A = nextVal;
+			}
+			data.waited1 = 0;
+		} else {
+			data.waited1++;
+		}
+	}
+
+	txbuffer[0] = OCR1A;
+	txbuffer[1] = OCR2;
 	return data;
 }
 
-void setDirectionToForward() {
+void setDirectionToForward1() {
+	//PB3 / PB4
+    PORTB |= (1 << PB0);  //im PORTB setzen
+    PORTB &= ~(1 << PB2); //im PORTB löschen
+}
+
+void setDirectionToBackward1() {
+    PORTB &= ~(1 << PB0); //im PORTB löschen
+    PORTB |= (1 << PB2);  //im PORTB setzen
+}
+
+void setDirection1(struct DATA data) {
+	if (1 == data.direction1) {
+		setDirectionToForward1();
+	} else if (2 == data.direction1) {
+		setDirectionToBackward1();
+	}
+}
+
+void setDirectionToForward2() {
 	//PB3 / PB4
     PORTB |= (1 << PB5);  //PB3 im PORTB setzen
     PORTB &= ~(1 << PB4); //PB4 im PORTB löschen
 }
 
-void setDirectionToBackward() {
+void setDirectionToBackward2() {
     PORTB &= ~(1 << PB5); //PB3 im PORTB löschen
     PORTB |= (1 << PB4);  //PB4 im PORTB setzen
 }
 
-void setDirection(struct DATA data) {
-	if (1 == data.direction) {
-		setDirectionToForward();
-	} else if (2 == data.direction) {
-		setDirectionToBackward();
+void setDirection2(struct DATA data) {
+	if (1 == data.direction2) {
+		setDirectionToForward2();
+	} else if (2 == data.direction2) {
+		setDirectionToBackward2();
 	}
 }
-int main(void){
 
+void initPorts() {
+    DDRB |= (1 << PB1); 				// PB1 is output (PWM1)
+    DDRB |= (1 << PB0);					// PB0 as output (-> directin PWM1)
+    DDRB |= (1 << PB2);					// PB2 as output (-> directin PWM1)
+	DDRB |= (1 << PB3);					// PB3 as output (PWM2)
+	DDRB |= (1 << PB5);					// PB5 as output (-> direction PWM2)
+	DDRB |= (1 << PB4);					// PB4 as output (-> direction PWM2)
+}
+
+int main(void){
 	initTwi();
 
-    DDRB = 0x06;                      // Set Port PB1 and PB2 as Output (0x06 -> 110b)
-	DDRB |= (1 << PB3);					// PB4 as Output
-	DDRB |= (1 << PB5);					// PB5 as Output
-	DDRB |= (1 << PB4);					// PB4 as Output
+	initPorts();
 
-
-	initOcr();
-	// --------- test... end
+	initOcr1();
+	initOcr2();
 
 	struct DATA data = {
-		.destOcr = INITIAL_OCR_SPEED,
-	    .stepSize = 0,
-		.nrOfWaitsBetweenSteps = 0,
-		.waited = 0,
-		.direction = INITIAL_DIRECTION
+		.destOcr1 = INITIAL_OCR_SPEED,
+		.destOcr2 = INITIAL_OCR_SPEED,
+	    .stepSize1 = 0,
+	    .stepSize2 = 0,
+		.nrOfWaitsBetweenSteps1 = 0,
+		.nrOfWaitsBetweenSteps2 = 0,
+		.waited1 = 0,
+		.waited2 = 0,
+		.direction1 = INITIAL_DIRECTION,
+		.direction2 = INITIAL_DIRECTION
 	};
 
-	OCR2 = data.destOcr;
+	OCR2 = INITIAL_OCR_SPEED;
+	OCR1A = INITIAL_OCR_SPEED;
 
 	while (1) {
 		data = readTwiData(data);
-		setDirection(data);
+		setDirection1(data);
+		setDirection2(data);
 		data = setOcr(data);
 	}
 	return 0;
 }
-//
-//
-//
-//	while(1) {
-//		//############################ write Data in txbuffer
-//
-//		// 8Bit variable
-//		txbuffer[2]=3;
-//		txbuffer[3]=4;
-//		txbuffer[4]=5;
-//		txbuffer[5]=6;
-//
-//		// 16Bit Variable --> 2x 8Bit Variable
-//		buffer		= Variable;
-//		txbuffer[0]	= LOW_BYTE(buffer);			//16bit --> 8bit
-//		txbuffer[1]	= HIGH_BYTE(buffer);		//16bit --> 8bit
-//
-//
-//		//############################ read Data form rxbuffer
-//
-//		// 8Bit variable
-//		Variable	= rxbuffer[2];
-//
-//		// 2x 8Bit Variable -->16Bit Variable
-//		low			= rxbuffer[0];
-//		hight		= rxbuffer[1];
-//		Variable	= uniq(low,hight);			// 2x 8Bit  --> 16Bit
-//
-//
-//		//############################
-//		} //end.while
-//	return 0;
-//} //end.main
-
-
-
