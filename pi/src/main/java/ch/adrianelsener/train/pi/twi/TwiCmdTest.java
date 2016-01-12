@@ -28,19 +28,17 @@ public class TwiCmdTest {
         String val = readNextStepWithOutput(in);
         while (!val.startsWith("e")) {
             if (val.startsWith("r")) {
-                final Process setProcess = createStartedSetProcess(devNr, 0x00);
-                waitForProcess(setProcess);
-                ProcessBuilder processBuilder = new ProcessBuilder("/usr/sbin/i2cget", "-y", "1", "0x"+Integer.toHexString(devNr.get()));
-                final Process getProcess = processBuilder.start();
-                final InputStream inputStream = getProcess.getInputStream();
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(getProcess.getErrorStream()));
-                errorReader.lines().forEach(l -> System.out.println("err: "+l));
-                final BufferedReader getReader = new BufferedReader(new InputStreamReader(inputStream));
-                waitForProcess(getProcess);
-                final String readLine = getReader.readLine();
-                System.out.printf("PWM -> %s\n", readLine);
+                final String readLine2 = read(devNr, 0x00);
+                System.out.printf("PWM 2 -> %s\n", readLine2);
+                final String readLine1 = read(devNr, 0x01);
+                System.out.printf("PWM 1 -> %s\n", readLine1);
             } else {
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
+                if ("1".equals(splittedStrings.get(2))) {
+                    setSpeed(0, devNr, splittedStrings);
+                } else if ("2".equals(splittedStrings.get(2))) {
+                    setSpeed(4, devNr, splittedStrings);
+                }
                 List<Integer> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s)).collect(Collectors.toList());
                 for (int dataPosition = 0; dataPosition < splitted.size(); dataPosition++) {
                     createStartedSetProcess(devNr, dataPosition, splitted.get(dataPosition));
@@ -48,7 +46,30 @@ public class TwiCmdTest {
             }
             val = readNextStepWithOutput(in);
         }
+    }
 
+    private void setSpeed(int offset, Optional<Integer> devNr, List<String> splittedStrings) throws IOException {
+        createStartedSetProcess(devNr, 0+offset, 0x01);
+        createStartedSetProcess(devNr, 1+offset, 0x01);
+        createStartedSetProcess(devNr, 2+offset, Math.abs(Integer.parseInt(splittedStrings.get(0))));
+        if (splittedStrings.get(0).startsWith("-")) {
+            createStartedSetProcess(devNr, 3+offset, 0x01);
+        } else {
+            createStartedSetProcess(devNr, 3+offset, 0x02);
+        }
+    }
+
+    private String read(Optional<Integer> devNr, int toRead) throws IOException {
+        final Process setProcess = createStartedSetProcess(devNr, toRead);
+        waitForProcess(setProcess);
+        ProcessBuilder processBuilder = new ProcessBuilder("/usr/sbin/i2cget", "-y", "1", "0x"+Integer.toHexString(devNr.get()));
+        final Process getProcess = processBuilder.start();
+        final InputStream inputStream = getProcess.getInputStream();
+        BufferedReader errorReader = new BufferedReader(new InputStreamReader(getProcess.getErrorStream()));
+        errorReader.lines().forEach(l -> System.out.println("err: "+l));
+        final BufferedReader getReader = new BufferedReader(new InputStreamReader(inputStream));
+        waitForProcess(getProcess);
+        return getReader.readLine();
     }
 
     private Process createStartedSetProcess(final Optional<Integer> devNr, final int dataPosition) throws IOException {
@@ -85,7 +106,7 @@ public class TwiCmdTest {
 
     private String readNextStepWithOutput(final Scanner in) {
         final String val;
-        System.out.printf("next value (wait,steps,destination,direction[1,2]) - (e)xit) (r)ead: ");
+        System.out.printf("next value (destination[-254/254],pwm[1/2]) - (e)xit) (r)ead: ");
         val = in.nextLine();
         return val;
     }
