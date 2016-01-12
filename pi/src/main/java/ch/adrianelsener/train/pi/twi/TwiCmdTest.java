@@ -34,15 +34,15 @@ public class TwiCmdTest {
                 System.out.printf("PWM 1 -> %s\n", readLine1);
             } else {
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
-                if ("1".equals(splittedStrings.get(2))) {
+                if ("1".equals(splittedStrings.get(1))) {
                     setSpeed(0, devNr, splittedStrings);
-                } else if ("2".equals(splittedStrings.get(2))) {
+                } else if ("2".equals(splittedStrings.get(1))) {
                     setSpeed(4, devNr, splittedStrings);
                 }
-                List<Integer> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s)).collect(Collectors.toList());
-                for (int dataPosition = 0; dataPosition < splitted.size(); dataPosition++) {
-                    createStartedSetProcess(devNr, dataPosition, splitted.get(dataPosition));
-                }
+//                List<Integer> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s)).collect(Collectors.toList());
+//                for (int dataPosition = 0; dataPosition < splitted.size(); dataPosition++) {
+//                    createStartedSetProcess(devNr, dataPosition, splitted.get(dataPosition));
+//                }
             }
             val = readNextStepWithOutput(in);
         }
