@@ -21,7 +21,7 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-src/main/c/adc_sample \
-src/main/c/twislave \
 src/main/c \
+src/main/c/twislave \
+src/main/c/adc_sample \
 
