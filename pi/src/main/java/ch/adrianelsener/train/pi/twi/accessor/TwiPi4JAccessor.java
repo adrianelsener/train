@@ -2,6 +2,7 @@ package ch.adrianelsener.train.pi.twi.accessor;
 
 import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Result;
+import ch.adrianelsener.train.pi.dto.properties.Device;
 import ch.adrianelsener.train.pi.dto.properties.Speed;
 import ch.adrianelsener.train.pi.twi.TwiAccessException;
 import ch.adrianelsener.train.pi.twi.TwiAccessor;
@@ -14,11 +15,9 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class TwiPi4JAccessor implements TwiAccessor {
-    private final I2CDevice i2CDevice;
 
-    public TwiPi4JAccessor(final int deviceNr) {
-        final I2CBus i2CBus = getI2CBus();
-        this.i2CDevice = toI2CDevice(deviceNr, i2CBus);
+    public TwiPi4JAccessor() {
+        super();
     }
 
     private I2CBus getI2CBus() {
@@ -37,8 +36,10 @@ public class TwiPi4JAccessor implements TwiAccessor {
         }
     }
 
-    public void write(AccelerationDto accelerationDto) {
+    @Override
+    public void write(final Device device, final AccelerationDto accelerationDto) {
         byte[] sendbytes = accelerationDtoToBytearray().apply(accelerationDto);
+        final I2CDevice i2CDevice = getI2CDevice(device);
         try {
             i2CDevice.write(sendbytes, 0, sendbytes.length);
         } catch (IOException e) {
@@ -48,31 +49,34 @@ public class TwiPi4JAccessor implements TwiAccessor {
 //            Integer.valueOf(s).byteValue()
     }
 
+    private I2CDevice getI2CDevice(final Device device) {
+        final I2CBus i2CBus = getI2CBus();
+        return toI2CDevice(device.getDeviceNr(), i2CBus);
+    }
+
     private static Function<AccelerationDto, byte[]> accelerationDtoToBytearray() {
-        return (dto -> {
-            byte[] bytes = new byte[]{
-                    intToByte().apply(dto.getAcceleration().getStepsize()),//
-                    intToByte().apply(dto.getAcceleration().getAcceleration()),//
-                    intToByte().apply(dto.getSpeed().getSpeed()),//
-                    intToByte().apply(dto.getDirection().getAvrDirectionValue()),//
-            };
-            return bytes;
+        return (dto -> new byte[]{
+                intToByte().apply(dto.getAcceleration().getStepsize()),//
+                intToByte().apply(dto.getAcceleration().getAcceleration()),//
+                intToByte().apply(dto.getSpeed().getSpeed()),//
+                intToByte().apply(dto.getDirection().getAvrDirectionValue()),//
         });
     }
 
     private static Function<Integer, Byte> intToByte() {
-        return (i -> i.byteValue());
+        return Integer::byteValue;
     }
 
-    public Result read() {
+    @Override
+    public Result read(final Device device) {
         int bytesToRead = 1;
-        Result result = readFromTwi(bytesToRead, byteArrayToResult());
-        return result;
+        return readFromTwi(device, bytesToRead, byteArrayToResult());
     }
 
-    private <RESULT> RESULT readFromTwi(final int bytesToRead, final Function<byte[], RESULT> toResult) {
+    private <RESULT> RESULT readFromTwi(final Device device, final int bytesToRead, final Function<byte[], RESULT> toResult) {
         byte[] bytes = new byte[bytesToRead];
         try {
+            final I2CDevice i2CDevice = getI2CDevice(device);
             int bytesRead = i2CDevice.read(bytes, 0, bytes.length);
             if (bytes.length != bytesRead) {
                 throw new TwiAccessException("Expected lenght differs from read lenght:\n Expected: '{}' but received '{}'", bytesToRead, bytesRead);
