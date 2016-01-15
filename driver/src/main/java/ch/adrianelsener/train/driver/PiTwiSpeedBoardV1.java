@@ -6,6 +6,7 @@ import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
+import ch.adrianelsener.train.pi.dto.properties.Device;
 import ch.adrianelsener.train.pi.tcp.TcpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +30,15 @@ public class PiTwiSpeedBoardV1 implements SpeedBoardDriver {
     @Override
     public void setSpeed(final int estimated) {
         final AccelerationDto acceleration = new AccelerationDto().setSpeed(estimated);
+        final Device device = new Device(9, 0, Device.Accessor.CMD);
         logger.debug("Send command {}", acceleration);
-        tcpClient.sendCommand(Command.builder().setMode(Mode.SPEED).setData(acceleration).build());
+        tcpClient.sendCommand(Command.builder().setMode(Mode.SPEED).setData(acceleration).setDevice(device).build());
     }
 
     @Override
     public int getCurrentSpeed() {
-        Result result = tcpClient.sendCommand(Command.builder().setMode(Mode.READ_SPEED).build());
+        final Device device = new Device(9, 0, Device.Accessor.CMD);
+        Result result = tcpClient.sendCommand(Command.builder().setMode(Mode.READ_SPEED).setDevice(device).build());
         logger.debug("Received for get {}", result);
         return result.getResult().get().getSpeed().getSpeed();
     }

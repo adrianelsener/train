@@ -3,8 +3,11 @@ package ch.adrianelsener.train.pi.twi.accessor.cmd;
 import ch.adrianelsener.train.pi.dto.properties.Device;
 import com.google.common.collect.ImmutableList;
 
+import javax.inject.Inject;
+
 abstract class CmdSetter {
     private final static int SET_OFFSET = 4;
+    @Inject
     private final CmdExecutor cmdExecutor = new CmdExecutor();
     protected int subDev;
     protected int devNr;

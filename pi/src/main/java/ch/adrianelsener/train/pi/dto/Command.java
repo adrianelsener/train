@@ -1,19 +1,22 @@
 package ch.adrianelsener.train.pi.dto;
 
+import ch.adrianelsener.train.pi.dto.properties.Device;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Command {
     private final Mode mode;
     private final AccelerationDto data;
+    private final Device device;
 
     private Command(Builder builder) {
         mode = builder.mode;
         data = builder.data;
+        device = builder.device;
     }
 
     public Result execute() {
-        return mode.apply(data);
+        return mode.apply(data, device);
     }
 
     @Override
@@ -28,6 +31,7 @@ public class Command {
     public static class Builder {
         private Mode mode;
         public AccelerationDto data;
+        public Device device;
 
         private Builder() {
             super();
@@ -40,6 +44,11 @@ public class Command {
 
         public Builder setMode(Mode mode) {
             this.mode = mode;
+            return this;
+        }
+
+        public Builder setDevice(Device device) {
+            this.device = device;
             return this;
         }
 

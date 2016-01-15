@@ -7,6 +7,7 @@ import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
+import ch.adrianelsener.train.pi.dto.properties.Device;
 import ch.adrianelsener.train.pi.tcp.TcpClient;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -29,10 +30,12 @@ public class TcpGsonClient implements TcpClient {
         this(address, new SocketFactory(), new GsonWrapper());
     }
 
+    // TODO should be used
     private Result sendSetSpeed() {
         Command cmd = Command.builder()//
                 .setData(new AccelerationDto())//
                 .setMode(Mode.SPEED)//
+                .setDevice(new Device())//
                 .build();
         Result result = sendCommand(cmd);
         System.out.printf("%s\n", result);
@@ -42,8 +45,7 @@ public class TcpGsonClient implements TcpClient {
     public Result sendCommand(final Command cmd) {
         try (AutoClosableSocket socket = socketFactory.create(address)) {
             sendData(cmd, socket);
-            final Result receivedDto = receiveData(socket);
-            return receivedDto;
+            return receiveData(socket);
         }
     }
 
