@@ -21,4 +21,14 @@ public enum Direction {
         return FluentIterable.of(Direction.values())//
                 .firstMatch(direction -> direction.avrDirectionValue == i).get();
     }
+
+    public static Direction forSpeed(final Integer speed) {
+        if (0 < speed) {
+            return FORWARD;
+        } else if (0 > speed) {
+            return BACKWARD;
+        } else {
+            return STOP;
+        }
+    }
 }
