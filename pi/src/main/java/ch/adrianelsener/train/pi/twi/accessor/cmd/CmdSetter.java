@@ -8,7 +8,7 @@ import javax.inject.Inject;
 abstract class CmdSetter {
     private final static int SET_OFFSET = 4;
     @Inject
-    private final CmdExecutor cmdExecutor = new CmdExecutor();
+    private CmdExecutor cmdExecutor = new CmdExecutor();
     protected int subDev;
     protected int devNr;
 
