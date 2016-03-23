@@ -166,12 +166,23 @@ void initPorts() {
 	DDRB |= (1 << PB4);					// PB4 as output (-> direction PWM1A)
 }
 
+void initInput() {
+	DDRD &= ~(1 << PD2);//DDD2		// PD2 as input
+	PORTD &= (1 << PD2);			// Enable Pull-Up
+}
+
+void readInputStates() {
+	int isPd2Set = (PIND & (1 << PD2));
+}
+
 int main(void) {
 	initTwi();
 
 	initPorts();
 
 	initOcr1();
+
+	initInput();
 
 	struct DATA data = { //
 			.destOcr1 = INITIAL_OCR_SPEED, //
@@ -190,6 +201,7 @@ int main(void) {
 
 	while (1) {
 		data = readTwiData(data);
+		readInputStates();
 		setDirection1(data);
 		setDirection2(data);
 		data = setOcr(data);
