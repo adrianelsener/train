@@ -32,6 +32,8 @@ public class TwiCmdTest {
                 System.out.printf("PWM 2 -> %s\n", readLine2);
                 final String readLine1 = read(devNr, 0x01);
                 System.out.printf("PWM 1 -> %s\n", readLine1);
+                final String inputPin = read(devNr, 0x02);
+                System.out.printf("InputPin -> %s\n", inputPin);
             } else {
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
                 if ("1".equals(splittedStrings.get(1))) {
