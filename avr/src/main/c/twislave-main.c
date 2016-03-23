@@ -32,6 +32,7 @@ struct DATA {
 	uint8_t nrOfWaitsBetweenSteps2;
 	uint16_t waited2; // indicates how many waits are done
 	uint8_t direction2; // [1,2]
+	uint8_t isSet2;
 };
 
 void initTwi(void) {
@@ -173,6 +174,7 @@ void initInput() {
 
 void readInputStates() {
 	int isPd2Set = (PIND & (1 << PD2));
+	txbuffer[2] = isPd2Set;
 }
 
 int main(void) {
