@@ -172,7 +172,7 @@ void initPorts() {
 void initInput() {
 	DDRD = 0x00;
 //	DDRD &= ~(1 << PD2);//DDD2		// PD2 as input
-	PORTD &= (1 << PD2);			// Enable Pull-Up
+//	PORTD &= (1 << PD2);			// Enable Pull-Up
 }
 
 void readInputStates() {
@@ -187,7 +187,7 @@ void readInputStates() {
 			pinstate[i][1] = 0;
 			pinstate[i][0] = 0;
 		}
-		txbuffer[i + 2][1] = pinstate[i][1];
+		txbuffer[i + 2] = pinstate[i][1];
 	}
 }
 
