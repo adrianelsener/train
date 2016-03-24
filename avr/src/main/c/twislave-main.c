@@ -176,7 +176,7 @@ void initInput() {
 }
 
 void readInputStates() {
-	for (int i = PD0; i < PD7; i++) {
+	for (int i = PD0; i <= PD7; i++) {
 		int isPinSet = (PIND & (1 << i));
 		if (isPinSet) {
 			pinstate[i][1] = isPinSet;
