@@ -20,6 +20,9 @@
 
 #define	bis(ADDRESS,BIT)	(ADDRESS & (1<<BIT))		// bit is set?
 #define	bic(ADDRESS,BIT)	(!(ADDRESS & (1<<BIT)))		// bit is clear?
+// [X][0] -> times since last 1
+// [X][1] -> times there was a 1
+uint8_t pinstate[8][2];
 
 struct DATA {
 	uint16_t destOcr1;
@@ -32,7 +35,6 @@ struct DATA {
 	uint8_t nrOfWaitsBetweenSteps2;
 	uint16_t waited2; // indicates how many waits are done
 	uint8_t direction2; // [1,2]
-	uint8_t isSet2;
 };
 
 void initTwi(void) {
@@ -168,23 +170,41 @@ void initPorts() {
 }
 
 void initInput() {
-	DDRD &= ~(1 << PD2);//DDD2		// PD2 as input
+	DDRD = 0x00;
+//	DDRD &= ~(1 << PD2);//DDD2		// PD2 as input
 	PORTD &= (1 << PD2);			// Enable Pull-Up
 }
 
 void readInputStates() {
-	int isPd2Set = (PIND & (1 << PD2));
-	txbuffer[2] = isPd2Set;
+	for (int i = PD0; i < PD7; i++) {
+		int isPinSet = (PIND & (1 << i));
+		if (isPinSet) {
+			pinstate[i][1] = isPinSet;
+			pinstate[i][0] = 0;
+		} else if (pinstate[i][0] < 10) {
+			pinstate[i][0] = pinstate[i][0] + 1;
+		} else {
+			pinstate[i][1] = 0;
+			pinstate[i][0] = 0;
+		}
+		txbuffer[i + 2][1] = pinstate[i][1];
+	}
+}
+
+void initPinState() {
+	for (int i = 0; i < 8; i++) {
+		pinstate[i][0] = 0;
+		pinstate[i][1] = 0;
+	}
 }
 
 int main(void) {
 	initTwi();
 
 	initPorts();
-
 	initOcr1();
-
 	initInput();
+	initPinState();
 
 	struct DATA data = { //
 			.destOcr1 = INITIAL_OCR_SPEED, //

@@ -62,6 +62,8 @@
 //#################################### Globale Variablen, die vom Hauptprogramm genutzt werden 
 
 volatile uint8_t rxbuffer[buffer_size];				//Der Empfangsbuffer, der vom Slave ausgelesen werden kann.
+
+// 0,1 current state of pwm, 2-9 inputstates
 volatile uint8_t txbuffer[buffer_size];				//Der Sendebuffe, der vom Master ausgelesen werden kann.
 volatile uint8_t buffer_adr; 						//"Adressregister" f�r den Buffer
 volatile uint8_t received[1];
