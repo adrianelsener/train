@@ -42,6 +42,7 @@
 #include <util/twi.h> 								// Bezeichnungen fuer Statuscodes in TWSR
 #include <avr/interrupt.h> 							// behandlung der Interrupts
 #include <stdint.h> 								// definiert Datentyp uint8_t
+#include <inttypes.h>
 #include "twislave.h" 								
 
 //#################################### Macros

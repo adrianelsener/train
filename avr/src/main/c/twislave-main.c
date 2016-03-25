@@ -2,6 +2,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <inttypes.h>
 
 #include "twislave/twislave.h"
 
@@ -20,6 +21,11 @@
 
 #define	bis(ADDRESS,BIT)	(ADDRESS & (1<<BIT))		// bit is set?
 #define	bic(ADDRESS,BIT)	(!(ADDRESS & (1<<BIT)))		// bit is clear?
+
+#define dataPosition 1
+#define countPosition 0
+#define waitToReset 10
+
 // [X][0] -> times since last 1
 // [X][1] -> current state
 uint8_t pinstate[8][2];
@@ -175,12 +181,8 @@ void initPortDAsInputWithPullUp() {
 		PORTD &= (1 << i);			// Enable Pull-Up
 	}
 }
-#define dataPosition 1
-#define countPosition 0
-#define waitToReset 10
 
 void readInputStates() {
-
 	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
 		int isPinSet = (PIND & (1 << pinToCheck));
 		if (isPinSet) {
