@@ -21,7 +21,7 @@
 #define	bis(ADDRESS,BIT)	(ADDRESS & (1<<BIT))		// bit is set?
 #define	bic(ADDRESS,BIT)	(!(ADDRESS & (1<<BIT)))		// bit is clear?
 // [X][0] -> times since last 1
-// [X][1] -> times there was a 1
+// [X][1] -> current state
 uint8_t pinstate[8][2];
 
 struct DATA {
@@ -169,32 +169,38 @@ void initPorts() {
 	DDRB |= (1 << PB4);					// PB4 as output (-> direction PWM1A)
 }
 
-void initInput() {
+void initPortDAsInputWithPullUp() {
 	DDRD = 0x00;
-//	DDRD &= ~(1 << PD2);//DDD2		// PD2 as input
-//	PORTD &= (1 << PD2);			// Enable Pull-Up
+	for (int i = PD0; i <= PD7; i++) {
+		PORTD &= (1 << i);			// Enable Pull-Up
+	}
 }
+#define dataPosition 1
+#define countPosition 0
+#define waitToReset 10
 
 void readInputStates() {
-	for (int i = PD0; i <= PD7; i++) {
-		int isPinSet = (PIND & (1 << i));
+
+	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
+		int isPinSet = (PIND & (1 << pinToCheck));
 		if (isPinSet) {
-			pinstate[i][1] = isPinSet;
-			pinstate[i][0] = 0;
-		} else if (pinstate[i][0] < 10) {
-			pinstate[i][0] = pinstate[i][0] + 1;
+			if (pinstate[pinToCheck][countPosition] > waitToReset) {
+				pinstate[pinToCheck][dataPosition] = 1;
+			} else {
+				pinstate[pinToCheck][countPosition] = pinstate[pinToCheck][countPosition] + 1;
+			}
 		} else {
-			pinstate[i][1] = 0;
-			pinstate[i][0] = 0;
+			pinstate[pinToCheck][dataPosition] = 0;
+			pinstate[pinToCheck][countPosition] = 0;
 		}
-		txbuffer[i + 2] = pinstate[i][1];
+		txbuffer[pinToCheck + 2] = pinstate[pinToCheck][dataPosition];
 	}
 }
 
 void initPinState() {
 	for (int i = 0; i < 8; i++) {
 		pinstate[i][0] = 0;
-		pinstate[i][1] = 0;
+		pinstate[i][1] = 1;
 	}
 }
 
@@ -203,7 +209,7 @@ int main(void) {
 
 	initPorts();
 	initOcr1();
-	initInput();
+	initPortDAsInputWithPullUp();
 	initPinState();
 
 	struct DATA data = { //
