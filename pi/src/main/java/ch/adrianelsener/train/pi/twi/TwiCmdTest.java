@@ -37,7 +37,7 @@ public class TwiCmdTest {
                 final String inputPin = read(devNr, 0x02);
                 System.out.printf("InputPin -> %s\n", inputPin);
                 final String inputPins = read(devNr, 0x0B);
-                System.out.printf("InputPins combined -> %s\n as binary: %s", inputPins, Integer.toBinaryString(Integer.decode(inputPins)));
+                System.out.printf("InputPins combined -> %s\n as binary: %s\n", inputPins, Integer.toBinaryString(Integer.decode(inputPins)));
             } else {
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
                 if ("1".equals(splittedStrings.get(1))) {
@@ -89,7 +89,7 @@ public class TwiCmdTest {
         parameters.add("0x"+Long.toHexString(data));
         ProcessBuilder setProcessBuilder = new ProcessBuilder(parameters);
         parameters.forEach(System.out::println);
-        logger.debug("Data was : " + data);
+        logger.trace("Data was : " + data);
         return setProcessBuilder.start();
     }
 
@@ -102,7 +102,7 @@ public class TwiCmdTest {
             }
         }
         final int exitValue = setProcess.exitValue();
-        logger.debug("Exit value is %s\n", exitValue);
+        logger.trace("Exit value is %s\n", exitValue);
         return exitValue;
     }
 
