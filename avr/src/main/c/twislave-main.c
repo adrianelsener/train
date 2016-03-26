@@ -24,11 +24,11 @@
 
 #define dataPosition 1
 #define countPosition 0
-#define waitToReset 10
+#define waitToReset 2000
 
 // [X][0] -> times since last 1
 // [X][1] -> current state
-uint8_t pinstate[8][2];
+uint16_t pinstate[8][2];
 
 struct DATA {
 	uint16_t destOcr1;
@@ -183,7 +183,7 @@ void initPortDAsInputWithPullUp() {
 }
 
 void readInputStates() {
-	int tmp = 0x00;
+	uint8_t tmp = 0x00;
 	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
 		int isPinSet = (PIND & (1 << pinToCheck));
 		if (isPinSet) {
@@ -197,7 +197,6 @@ void readInputStates() {
 			pinstate[pinToCheck][countPosition] = 0;
 		}
 		tmp ^= (-pinstate[pinToCheck][dataPosition] ^ tmp) & (1 << pinToCheck);
-		txbuffer[pinToCheck + 2] = pinstate[pinToCheck][dataPosition];
 	}
 	txbuffer[11] = tmp;
 }
