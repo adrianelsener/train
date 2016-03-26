@@ -183,6 +183,7 @@ void initPortDAsInputWithPullUp() {
 }
 
 void readInputStates() {
+	int tmp = 0x00;
 	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
 		int isPinSet = (PIND & (1 << pinToCheck));
 		if (isPinSet) {
@@ -195,8 +196,10 @@ void readInputStates() {
 			pinstate[pinToCheck][dataPosition] = 0;
 			pinstate[pinToCheck][countPosition] = 0;
 		}
+		tmp ^= (-pinstate[pinToCheck][dataPosition] ^ tmp) & (1 << pinToCheck);
 		txbuffer[pinToCheck + 2] = pinstate[pinToCheck][dataPosition];
 	}
+	txbuffer[11] = tmp;
 }
 
 void initPinState() {
