@@ -2,6 +2,8 @@ package ch.adrianelsener.train.pi.twi;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class TwiCmdTest {
+    private static final Logger logger = LoggerFactory.getLogger(TwiCmdTest.class);
     public static void main(String[] args) throws IOException {
         new TwiCmdTest().sendFromConsole();
     }
@@ -34,6 +36,8 @@ public class TwiCmdTest {
                 System.out.printf("PWM 1 -> %s\n", readLine1);
                 final String inputPin = read(devNr, 0x02);
                 System.out.printf("InputPin -> %s\n", inputPin);
+                final String inputPins = read(devNr, 0x0B);
+                System.out.printf("InputPins combined -> %s\n as binary: %s", inputPins, Integer.toBinaryString(Integer.decode(inputPins)));
             } else {
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
                 if ("1".equals(splittedStrings.get(1))) {
@@ -41,10 +45,6 @@ public class TwiCmdTest {
                 } else if ("2".equals(splittedStrings.get(1))) {
                     setSpeed(4, devNr, splittedStrings);
                 }
-//                List<Integer> splitted = splittedStrings.stream().map(s -> Integer.valueOf(s)).collect(Collectors.toList());
-//                for (int dataPosition = 0; dataPosition < splitted.size(); dataPosition++) {
-//                    createStartedSetProcess(devNr, dataPosition, splitted.get(dataPosition));
-//                }
             }
             val = readNextStepWithOutput(in);
         }
@@ -89,7 +89,7 @@ public class TwiCmdTest {
         parameters.add("0x"+Long.toHexString(data));
         ProcessBuilder setProcessBuilder = new ProcessBuilder(parameters);
         parameters.forEach(System.out::println);
-        System.out.println("Data was : "+data);
+        logger.debug("Data was : " + data);
         return setProcessBuilder.start();
     }
 
@@ -102,7 +102,7 @@ public class TwiCmdTest {
             }
         }
         final int exitValue = setProcess.exitValue();
-        System.out.printf("Exit value is %s\n", exitValue);
+        logger.debug("Exit value is %s\n", exitValue);
         return exitValue;
     }
 
