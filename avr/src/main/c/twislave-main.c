@@ -177,41 +177,23 @@ void initPorts() {
 
 void initPortDAsInputWithPullUp() {
 	DDRD = 0x00;
-	PORTD = 0x00;
-//	PORTD = 0xFF; // Pullup
+//	PORTD = 0x00;
+	PORTD = 0xFF; // Pullup
 }
 
-//void readInputStates() {
-//	uint8_t tmp = 0x00;
-//	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
-//		int isPinSet = (PIND & (1 << pinToCheck));
-//		if (isPinSet) {
-//			if (pinstate[pinToCheck][countPosition] > waitToReset) {
-//				pinstate[pinToCheck][dataPosition] = 1;
-//			} else {
-//				pinstate[pinToCheck][countPosition] = pinstate[pinToCheck][countPosition] + 1;
-//			}
-//		} else {
-//			pinstate[pinToCheck][dataPosition] = 0;
-//			pinstate[pinToCheck][countPosition] = 0;
-//		}
-//		tmp ^= (-pinstate[pinToCheck][dataPosition] ^ tmp) & (1 << pinToCheck);
-//	}
-//	txbuffer[11] = tmp;
-//}
 void readInputStates() {
 	uint8_t tmp = 0x00;
 	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
 		int isPinSet = (PIND & (1 << pinToCheck));
 		if (isPinSet) {
-			pinstate[pinToCheck][dataPosition] = 1;
-			pinstate[pinToCheck][countPosition] = 0;
-		} else {
 			if (pinstate[pinToCheck][countPosition] > waitToReset) {
-				pinstate[pinToCheck][dataPosition] = 0;
+				pinstate[pinToCheck][dataPosition] = 1;
 			} else {
 				pinstate[pinToCheck][countPosition] = pinstate[pinToCheck][countPosition] + 1;
 			}
+		} else {
+			pinstate[pinToCheck][dataPosition] = 0;
+			pinstate[pinToCheck][countPosition] = 0;
 		}
 		tmp ^= (-pinstate[pinToCheck][dataPosition] ^ tmp) & (1 << pinToCheck);
 	}
