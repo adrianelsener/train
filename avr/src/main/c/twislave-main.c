@@ -23,13 +23,7 @@
 #define	bis(ADDRESS,BIT)	(ADDRESS & (1<<BIT))		// bit is set?
 #define	bic(ADDRESS,BIT)	(!(ADDRESS & (1<<BIT)))		// bit is clear?
 
-#define dataPosition 1
-#define countPosition 0
 #define waitToReset 2000
-
-// [X][0] -> times since last 1
-// [X][1] -> current state
-uint16_t pinstate[8][2];
 
 struct DATA {
 	uint16_t destOcr1;
@@ -43,6 +37,12 @@ struct DATA {
 	uint16_t waited2; // indicates how many waits are done
 	uint8_t direction2; // [1,2]
 };
+
+struct PINSTATE {
+	uint16_t countSinceLastReset;
+	uint8_t state;
+};
+struct PINSTATE pinstates[8];
 
 void initTwi(void) {
 	cli();
@@ -178,7 +178,6 @@ void initPorts() {
 
 void initPortDAsInputWithPullUp() {
 	DDRD = 0x00;
-//	PORTD = 0x00;
 	PORTD = 0xFF; // Pullup
 }
 
@@ -187,24 +186,24 @@ void readInputStates() {
 	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
 		int isPinSet = (PIND & (1 << pinToCheck));
 		if (isPinSet) {
-			if (pinstate[pinToCheck][countPosition] > waitToReset) {
-				pinstate[pinToCheck][dataPosition] = 1;
+			if (pinstates[pinToCheck].countSinceLastReset <= 0) {
+				pinstates[pinToCheck].state = 1;
 			} else {
-				pinstate[pinToCheck][countPosition] = pinstate[pinToCheck][countPosition] + 1;
+				pinstates[pinToCheck].countSinceLastReset = pinstates[pinToCheck].countSinceLastReset - 1;
 			}
 		} else {
-			pinstate[pinToCheck][dataPosition] = 0;
-			pinstate[pinToCheck][countPosition] = 0;
+			pinstates[pinToCheck].state = 0;
+			pinstates[pinToCheck].countSinceLastReset = waitToReset;
 		}
-		tmp ^= (-pinstate[pinToCheck][dataPosition] ^ tmp) & (1 << pinToCheck);
+		tmp ^= (-pinstates[pinToCheck].state ^ tmp) & (1 << pinToCheck);
 	}
 	txbuffer[11] = tmp;
 }
 
 void initPinState() {
 	for (int i = 0; i < 8; i++) {
-		pinstate[i][0] = 0;
-		pinstate[i][1] = 1;
+		pinstates[i].countSinceLastReset = 0;
+		pinstates[i].state = 1;
 	}
 }
 
