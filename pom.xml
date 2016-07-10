@@ -27,7 +27,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.5.201505241946</version>
+                <version>0.7.7.201606060606</version>
                 <executions>
                     <execution>
                         <id>
@@ -70,7 +70,6 @@
     </modules>
 
     <properties>
-        <version.guava>18.0</version.guava>
         <version.logback-classic>1.1.2</version.logback-classic>
         <version.slf4j>1.7.12</version.slf4j>
         <version.hamcrest>1.3</version.hamcrest>
@@ -142,7 +141,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>${version.guava}</version>
+                <version>19.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
