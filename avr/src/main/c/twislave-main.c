@@ -181,9 +181,10 @@ void initPortDAsInputWithPullUp() {
 	PORTD = 0xFF; // Pullup
 }
 
-void readInputStates() {
+void readInputState(int offset) {
 	uint8_t tmp = 0x00;
-	for (int pinToCheck = PIND0; pinToCheck <= PIND7; pinToCheck++) {
+	int pinOffset = offset * 4;
+	for (int pinToCheck = PIND0 + pinOffset; pinToCheck <= PIND3 + pinOffset; pinToCheck++) {
 		int isPinSet = (PIND & (1 << pinToCheck));
 		if (isPinSet) {
 			if (pinstates[pinToCheck].countSinceLastReset <= 0) {
@@ -195,9 +196,14 @@ void readInputStates() {
 			pinstates[pinToCheck].state = 0;
 			pinstates[pinToCheck].countSinceLastReset = waitToReset;
 		}
-		tmp ^= (-pinstates[pinToCheck].state ^ tmp) & (1 << pinToCheck);
+		tmp ^= (-pinstates[pinToCheck].state ^ tmp) & (1 << (pinToCheck - pinOffset));
 	}
-	txbuffer[11] = tmp;
+	txbuffer[11 + offset] = tmp;
+}
+
+void readInputStates() {
+	readInputState(0);
+	readInputState(1);
 }
 
 void initPinState() {
