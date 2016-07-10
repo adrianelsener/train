@@ -38,6 +38,8 @@ public class TwiCmdTest {
                 System.out.printf("InputPin -> %s\n", inputPin);
                 final String inputPins = read(devNr, 0x0B);
                 System.out.printf("InputPins combined -> %s\n as binary: %s\n", inputPins, Integer.toBinaryString(Integer.decode(inputPins)));
+                final String inputPins2 = read(devNr, 0x0C);
+                System.out.printf("InputPins combined -> %s\n as binary: %s\n", inputPins2, Integer.toBinaryString(Integer.decode(inputPins2)));
             } else {
                 List<String> splittedStrings = Splitter.on(",").splitToList(val);
                 if ("1".equals(splittedStrings.get(1))) {
