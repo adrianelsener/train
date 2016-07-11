@@ -13,6 +13,9 @@ public class RestServer {
 
     public void start() {
         final ResourceConfig rc = new ResourceConfig().packages(InfoTextService.class.getPackage().toString());
+
+        rc.register(GsonMessageBodyHandler.class);
+
         httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 

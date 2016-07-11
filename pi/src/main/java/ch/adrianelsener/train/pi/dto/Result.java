@@ -1,5 +1,8 @@
 package ch.adrianelsener.train.pi.dto;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Optional;
 
 public abstract class Result extends AbstractDto {
@@ -32,6 +35,8 @@ public abstract class Result extends AbstractDto {
         }
     }
 
+    @XmlRootElement
+    @XmlAccessorType(XmlAccessType.FIELD)
     private static class OkResult extends Result {
         private final AccelerationDto acceleration;
 

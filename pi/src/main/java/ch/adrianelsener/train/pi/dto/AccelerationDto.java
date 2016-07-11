@@ -5,6 +5,11 @@ import ch.adrianelsener.train.pi.dto.properties.Device;
 import ch.adrianelsener.train.pi.dto.properties.Direction;
 import ch.adrianelsener.train.pi.dto.properties.Speed;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AccelerationDto extends AbstractDto {
     private final Acceleration acceleration;
     private final Speed speed;

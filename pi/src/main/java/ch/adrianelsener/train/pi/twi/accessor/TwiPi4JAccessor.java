@@ -23,7 +23,7 @@ public class TwiPi4JAccessor implements TwiAccessor {
     private I2CBus getI2CBus() {
         try {
             return I2CFactory.getInstance(I2CBus.BUS_1);
-        } catch (IOException e) {
+        } catch (IOException | I2CFactory.UnsupportedBusNumberException e) {
             throw new TwiInitializationException(e);
         }
     }

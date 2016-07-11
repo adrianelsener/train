@@ -13,11 +13,11 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class TwiTest2 {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, I2CFactory.UnsupportedBusNumberException {
         new TwiTest2().sendFromConsole();
     }
 
-    public void sendFromConsole() throws IOException {
+    public void sendFromConsole() throws IOException, I2CFactory.UnsupportedBusNumberException {
         Scanner in = new Scanner(System.in);
         I2CBus i2CBus = I2CFactory.getInstance(I2CBus.BUS_1);
         System.out.printf("Device nr: ");
