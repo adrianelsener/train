@@ -17,6 +17,7 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
+import ch.adrianelsener.train.pi.dto.Result;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,7 +34,7 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>,
     private Gson getGson() {
         if (gson == null) {
             final GsonBuilder gsonBuilder = new GsonBuilder();
-            gson = gsonBuilder.create();
+            gson = gsonBuilder.registerTypeHierarchyAdapter(Result.class, new AbstrTypeAdapter()).create();
         }
         return gson;
     }

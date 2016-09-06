@@ -5,12 +5,16 @@ import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
 import com.google.gson.Gson;
+import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ParamConverter;
+import javax.ws.rs.ext.ParamConverterProvider;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,15 +22,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.net.Socket;
 
 public class TcpTestClient {
-
-
-
-
-
     public static void main(String[] args) throws IOException {
+        ResteasyProviderFactory instance= ResteasyProviderFactory.getInstance();
+        RegisterBuiltin.register(instance);
+        instance.registerProvider(GsonMessageBodyHandler.class);
+
         new TcpTestClient().send("foo");
     }
 
@@ -37,7 +42,7 @@ public class TcpTestClient {
     private Result sendSetSpeed() throws IOException {
         Gson gson = new Gson();
         Command cmd = Command.builder()//
-                .setData(new AccelerationDto())//
+                .setData(new AccelerationDto().setAcceleration(20, 4))//
                 .setMode(Mode.SPEED)//
                 .build();
         Result result = sendCommand(cmd);
@@ -48,6 +53,7 @@ public class TcpTestClient {
     private Result sendCommand(final Command cmd) throws IOException {
         Client client = ClientBuilder.newBuilder().build();
         WebTarget target = client.target("http://127.0.0.1:8080/train/api/speed");
+        client.register(GsonMessageBodyHandler.class);
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         Result value = response.readEntity(Result.class);
         response.close();
