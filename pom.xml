@@ -70,18 +70,18 @@
     </modules>
 
     <properties>
-        <version.logback-classic>1.1.2</version.logback-classic>
-        <version.slf4j>1.7.12</version.slf4j>
-        <version.hamcrest>1.3</version.hamcrest>
-        <version.commons-lang3>3.4</version.commons-lang3>
-        <verison.commons-io>2.4</verison.commons-io>
-        <version.testng>6.9.4</version.testng>
-        <version.jsr305>3.0.0</version.jsr305>
+        <version.logback-classic>1.1.7</version.logback-classic>
+        <version.slf4j>1.7.21</version.slf4j>
+        <version.hamcrest>2.0.0.0</version.hamcrest>
+        <version.commons-lang3>3.5</version.commons-lang3>
+        <verison.commons-io>2.5</verison.commons-io>
+        <version.testng>6.9.13.6</version.testng>
+        <version.jsr305>3.0.1</version.jsr305>
         <version.junit>4.12</version.junit>
-        <version.mockito>2.0.28-beta</version.mockito>
+        <version.mockito>2.2.9</version.mockito>
         <version.dom4j>1.6.1</version.dom4j>
-        <version.gson>2.3.1</version.gson>
-        <version.guice>4.0</version.guice>
+        <version.gson>2.8.0</version.gson>
+        <version.guice>4.1.0</version.guice>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -92,12 +92,7 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
+            <artifactId>java-hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -171,13 +166,7 @@
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-core</artifactId>
-                <version>${version.hamcrest}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-library</artifactId>
+                <artifactId>java-hamcrest</artifactId>
                 <version>${version.hamcrest}</version>
                 <scope>test</scope>
             </dependency>
