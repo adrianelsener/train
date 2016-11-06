@@ -1,14 +1,15 @@
 package ch.adrianelsener.train.pi.dto;
 
 import ch.adrianelsener.train.pi.dto.properties.Device;
-import ch.adrianelsener.train.pi.twi.TwiAccessor;
-import ch.adrianelsener.train.pi.twi.TwiAccessorFactory;
+import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
+import ch.adrianelsener.train.pi.twi.accessor.TwiAccessor;
+import ch.adrianelsener.train.pi.twi.accessor.TwiAccessorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum Mode {
     SPEED {
-        public Result apply(final AccelerationDto accel, final Device device) {
+        public Result apply(final AccelerationDto accel, final TwiDevice device) {
             log.debug("ACCEL: {}", accel);
             TwiAccessor twiAccessor = new TwiAccessorFactory().open(device);
             twiAccessor.write(device, accel);
@@ -19,7 +20,7 @@ public enum Mode {
     },//
     READ_SPEED {
         @Override
-        public Result apply(final AccelerationDto data, final Device device) {
+        public Result apply(final AccelerationDto data, final TwiDevice device) {
             TwiAccessor twiAccessor = new TwiAccessorFactory().open(device);
             Result result = twiAccessor.read(device);
             log.debug("read {}", result);
@@ -28,6 +29,5 @@ public enum Mode {
     };
     private final static Logger log = LoggerFactory.getLogger(Mode.class);
 
-    public abstract Result apply(final AccelerationDto data, final Device device);
-
+    public abstract Result apply(final AccelerationDto data, final TwiDevice device);
 }

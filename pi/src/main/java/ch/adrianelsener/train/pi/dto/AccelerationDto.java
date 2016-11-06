@@ -7,7 +7,6 @@ import ch.adrianelsener.train.pi.dto.properties.Speed;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AccelerationDto extends AbstractDto {
@@ -18,7 +17,7 @@ public class AccelerationDto extends AbstractDto {
     public AccelerationDto() {
         acceleration = new Acceleration();
         speed = new Speed();
-        direction = Direction.STOP;
+        direction = Direction.NOOP;
     }
 
     private AccelerationDto(AccelerationDto current, Acceleration acceleration) {

@@ -1,7 +1,8 @@
 package ch.adrianelsener.train.pi.twi.accessor.cmd;
 
 import ch.adrianelsener.train.pi.dto.properties.Device;
-import ch.adrianelsener.train.pi.twi.TwiAccessException;
+import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
+import ch.adrianelsener.train.pi.twi.accessor.TwiAccessException;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,17 +17,17 @@ abstract class CmdReader<T> {
     private final static int READ_OFFSET = 1;
     private final CmdExecutor cmdExecutor = new CmdExecutor();
 
-    public T fromDevice(final Device device) {
+    public T fromDevice(final TwiDevice device) {
         final ImmutableList<String> command = createCommand(device);
         final Process getProcess = cmdExecutor.executeGetCmd(command);
         final String line = readCmdResult(getProcess);
         return convert(line);
     }
 
-    private ImmutableList<String> createCommand(final Device device) {
-        final int offset = device.getSubDeviceNr() * READ_OFFSET;
+    private ImmutableList<String> createCommand(final TwiDevice device) {
+        final int offset = device.getSubDevice() * READ_OFFSET;
         return ImmutableList.of(
-                cmdExecutor.toPrefixedHexString(device.getDeviceNr()),
+                cmdExecutor.toPrefixedHexString(device.getDeviceBusNr()),
                 cmdExecutor.toPrefixedHexString(offset + getReadPosition()));
     }
 

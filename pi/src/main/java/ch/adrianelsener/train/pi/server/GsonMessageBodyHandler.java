@@ -48,14 +48,19 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>,
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException {
         try(InputStreamReader streamReader = new InputStreamReader(entityStream, UTF_8)) {
-            Type jsonType;
-            if (type.equals(genericType)) {
-                jsonType = type;
-            } else {
-                jsonType = genericType;
-            }
+            Type jsonType = getType(type, genericType);
             return getGson().fromJson(streamReader, jsonType);
         }
+    }
+
+    private Type getType(Class<Object> type, Type genericType) {
+        Type jsonType;
+        if (type.equals(genericType)) {
+            jsonType = type;
+        } else {
+            jsonType = genericType;
+        }
+        return jsonType;
     }
 
     @Override

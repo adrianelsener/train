@@ -5,7 +5,7 @@ import com.google.common.collect.FluentIterable;
 public enum Direction {
     FORWARD(1),//
     BACKWARD(2),//
-    STOP(0);
+    NOOP(0);
 
     private final int avrDirectionValue;
 
@@ -28,7 +28,7 @@ public enum Direction {
         } else if (0 > speed) {
             return BACKWARD;
         } else {
-            return STOP;
+            return NOOP;
         }
     }
 }

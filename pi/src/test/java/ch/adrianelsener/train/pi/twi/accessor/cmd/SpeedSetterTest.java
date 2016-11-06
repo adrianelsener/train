@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.pi.twi.accessor.cmd;
 
-import ch.adrianelsener.train.pi.dto.properties.Device;
+import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Binder;
 import com.google.inject.Guice;
@@ -42,10 +42,10 @@ public class SpeedSetterTest {
             }
         });
         injector.injectMembers(testee);
-        final Device device = mock(Device.class);
-        when(device.getDeviceNr()).thenReturn(12);
-        when(device.getSubDeviceNr()).thenReturn(8);
-        testee.onDevice(device);
+        TwiDevice twiDevice = mock(TwiDevice.class);
+        when(twiDevice.getDeviceBusNr()).thenReturn(12);
+        when(twiDevice.getSubDevice()).thenReturn(8);
+        testee.onDevice(twiDevice);
         // assert
         verify(executor).executeSetCmd(parameterCaptor.capture());
         assertThat(parameterCaptor.getValue(), IsCollectionContaining.hasItems("42"));

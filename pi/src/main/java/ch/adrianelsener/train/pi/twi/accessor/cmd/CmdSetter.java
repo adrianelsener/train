@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.pi.twi.accessor.cmd;
 
-import ch.adrianelsener.train.pi.dto.properties.Device;
+import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
 import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;
@@ -12,9 +12,9 @@ abstract class CmdSetter {
     protected int subDev;
     protected int devNr;
 
-    public Process onDevice(final Device device) {
-        this.subDev = device.getSubDeviceNr();
-        this.devNr = device.getDeviceNr();
+    public Process onDevice(final TwiDevice device) {
+        this.subDev = device.getSubDevice();
+        this.devNr = device.getDeviceBusNr();
         final ImmutableList<String> parameters = createCommandList();
         return cmdExecutor.executeSetCmd(parameters);
     }

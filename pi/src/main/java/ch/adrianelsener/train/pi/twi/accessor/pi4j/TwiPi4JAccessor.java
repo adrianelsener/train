@@ -1,12 +1,12 @@
-package ch.adrianelsener.train.pi.twi.accessor;
+package ch.adrianelsener.train.pi.twi.accessor.pi4j;
 
 import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Result;
-import ch.adrianelsener.train.pi.dto.properties.Device;
 import ch.adrianelsener.train.pi.dto.properties.Speed;
-import ch.adrianelsener.train.pi.twi.TwiAccessException;
-import ch.adrianelsener.train.pi.twi.TwiAccessor;
-import ch.adrianelsener.train.pi.twi.TwiInitializationException;
+import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
+import ch.adrianelsener.train.pi.twi.accessor.TwiInitializationException;
+import ch.adrianelsener.train.pi.twi.accessor.TwiAccessException;
+import ch.adrianelsener.train.pi.twi.accessor.TwiAccessor;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
@@ -37,7 +37,7 @@ public class TwiPi4JAccessor implements TwiAccessor {
     }
 
     @Override
-    public void write(final Device device, final AccelerationDto accelerationDto) {
+    public void write(final TwiDevice device, final AccelerationDto accelerationDto) {
         byte[] sendbytes = accelerationDtoToBytearray().apply(accelerationDto);
         final I2CDevice i2CDevice = getI2CDevice(device);
         try {
@@ -49,9 +49,9 @@ public class TwiPi4JAccessor implements TwiAccessor {
 //            Integer.valueOf(s).byteValue()
     }
 
-    private I2CDevice getI2CDevice(final Device device) {
+    private I2CDevice getI2CDevice(final TwiDevice device) {
         final I2CBus i2CBus = getI2CBus();
-        return toI2CDevice(device.getDeviceNr(), i2CBus);
+        return toI2CDevice(device.getDeviceBusNr(), i2CBus);
     }
 
     private static Function<AccelerationDto, byte[]> accelerationDtoToBytearray() {
@@ -68,12 +68,12 @@ public class TwiPi4JAccessor implements TwiAccessor {
     }
 
     @Override
-    public Result read(final Device device) {
+    public Result read(final TwiDevice device) {
         int bytesToRead = 1;
         return readFromTwi(device, bytesToRead, byteArrayToResult());
     }
 
-    private <RESULT> RESULT readFromTwi(final Device device, final int bytesToRead, final Function<byte[], RESULT> toResult) {
+    private <RESULT> RESULT readFromTwi(final TwiDevice device, final int bytesToRead, final Function<byte[], RESULT> toResult) {
         byte[] bytes = new byte[bytesToRead];
         try {
             final I2CDevice i2CDevice = getI2CDevice(device);

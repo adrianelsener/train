@@ -16,7 +16,7 @@ public class Command {
     }
 
     public Result execute() {
-        return mode.apply(data, device);
+        return mode.apply(data, device.getTwiDevice());
     }
 
     @Override
@@ -26,6 +26,10 @@ public class Command {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public Result call() {
+        return device.call(this);
     }
 
     public static class Builder {
