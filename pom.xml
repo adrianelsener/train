@@ -75,7 +75,7 @@
         <version.hamcrest>2.0.0.0</version.hamcrest>
         <version.commons-lang3>3.5</version.commons-lang3>
         <verison.commons-io>2.5</verison.commons-io>
-        <version.testng>6.9.13.6</version.testng>
+        <version.testng>6.9.10</version.testng>
         <version.jsr305>3.0.1</version.jsr305>
         <version.junit>4.12</version.junit>
         <version.mockito>2.2.9</version.mockito>
