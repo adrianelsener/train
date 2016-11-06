@@ -22,6 +22,6 @@ public class Device extends AbstractProperty {
     }
 
     public Result call(Command command) {
-        return holderDevice.getCallType().doCall(command);
+        return holderDevice.getCallType().doCall(holderDevice, command);
     }
 }

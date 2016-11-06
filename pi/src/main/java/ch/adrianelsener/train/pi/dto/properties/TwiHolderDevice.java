@@ -11,6 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -49,19 +50,22 @@ public class TwiHolderDevice {
 
     public enum Call {
         GSON_REST {
-            public Result doCall(Command cmd) {
-
-
-        Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://127.0.0.1:8080/train/api/speed");
-        client.register(GsonMessageBodyHandler.class);
-        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(cmd, MediaType.APPLICATION_JSON));
-        Result value = response.readEntity(Result.class);
-        response.close();
-        return value;
+            public Result doCall(TwiHolderDevice holderDevice, Command cmd) {
+                Client client = ClientBuilder.newBuilder().build();
+                try {
+                    WebTarget target = client.target(holderDevice.getUrl().toURI());
+                    client.register(GsonMessageBodyHandler.class);
+                    Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(cmd, MediaType.APPLICATION_JSON));
+                    Result value = response.readEntity(Result.class);
+                    response.close();
+                    return value;
+                } catch (URISyntaxException e) {
+                    throw new IllegalArgumentException(e);
+                }
+//        WebTarget target = client.target("http://127.0.0.1:8080/train/api/speed");
             }
         };
 
-        public abstract Result doCall(Command cmd);
+        public abstract Result doCall(TwiHolderDevice holderDevice, Command cmd);
     }
 }

@@ -31,7 +31,7 @@ public class IpTwiSpeedBoardDriver implements SpeedBoardDriver {
         String port = cfg.getChild("PORT");
         String path = cfg.getChild("PATH");
         String protocol = cfg.getChild("PROTOCOL");
-        String connectionString = new StringBuilder("http://").append(ip).append(port).append(path).toString();
+        String connectionString = new StringBuilder("http://").append(ip).append(":").append(port).append(path).toString();
         return new TwiHolderDevice(connectionString, TwiHolderDevice.Call.valueOf(protocol));
     }
 

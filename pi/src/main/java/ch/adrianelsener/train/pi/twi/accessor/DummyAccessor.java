@@ -13,6 +13,6 @@ public class DummyAccessor implements TwiAccessor {
 
     @Override
     public Result read(TwiDevice device) {
-        return Result.ok(null);
+        return Result.ok(new AccelerationDto().setSpeed(42));
     }
 }
