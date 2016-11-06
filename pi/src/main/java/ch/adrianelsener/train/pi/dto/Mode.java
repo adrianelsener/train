@@ -1,6 +1,5 @@
 package ch.adrianelsener.train.pi.dto;
 
-import ch.adrianelsener.train.pi.dto.properties.Device;
 import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
 import ch.adrianelsener.train.pi.twi.accessor.TwiAccessor;
 import ch.adrianelsener.train.pi.twi.accessor.TwiAccessorFactory;
@@ -8,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum Mode {
-    SPEED {
+    SET_SPEED {
         public Result apply(final AccelerationDto accel, final TwiDevice device) {
             log.debug("ACCEL: {}", accel);
             TwiAccessor twiAccessor = new TwiAccessorFactory().open(device);

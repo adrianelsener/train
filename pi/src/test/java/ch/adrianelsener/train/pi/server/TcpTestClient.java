@@ -21,7 +21,7 @@ public class TcpTestClient {
     private Result sendSetSpeed() throws IOException {
         Command cmd = Command.builder()//
                 .setData(new AccelerationDto().setAcceleration(20, 4))//
-                .setMode(Mode.SPEED)//
+                .setMode(Mode.SET_SPEED)//
                 .setDevice(new Device(new TwiHolderDevice("http://127.0.0.1:8080/train/api/speed", TwiHolderDevice.Call.GSON_REST), new TwiDevice(6, 1, TwiDevice.Accessor.DUMMY)))//
                 .build();
         Result result = cmd.call();

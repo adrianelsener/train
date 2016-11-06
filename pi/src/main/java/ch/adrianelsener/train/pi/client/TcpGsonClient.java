@@ -34,7 +34,7 @@ public class TcpGsonClient implements TcpClient {
     private Result sendSetSpeed() {
         Command cmd = Command.builder()//
                 .setData(new AccelerationDto())//
-                .setMode(Mode.SPEED)//
+                .setMode(Mode.SET_SPEED)//
                 .setDevice(new Device())//
                 .build();
         Result result = sendCommand(cmd);
