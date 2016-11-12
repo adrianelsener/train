@@ -17,6 +17,7 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
+import ch.adrianelsener.train.pi.dto.Result;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,7 +34,7 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>,
     private Gson getGson() {
         if (gson == null) {
             final GsonBuilder gsonBuilder = new GsonBuilder();
-            gson = gsonBuilder.create();
+            gson = gsonBuilder.registerTypeHierarchyAdapter(Result.class, new AbstrTypeAdapter()).create();
         }
         return gson;
     }
@@ -46,18 +47,20 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>,
 
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException {
-        InputStreamReader streamReader = new InputStreamReader(entityStream, UTF_8);
-        try {
-            Type jsonType;
-            if (type.equals(genericType)) {
-                jsonType = type;
-            } else {
-                jsonType = genericType;
-            }
+        try(InputStreamReader streamReader = new InputStreamReader(entityStream, UTF_8)) {
+            Type jsonType = getType(type, genericType);
             return getGson().fromJson(streamReader, jsonType);
-        } finally {
-            streamReader.close();
         }
+    }
+
+    private Type getType(Class<Object> type, Type genericType) {
+        Type jsonType;
+        if (type.equals(genericType)) {
+            jsonType = type;
+        } else {
+            jsonType = genericType;
+        }
+        return jsonType;
     }
 
     @Override
@@ -72,8 +75,8 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>,
 
     @Override
     public void writeTo(Object object, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF_8);
-        try {
+
+        try(OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF_8)) {
             Type jsonType;
             if (type.equals(genericType)) {
                 jsonType = type;
@@ -81,8 +84,6 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>,
                 jsonType = genericType;
             }
             getGson().toJson(object, jsonType, writer);
-        } finally {
-            writer.close();
         }
     }
 }

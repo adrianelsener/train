@@ -2,8 +2,8 @@ package ch.adrianelsener.train.pi.twi.accessor.cmd;
 
 import ch.adrianelsener.train.pi.dto.AccelerationDto;
 import ch.adrianelsener.train.pi.dto.Result;
-import ch.adrianelsener.train.pi.dto.properties.Device;
-import ch.adrianelsener.train.pi.twi.TwiAccessor;
+import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
+import ch.adrianelsener.train.pi.twi.accessor.TwiAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class TwiCmdAccessor implements TwiAccessor {
     }
 
     @Override
-    public void write(final Device device, final AccelerationDto accelerationDto) {
+    public void write(final TwiDevice device, final AccelerationDto accelerationDto) {
         setStepsize(accelerationDto.getAcceleration().getStepsize()).onDevice(device);
         setAcceleration(accelerationDto.getAcceleration().getAcceleration()).onDevice(device);
         setSpeed(accelerationDto.getSpeed().getSpeed()).onDevice(device);
@@ -39,7 +39,7 @@ public class TwiCmdAccessor implements TwiAccessor {
     }
 
     @Override
-    public Result read(final Device device) {
+    public Result read(final TwiDevice device) {
         int currentSpeed = readCurrentSpeed().fromDevice(device);
         return Result.ok(new AccelerationDto().setSpeed(currentSpeed));
     }

@@ -1,6 +1,6 @@
 package ch.adrianelsener.train.pi.twi.accessor.cmd;
 
-import ch.adrianelsener.train.pi.twi.TwiAccessException;
+import ch.adrianelsener.train.pi.twi.accessor.TwiAccessException;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

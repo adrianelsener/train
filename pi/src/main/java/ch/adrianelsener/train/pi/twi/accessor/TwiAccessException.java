@@ -1,4 +1,4 @@
-package ch.adrianelsener.train.pi.twi;
+package ch.adrianelsener.train.pi.twi.accessor;
 
 public class TwiAccessException extends RuntimeException {
     public TwiAccessException(Throwable e) {

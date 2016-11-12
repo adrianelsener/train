@@ -1,11 +1,11 @@
-package ch.adrianelsener.train.pi.twi;
+package ch.adrianelsener.train.pi.twi.accessor;
 
-import ch.adrianelsener.train.pi.dto.properties.Device;
+import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
 
 import java.lang.reflect.Constructor;
 
 public class TwiAccessorFactory {
-    public TwiAccessor open(Device device) {
+    public TwiAccessor open(TwiDevice device) {
         try {
             final Constructor<?> constructor = Class.forName(device.getAccessorClass()).getConstructor();
             final Object accessor = constructor.newInstance();

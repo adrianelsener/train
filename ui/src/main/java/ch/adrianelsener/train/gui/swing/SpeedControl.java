@@ -48,11 +48,9 @@ public class SpeedControl extends JFrame {
 
     private SpeedBoardDriver createSpeedBoardDriver(final Config config) {
         final SpeedBoardDriver speedBoard;
-        final String ip = config.getChild("IP");
-        final String port = config.getChild("PORT");
         final String drvClassName = config.getChild("DRV");
         try {
-            speedBoard = SpeedBoardDriver.class.cast(Class.forName(drvClassName).getConstructor(NetAddress.class).newInstance(NetAddress.create(ip, Integer.parseInt(port))));
+            speedBoard = SpeedBoardDriver.class.cast(Class.forName(drvClassName).getConstructor(Config.class).newInstance(config));
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException(e);
         }

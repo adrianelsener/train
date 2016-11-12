@@ -1,54 +1,34 @@
 package ch.adrianelsener.train.pi.dto.properties;
 
-import ch.adrianelsener.train.pi.twi.TwiAccessor;
-import ch.adrianelsener.train.pi.twi.accessor.TwiPi4JAccessor;
-import ch.adrianelsener.train.pi.twi.accessor.cmd.TwiCmdAccessor;
-import org.apache.commons.lang3.Validate;
+import ch.adrianelsener.train.pi.dto.Command;
+import ch.adrianelsener.train.pi.dto.Result;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Device extends AbstractProperty {
-    private final int deviceNr;
-    private final int subDeviceNr;
-    private final Accessor accessor;
-
-    public enum Accessor {
-        PI4J(TwiPi4JAccessor.class),//
-        CMD(TwiCmdAccessor.class),//
-        DUMMY(null);
-
-        private final Class<? extends TwiAccessor> accessorClass;
-
-        Accessor(final Class<? extends TwiAccessor> accessorClass) {
-            this.accessorClass = accessorClass;
-        }
-
-        public String getAccessorClass() {
-            return accessorClass.getName();
-        }
-    }
+    private final TwiDevice twiDevice;
+    private final TwiHolderDevice holderDevice;
 
     public Device() {
-        subDeviceNr = -1;
-        this.deviceNr = -1;
-        accessor = Accessor.CMD;
+        this.twiDevice = TwiDevice.NOT_INITIALIZED;
+        holderDevice  = TwiHolderDevice.NOT_INITIALIZED;
     }
 
-    public Device(final int deviceNr, final int subDeviceNr, final Accessor accessor) {
-        Validate.inclusiveBetween(0, 255, deviceNr);
-        Validate.inclusiveBetween(0, 1, subDeviceNr);
-        this.deviceNr = deviceNr;
-        this.subDeviceNr = subDeviceNr;
-        this.accessor = accessor;
+    public Device(TwiHolderDevice holderDevice, final TwiDevice twiDevice) {
+        this.holderDevice = holderDevice;
+        this.twiDevice = twiDevice;
     }
 
-    public int getDeviceNr() {
-        return deviceNr;
+    public TwiDevice getTwiDevice() {
+        return twiDevice;
     }
 
-    public String getAccessorClass() {
-        return accessor.getAccessorClass();
+    public Result call(Command command) {
+        return holderDevice.getCallType().doCall(holderDevice, command);
     }
 
-    public int getSubDeviceNr() {
-        return subDeviceNr;
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
     }
 }
