@@ -27,4 +27,4 @@ Finally install the I2C utilities:
 
 SET I2C-SPEED
 -------------
-sudo bash -c "echo options i2c_bcm2708 baudrate=350000 > /etc/modprobe.d/i2c.conf"
+sudo bash -c "echo options i2c_bcm2708 baudrate=100000 > /etc/modprobe.d/i2c.conf"
