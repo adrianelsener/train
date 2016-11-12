@@ -2,10 +2,6 @@ package ch.adrianelsener.train.common.net;
 
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.CombinableMatcher;
-import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.net.InetAddress;

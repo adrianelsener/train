@@ -38,6 +38,10 @@ public class Config {
         return subConfig;
     }
 
+    public Config getAllChilds(final String childname) {
+        return getAll(parentKey.createSubKey(childname));
+    }
+
     public String getChild(final String childname) {
         return get(parentKey.createSubKey(childname));
     }
