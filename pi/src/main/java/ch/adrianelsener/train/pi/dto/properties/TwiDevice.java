@@ -5,6 +5,8 @@ import ch.adrianelsener.train.pi.twi.accessor.TwiAccessor;
 import ch.adrianelsener.train.pi.twi.accessor.cmd.TwiCmdAccessor;
 import ch.adrianelsener.train.pi.twi.accessor.pi4j.TwiPi4JAccessor;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class TwiDevice {
     public final static TwiDevice NOT_INITIALIZED = new TwiDevice();
@@ -47,6 +49,11 @@ public class TwiDevice {
 
     public String getAccessorClass() {
         return accessor.getAccessorClass();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
     }
 
     public enum Accessor {

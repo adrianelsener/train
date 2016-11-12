@@ -3,6 +3,8 @@ package ch.adrianelsener.train.pi.dto.properties;
 import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Result;
 import ch.adrianelsener.train.pi.server.GsonMessageBodyHandler;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -48,6 +50,11 @@ public class TwiHolderDevice {
         return callType;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+    }
+
     public enum Call {
         GSON_REST {
             public Result doCall(TwiHolderDevice holderDevice, Command cmd) {
@@ -62,7 +69,6 @@ public class TwiHolderDevice {
                 } catch (URISyntaxException e) {
                     throw new IllegalArgumentException(e);
                 }
-//        WebTarget target = client.target("http://127.0.0.1:8080/train/api/speed");
             }
         };
 
