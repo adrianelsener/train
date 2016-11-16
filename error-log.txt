@@ -1,0 +1,48 @@
+[INFO] --- exec-maven-plugin:1.5.0:java (default) @ pi ---
+Nov 16, 2016 1:51:48 PM org.glassfish.grizzly.http.server.NetworkListener start
+INFO: Started listener bound to [0.0.0.0:8080]
+Nov 16, 2016 1:51:48 PM org.glassfish.grizzly.http.server.HttpServer start
+INFO: [HttpServer] Started.
+13:52:26.195 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.server.SpeedService - received Command[mode=SET_SPEED,data=0,4,0,NOOP,device=6,0,CMD,http://172.16.100.120:8080/train/api/speed,GSON_REST]
+13:52:26.537 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.dto.Mode - ACCEL: 0,4,0,NOOP
+13:52:26.858 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - /usr/sbin/i2cset
+13:52:26.858 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - -y
+13:52:26.859 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 1
+13:52:26.859 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x6
+13:52:26.860 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x0
+13:52:26.860 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x4
+13:52:26.963 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - /usr/sbin/i2cset
+13:52:26.963 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - -y
+13:52:26.964 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 1
+13:52:26.964 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x6
+13:52:26.964 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x1
+13:52:26.965 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x0
+13:52:26.971 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - /usr/sbin/i2cset
+13:52:26.972 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - -y
+13:52:26.973 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 1
+13:52:26.973 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x6
+13:52:26.974 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x2
+13:52:26.974 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x0
+13:52:26.981 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - /usr/sbin/i2cset
+13:52:26.981 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - -y
+13:52:26.982 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 1
+13:52:26.983 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x6
+13:52:26.983 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x3
+13:52:26.983 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x0
+13:52:26.990 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - /usr/sbin/i2cset
+13:52:26.991 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - -y
+13:52:26.991 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 1
+13:52:26.992 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x6
+13:52:26.993 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 0x0
+13:52:27.099 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - /usr/sbin/i2cget
+13:52:27.099 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - -y
+13:52:27.100 [grizzly-http-server-1] DEBUG ch.adrianelsener.train.pi.twi.accessor.cmd.CmdExecutor - 1
+13:52:29.106 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err: Usage: i2cget [-f] [-y] I2CBUS CHIP-ADDRESS [DATA-ADDRESS [MODE]]
+13:52:29.107 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err:   I2CBUS is an integer or an I2C bus name
+13:52:29.107 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err:   ADDRESS is an integer (0x03 - 0x77)
+13:52:29.107 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err:   MODE is one of:
+13:52:29.107 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err:     b (read byte data, default)
+13:52:29.108 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err:     w (read word data)
+13:52:29.108 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err:     c (write byte/read byte)
+13:52:29.108 [grizzly-http-server-1] ERROR ch.adrianelsener.train.pi.twi.accessor.cmd.CmdReader - err:     Append p for SMBus PEC
+
