@@ -63,9 +63,9 @@ public class TwiHolderDevice {
                     WebTarget target = client.target(holderDevice.getUrl().toURI());
                     client.register(GsonMessageBodyHandler.class);
                     Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(cmd, MediaType.APPLICATION_JSON));
-                    Result value = response.readEntity(Result.class);
+//                    Result value = response.readEntity(Result.class);
                     response.close();
-                    return value;
+                    return Result.ok();
                 } catch (URISyntaxException e) {
                     throw new IllegalArgumentException(e);
                 }
