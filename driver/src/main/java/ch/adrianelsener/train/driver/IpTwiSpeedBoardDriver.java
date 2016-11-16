@@ -54,7 +54,7 @@ public class IpTwiSpeedBoardDriver implements SpeedBoardDriver {
                 .build();
         Result result = cmd.call();
         System.out.printf("%s\n", result);
-        currentSpeed = result.getResult().get().getSpeed().getSpeed();
+//        currentSpeed = result.getResult().get().getSpeed().getSpeed();
     }
 
     @Override

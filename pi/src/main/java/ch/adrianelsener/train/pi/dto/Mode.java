@@ -12,7 +12,7 @@ public enum Mode {
             log.debug("ACCEL: {}", accel);
             TwiAccessor twiAccessor = new TwiAccessorFactory().open(device);
             twiAccessor.write(device, accel);
-            Result result = twiAccessor.read(device);
+            Result result = Result.ok();
             log.debug("read {}", result);
             return result;
         }

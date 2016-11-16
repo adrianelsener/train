@@ -20,6 +20,10 @@ public abstract class Result extends AbstractDto {
 
     public abstract boolean isOk();
 
+    public static Result ok() {
+        return new OkResult();
+    }
+
     private static class NokResult extends Result {
         NokResult() {
             super();
@@ -43,6 +47,10 @@ public abstract class Result extends AbstractDto {
 
         OkResult(AccelerationDto acceleration) {
             this.acceleration = acceleration;
+        }
+
+        OkResult() {
+            this (null);
         }
 
         @Override
