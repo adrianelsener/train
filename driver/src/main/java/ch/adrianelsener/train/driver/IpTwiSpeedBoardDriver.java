@@ -6,6 +6,7 @@ import ch.adrianelsener.train.pi.dto.Command;
 import ch.adrianelsener.train.pi.dto.Mode;
 import ch.adrianelsener.train.pi.dto.Result;
 import ch.adrianelsener.train.pi.dto.properties.Device;
+import ch.adrianelsener.train.pi.dto.properties.Direction;
 import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
 import ch.adrianelsener.train.pi.dto.properties.TwiHolderDevice;
 
@@ -48,7 +49,7 @@ public class IpTwiSpeedBoardDriver implements SpeedBoardDriver {
     @Override
     public void setSpeed(int estimated) {
         Command cmd = Command.builder()//
-                .setData(new AccelerationDto().setAcceleration(estimated, 4))//
+                .setData(new AccelerationDto().setAcceleration(1, 1).setSpeed(estimated).setDirection(Direction.FORWARD))//
                 .setMode(Mode.SET_SPEED)//
                 .setDevice(device)//
                 .build();
