@@ -34,7 +34,7 @@ class CmdExecutor {
 
     private Process executeCmd(final ImmutableList<String> parameters) {
         final ProcessBuilder setProcessBuilder = new ProcessBuilder(parameters);
-        parameters.forEach(l -> logger.debug("{}", l));
+        logger.debug("{}", parameters);
         try {
             return setProcessBuilder.start();
         } catch (IOException e) {

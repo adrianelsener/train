@@ -90,7 +90,7 @@ public class TwiCmdTest {
         parameters.add("0x"+Integer.toHexString(dataPosition));
         parameters.add("0x"+Long.toHexString(data));
         ProcessBuilder setProcessBuilder = new ProcessBuilder(parameters);
-        parameters.forEach(System.out::println);
+        System.out.println(parameters.toString());
         logger.trace("Data was : " + data);
         return setProcessBuilder.start();
     }
