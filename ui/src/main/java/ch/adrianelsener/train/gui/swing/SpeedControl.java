@@ -1,6 +1,5 @@
 package ch.adrianelsener.train.gui.swing;
 
-import ch.adrianelsener.train.common.net.NetAddress;
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.driver.SpeedBoardDriver;
 import org.slf4j.Logger;
@@ -31,9 +30,9 @@ public class SpeedControl extends JFrame {
         JTextField currentSpeed = new JTextField("0");
         add(currentSpeed);
         currentSpeed.setEditable(false);
-        slider = new JSlider(0, 250);
+        slider = new JSlider(-250, 250);
         slider.setValue(currentSpeedValue);
-        slider.setSize(20, 300);
+        slider.setSize(20, 600);
         slider.setOrientation(SwingConstants.VERTICAL);
         final ChangeListener sliderMoveListener = e -> currentSpeedValue = slider.getValue();
         slider.addMouseListener(new FireOnMouseRelease(this));

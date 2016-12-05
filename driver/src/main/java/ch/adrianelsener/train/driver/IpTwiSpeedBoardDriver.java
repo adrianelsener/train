@@ -9,6 +9,7 @@ import ch.adrianelsener.train.pi.dto.properties.Device;
 import ch.adrianelsener.train.pi.dto.properties.Direction;
 import ch.adrianelsener.train.pi.dto.properties.TwiDevice;
 import ch.adrianelsener.train.pi.dto.properties.TwiHolderDevice;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class IpTwiSpeedBoardDriver implements SpeedBoardDriver {
     private final Device device;
@@ -48,14 +49,26 @@ public class IpTwiSpeedBoardDriver implements SpeedBoardDriver {
 
     @Override
     public void setSpeed(int estimated) {
+        final Pair<Integer, Direction> effective = getEffektiveDirections(estimated);
         Command cmd = Command.builder()//
-                .setData(new AccelerationDto().setAcceleration(1, 1).setSpeed(estimated).setDirection(Direction.FORWARD))//
+                .setData(new AccelerationDto().setAcceleration(1, 1) //
+                .setSpeed(effective.getLeft()).setDirection(effective.getRight()))//
                 .setMode(Mode.SET_SPEED)//
                 .setDevice(device)//
                 .build();
         Result result = cmd.call();
         System.out.printf("%s\n", result);
 //        currentSpeed = result.getResult().get().getSpeed().getSpeed();
+    }
+
+    private Pair<Integer, Direction> getEffektiveDirections(int estimated) {
+        final Pair<Integer, Direction> effective;
+        if (estimated < 0) {
+            effective = Pair.of(Math.abs(estimated), Direction.BACKWARD);
+        } else {
+            effective = Pair.of(estimated, Direction.FORWARD);
+        }
+        return effective;
     }
 
     @Override
