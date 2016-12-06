@@ -13,32 +13,38 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class SpeedControl extends JFrame {
+class SpeedControl extends JFrame {
     private final static Logger logger = LoggerFactory.getLogger(SpeedControl.class);
     private static final long serialVersionUID = 1L;
-    private final JSlider slider;
-
+    private boolean forward = true;
     private int currentSpeedValue = 0;
+
     private final SpeedBoardDriver speedBoardDriver;
 
-    public SpeedControl(Config config) {
+    SpeedControl(Config config) {
         super("Speedy");
+//        speedBoardDriver = new StatefulDummySpeedBoard(null);
         speedBoardDriver = createSpeedBoardDriver(config);
         setSize(50, 400);
         final LayoutManager layout = new GridLayout(4, 1);
         setLayout(layout);
-        JTextField currentSpeed = new JTextField("0");
+        final JSlider slider = new JSlider(0, 250);
+        final JTextField currentSpeed = new JTextField("0");
         add(currentSpeed);
-        currentSpeed.setEditable(false);
-        slider = new JSlider(-250, 250);
+        currentSpeed.setEditable(true);
+        currentSpeed.addActionListener(e -> slider.setValue(Integer.parseInt(currentSpeed.getText())));
         slider.setValue(currentSpeedValue);
         slider.setSize(20, 600);
         slider.setOrientation(SwingConstants.VERTICAL);
         final ChangeListener sliderMoveListener = e -> currentSpeedValue = slider.getValue();
-        slider.addMouseListener(new FireOnMouseRelease(this));
+        FireOnMouseRelease fireOnMouseRelease = new FireOnMouseRelease(this);
+        slider.addMouseListener(fireOnMouseRelease);
         slider.addChangeListener(sliderMoveListener);
+        slider.addChangeListener(e -> currentSpeed.setText(String.format("%s", slider.getValue())));
         add(slider);
         JToggleButton forwardBackward = new JToggleButton();
+        forwardBackward.setSelected(forward);
+        forwardBackward.addActionListener(e -> forward = forwardBackward.isSelected());
         add(forwardBackward);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         final KeyListener keyListener = new SpeedKeyListener(this);
@@ -59,7 +65,7 @@ public class SpeedControl extends JFrame {
     private static class FireOnMouseRelease implements MouseListener {
         private final SpeedControl speedControl;
 
-        public FireOnMouseRelease(final SpeedControl speedControl) {
+        FireOnMouseRelease(final SpeedControl speedControl) {
             this.speedControl = speedControl;
         }
 
@@ -76,7 +82,11 @@ public class SpeedControl extends JFrame {
         @Override
         public void mouseReleased(final MouseEvent e) {
             logger.debug("mouse Released value is: '{}'", speedControl.currentSpeedValue);
-            speedControl.speedBoardDriver.setSpeed(speedControl.currentSpeedValue);
+            int speedWithDirection = speedControl.currentSpeedValue;
+            if (speedControl.forward) {
+                speedWithDirection *= -1;
+            }
+            speedControl.speedBoardDriver.setSpeed(speedWithDirection);
         }
 
         @Override
@@ -94,7 +104,7 @@ public class SpeedControl extends JFrame {
 
         private final SpeedControl speedControl;
 
-        public SpeedKeyListener(final SpeedControl speedControl) {
+        SpeedKeyListener(final SpeedControl speedControl) {
             this.speedControl = speedControl;
             speedControl.speedBoardDriver.setSpeed(speedControl.currentSpeedValue);
         }
