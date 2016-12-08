@@ -32,7 +32,6 @@ class SpeedControl extends JFrame {
         final JTextField currentSpeed = new JTextField("0");
         add(currentSpeed);
         currentSpeed.setEditable(true);
-        currentSpeed.addActionListener(e -> slider.setValue(Integer.parseInt(currentSpeed.getText())));
         slider.setValue(currentSpeedValue);
         slider.setSize(20, 600);
         slider.setOrientation(SwingConstants.VERTICAL);
@@ -40,7 +39,7 @@ class SpeedControl extends JFrame {
         FireOnMouseRelease fireOnMouseRelease = new FireOnMouseRelease(this);
         slider.addMouseListener(fireOnMouseRelease);
         slider.addChangeListener(sliderMoveListener);
-        slider.addChangeListener(e -> currentSpeed.setText(String.format("%s", slider.getValue())));
+//        slider.addChangeListener(e -> currentSpeed.setText(String.format("%s", slider.getValue())));
         add(slider);
         JToggleButton forwardBackward = new JToggleButton();
         forwardBackward.setSelected(forward);
