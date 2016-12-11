@@ -18,7 +18,7 @@ public class TwiCmdAccessor implements TwiAccessor {
     public void write(final TwiDevice device, final AccelerationDto accelerationDto) {
         logger.debug("AccelerationDto is: {}", accelerationDto);
         setStepsize(accelerationDto.getAcceleration().getStepsize()).onDevice(device);
-        setAcceleration(accelerationDto.getAcceleration().getAcceleration()).onDevice(device);
+        setAcceleration(accelerationDto.getAcceleration().getWaitBetweenSteps()).onDevice(device);
         setSpeed(accelerationDto.getSpeed().getSpeed()).onDevice(device);
         setDirection(accelerationDto.getDirection().getAvrDirectionValue()).onDevice(device);
     }

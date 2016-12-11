@@ -48,8 +48,8 @@ public class AccelerationDto extends AbstractDto {
         return new AccelerationDto(this, acceleration);
     }
 
-    public AccelerationDto setAcceleration(final int accel, final int stepsize) {
-        Acceleration acceleration = new Acceleration(accel, stepsize);
+    public AccelerationDto setAcceleration(final int waitBetweenSteps, final int stepsize) {
+        Acceleration acceleration = new Acceleration(waitBetweenSteps, stepsize);
         return new AccelerationDto(this, acceleration);
     }
 

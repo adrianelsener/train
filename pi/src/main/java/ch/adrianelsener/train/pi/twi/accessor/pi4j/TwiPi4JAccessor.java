@@ -57,7 +57,7 @@ public class TwiPi4JAccessor implements TwiAccessor {
     private static Function<AccelerationDto, byte[]> accelerationDtoToBytearray() {
         return (dto -> new byte[]{
                 intToByte().apply(dto.getAcceleration().getStepsize()),//
-                intToByte().apply(dto.getAcceleration().getAcceleration()),//
+                intToByte().apply(dto.getAcceleration().getWaitBetweenSteps()),//
                 intToByte().apply(dto.getSpeed().getSpeed()),//
                 intToByte().apply(dto.getDirection().getAvrDirectionValue()),//
         });

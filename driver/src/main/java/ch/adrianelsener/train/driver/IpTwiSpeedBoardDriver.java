@@ -51,7 +51,7 @@ public class IpTwiSpeedBoardDriver implements SpeedBoardDriver {
     public void setSpeed(int estimated) {
         final Pair<Integer, Direction> effective = getEffektiveDirections(estimated);
         Command cmd = Command.builder()//
-                .setData(new AccelerationDto().setAcceleration(1, 1) //
+                .setData(new AccelerationDto().setAcceleration(1, 10) //
                 .setSpeed(effective.getLeft()).setDirection(effective.getRight()))//
                 .setMode(Mode.SET_SPEED)//
                 .setDevice(device)//
