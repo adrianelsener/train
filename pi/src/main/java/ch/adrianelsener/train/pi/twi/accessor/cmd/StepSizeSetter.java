@@ -9,7 +9,7 @@ class StepSizeSetter extends CmdSetter {
 
     @Override
     protected int dataPosition() {
-        return 0x00;
+        return 0x01;
     }
 
     @Override

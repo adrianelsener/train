@@ -10,7 +10,7 @@ class AccelerationSetter extends CmdSetter {
 
     @Override
     protected int dataPosition() {
-        return 0x01;
+        return 0x00;
     }
 
     @Override
