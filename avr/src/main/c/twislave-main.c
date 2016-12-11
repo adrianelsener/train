@@ -14,7 +14,7 @@
 #define INITIAL_OCR_SPEED 0
 #define INITIAL_DIRECTION 1
 
-#define SLAVE_ADRESSE 0x19
+#define SLAVE_ADRESSE 0x08
 
 #define sbi(ADDRESS,BIT) 	((ADDRESS) |= (1<<(BIT)))	// set Bit
 #define cbi(ADDRESS,BIT) 	((ADDRESS) &= ~(1<<(BIT)))	// clear Bit
@@ -26,8 +26,8 @@
 #define waitToReset 2000
 
 struct DATA {
-	uint16_t destOcr1;
-	uint16_t stepSize1;
+	uint8_t destOcr1;
+	uint8_t stepSize1;
 	uint8_t nrOfWaitsBetweenSteps1;
 	uint16_t waited1; // indicates how many waits are done
 	uint8_t direction1; // [1,2]
@@ -118,6 +118,9 @@ struct DATA setOcr(struct DATA data) {
 
 	txbuffer[0] = OCR1A;
 	txbuffer[1] = OCR1B;
+
+	txbuffer[3] = data.destOcr1;
+	txbuffer[4] = data.destOcr2;
 	return data;
 }
 
