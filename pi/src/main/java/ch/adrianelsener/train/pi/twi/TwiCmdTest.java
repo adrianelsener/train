@@ -31,9 +31,13 @@ public class TwiCmdTest {
         while (!val.startsWith("e")) {
             if (val.startsWith("r")) {
                 final String readLine2 = read(devNr, 0x00);
-                System.out.printf("PWM 2 -> %s\n", readLine2);
+                System.out.printf("PWM 1 -> %s\n", readLine2);
+                final String des1tRead = read(devNr, 0x03);
+                System.out.printf("destPWM 1 -> %s\n", des1tRead);
                 final String readLine1 = read(devNr, 0x01);
-                System.out.printf("PWM 1 -> %s\n", readLine1);
+                System.out.printf("PWM 2 -> %s\n", readLine1);
+                final String dest2Read = read(devNr, 0x04);
+                System.out.printf("destPWM 1 -> %s\n", dest2Read);
                 final String inputPin = read(devNr, 0x02);
                 System.out.printf("InputPin -> %s\n", inputPin);
                 final String inputPins = read(devNr, 0x0B);
