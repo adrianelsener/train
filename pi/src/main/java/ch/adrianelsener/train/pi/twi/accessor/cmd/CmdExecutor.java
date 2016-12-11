@@ -2,6 +2,8 @@ package ch.adrianelsener.train.pi.twi.accessor.cmd;
 
 import ch.adrianelsener.train.pi.twi.accessor.TwiAccessException;
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,5 +57,10 @@ class CmdExecutor {
 
     public String toPrefixedHexString(int i) {
         return "0x" + Integer.toHexString(i);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }
