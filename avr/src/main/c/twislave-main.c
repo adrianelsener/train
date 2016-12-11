@@ -14,7 +14,7 @@
 #define INITIAL_OCR_SPEED 0
 #define INITIAL_DIRECTION 1
 
-#define SLAVE_ADRESSE 0x09
+#define SLAVE_ADRESSE 0x19
 
 #define sbi(ADDRESS,BIT) 	((ADDRESS) |= (1<<(BIT)))	// set Bit
 #define cbi(ADDRESS,BIT) 	((ADDRESS) &= ~(1<<(BIT)))	// clear Bit
@@ -90,11 +90,7 @@ struct DATA setOcr(struct DATA data) {
 					|| ((nextVal < data.destOcr2) && (stepWithSign < 0))) {
 				nextVal = data.destOcr2;
 			}
-			if (nextVal == 0) {
-				OCR1B = nextVal;
-			} else {
-				OCR1B = nextVal;
-			}
+			OCR1B = nextVal;
 			data.waited2 = 0;
 		} else {
 			data.waited2++;
@@ -113,11 +109,7 @@ struct DATA setOcr(struct DATA data) {
 					|| ((nextVal < data.destOcr1) && (stepWithSign < 0))) {
 				nextVal = data.destOcr1;
 			}
-			if (nextVal == 0) {
-				OCR1A = nextVal;
-			} else {
-				OCR1A = nextVal;
-			}
+			OCR1A = nextVal;
 			data.waited1 = 0;
 		} else {
 			data.waited1++;
