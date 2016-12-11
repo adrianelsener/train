@@ -35,19 +35,25 @@ class SpeedControl extends JFrame {
         slider.setValue(currentSpeedValue);
         slider.setSize(20, 600);
         slider.setOrientation(SwingConstants.VERTICAL);
-        final ChangeListener sliderMoveListener = e -> currentSpeedValue = slider.getValue();
-        FireOnMouseRelease fireOnMouseRelease = new FireOnMouseRelease(this);
-        slider.addMouseListener(fireOnMouseRelease);
-        slider.addChangeListener(sliderMoveListener);
-//        slider.addChangeListener(e -> currentSpeed.setText(String.format("%s", slider.getValue())));
+        final ChangeListener sliderMoveListener = e -> {
+            logger.debug("changed");
+            currentSpeedValue = slider.getValue();
+            int speedWithDirection = currentSpeedValue;
+            if (forward) {
+                speedWithDirection *= -1;
+            }
+            speedBoardDriver.setSpeed(speedWithDirection);
+        };
+//        slider.addChangeListener(sliderMoveListener);
+        slider.addMouseListener(new FireOnMouseRelease(this, slider));
         add(slider);
         JToggleButton forwardBackward = new JToggleButton();
         forwardBackward.setSelected(forward);
         forwardBackward.addActionListener(e -> forward = forwardBackward.isSelected());
         add(forwardBackward);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        final KeyListener keyListener = new SpeedKeyListener(this);
-        slider.addKeyListener(keyListener);
+//        final KeyListener keyListener = new SpeedKeyListener(this);
+//        slider.addKeyListener(keyListener);
     }
 
     private SpeedBoardDriver createSpeedBoardDriver(final Config config) {
@@ -63,9 +69,11 @@ class SpeedControl extends JFrame {
 
     private static class FireOnMouseRelease implements MouseListener {
         private final SpeedControl speedControl;
+        private final JSlider slider;
 
-        FireOnMouseRelease(final SpeedControl speedControl) {
+        FireOnMouseRelease(final SpeedControl speedControl, JSlider slider) {
             this.speedControl = speedControl;
+            this.slider = slider;
         }
 
         @Override
@@ -80,6 +88,7 @@ class SpeedControl extends JFrame {
 
         @Override
         public void mouseReleased(final MouseEvent e) {
+            speedControl.currentSpeedValue = slider.getValue();
             logger.debug("mouse Released value is: '{}'", speedControl.currentSpeedValue);
             int speedWithDirection = speedControl.currentSpeedValue;
             if (speedControl.forward) {
@@ -120,6 +129,7 @@ class SpeedControl extends JFrame {
 
         @Override
         public void keyReleased(final KeyEvent e) {
+            speedControl.
             logger.debug("key release value is: '{}'", speedControl.currentSpeedValue);
         }
     }
