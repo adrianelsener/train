@@ -2,6 +2,7 @@ package ch.adrianelsener.train.gui.swing;
 
 import ch.adrianelsener.train.config.Config;
 import ch.adrianelsener.train.driver.SpeedBoardDriver;
+import ch.adrianelsener.train.driver.StatefulDummySpeedBoard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,25 +36,14 @@ class SpeedControl extends JFrame {
         slider.setValue(currentSpeedValue);
         slider.setSize(20, 600);
         slider.setOrientation(SwingConstants.VERTICAL);
-        final ChangeListener sliderMoveListener = e -> {
-            logger.debug("changed");
-            currentSpeedValue = slider.getValue();
-            int speedWithDirection = currentSpeedValue;
-            if (forward) {
-                speedWithDirection *= -1;
-            }
-            speedBoardDriver.setSpeed(speedWithDirection);
-        };
-//        slider.addChangeListener(sliderMoveListener);
         slider.addMouseListener(new FireOnMouseRelease(this, slider));
+        slider.addChangeListener(e -> currentSpeed.setText(String.valueOf(slider.getValue())));
         add(slider);
         JToggleButton forwardBackward = new JToggleButton();
         forwardBackward.setSelected(forward);
         forwardBackward.addActionListener(e -> forward = forwardBackward.isSelected());
         add(forwardBackward);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-//        final KeyListener keyListener = new SpeedKeyListener(this);
-//        slider.addKeyListener(keyListener);
     }
 
     private SpeedBoardDriver createSpeedBoardDriver(final Config config) {
@@ -107,31 +97,4 @@ class SpeedControl extends JFrame {
 
         }
     }
-
-    private static class SpeedKeyListener implements KeyListener {
-
-        private final SpeedControl speedControl;
-
-        SpeedKeyListener(final SpeedControl speedControl) {
-            this.speedControl = speedControl;
-            speedControl.speedBoardDriver.setSpeed(speedControl.currentSpeedValue);
-        }
-
-        @Override
-        public void keyTyped(final KeyEvent e) {
-
-        }
-
-        @Override
-        public void keyPressed(final KeyEvent e) {
-
-        }
-
-        @Override
-        public void keyReleased(final KeyEvent e) {
-            speedControl.
-            logger.debug("key release value is: '{}'", speedControl.currentSpeedValue);
-        }
-    }
-
 }
