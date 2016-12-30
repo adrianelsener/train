@@ -20,6 +20,9 @@ public abstract class PartCreationAction extends CreationAction{
         return new SwitchTrackCreationAction(point);
     }
 
+    public static PartCreationAction createPowerTrack(Point point) {
+        return new PowerTrackCreationAction(point);
+    }
 
     public static PartCreationAction createSwitch(Point point) {
         return new SwitchCreationAction(point);
@@ -59,6 +62,20 @@ public abstract class PartCreationAction extends CreationAction{
             final TrackPart switchTrack = Track.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
             logger.debug("Created final switch track '{}' to send to ui", switchTrack);
             return switchTrack;
+        }
+    }
+
+    private static class PowerTrackCreationAction extends PartCreationAction {
+        private static final Logger logger = LoggerFactory.getLogger(SwitchTrackCreationAction.class);
+        public PowerTrackCreationAction(Point point) {
+            super(point);
+        }
+
+        @Override
+        public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
+            final TrackPart powerTrack = Track.createPowerTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
+            logger.debug("Created final power track '{}' to send to ui", powerTrack);
+            return powerTrack;
         }
     }
 

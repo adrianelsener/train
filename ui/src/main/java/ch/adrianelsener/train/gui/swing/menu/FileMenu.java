@@ -3,11 +3,7 @@ package ch.adrianelsener.train.gui.swing.menu;
 import ch.adrianelsener.csvdb.CsvReader;
 import ch.adrianelsener.odb.api.ObjectFactory;
 import ch.adrianelsener.odb.api.Odb;
-import ch.adrianelsener.train.gui.swing.model.DummySwitch;
-import ch.adrianelsener.train.gui.swing.model.RealSwitch;
-import ch.adrianelsener.train.gui.swing.model.SimpleTrack;
-import ch.adrianelsener.train.gui.swing.model.SwitchTrack;
-import ch.adrianelsener.train.gui.swing.model.TrackPart;
+import ch.adrianelsener.train.gui.swing.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +38,8 @@ public class FileMenu extends JMenu {
                     return SimpleTrack.createSimpleTrack(iterator);
                 case "TS":
                     return SwitchTrack.createSwitchTrack(iterator);
+                case "PT":
+                    return PowerTrack.createPowerTrack(iterator);
                 case "S":
                     return RealSwitch.create(iterator);
                 case "DS":

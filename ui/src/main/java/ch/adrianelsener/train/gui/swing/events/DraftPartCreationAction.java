@@ -33,6 +33,10 @@ public abstract class DraftPartCreationAction extends CreationAction {
         return new DraftTripleSwitchCreateionAction(point);
     }
 
+    public static DraftPartCreationAction createPowerTrack(Point point) {
+        return new DraftPowerTrackCreationAction(point);
+    }
+
     private static class DraftSwitchTrackCreationAction extends DraftPartCreationAction {
         public DraftSwitchTrackCreationAction(Point point) {
             super(point);
@@ -41,6 +45,17 @@ public abstract class DraftPartCreationAction extends CreationAction {
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
             return Track.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
+        }
+    }
+
+    private static class DraftPowerTrackCreationAction extends DraftPartCreationAction {
+        public DraftPowerTrackCreationAction(Point point) {
+            super(point);
+        }
+
+        @Override
+        public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
+            return Track.createPowerTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
         }
     }
 

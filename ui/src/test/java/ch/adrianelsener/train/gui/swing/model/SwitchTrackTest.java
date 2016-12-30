@@ -227,7 +227,7 @@ public class SwitchTrackTest {
         // act
         final SwitchTrack result = testee.toggle(toggler);
         // assert
-        assertThat(result, CombinableMatcher.both(hasId(BoardId.create(24))).and(hasId(SwitchId.create(42))).and(hasState(SwitchTrack.TrackState.On)));
+        assertThat(result, CombinableMatcher.both(hasId(BoardId.create(24))).and(hasId(SwitchId.create(42))).and(hasState(TrackState.On)));
     }
 
     @Test
@@ -251,10 +251,10 @@ public class SwitchTrackTest {
                         .and(hasEnd(CombinableMatcher.both(hasX(equalTo(endPoint.x + 7))).and(hasY(equalTo(endPoint.y + 9))))));
     }
 
-    private FeatureMatcher<SwitchTrack, SwitchTrack.TrackState> hasState(SwitchTrack.TrackState s) {
-        return new FeatureMatcher<SwitchTrack, SwitchTrack.TrackState>(equalTo(s), "trackState", "trackState") {
+    private FeatureMatcher<SwitchTrack, TrackState> hasState(TrackState s) {
+        return new FeatureMatcher<SwitchTrack, TrackState>(equalTo(s), "trackState", "trackState") {
             @Override
-            protected SwitchTrack.TrackState featureValueOf(SwitchTrack o) {
+            protected TrackState featureValueOf(SwitchTrack o) {
                 return o.getTrackState();
             }
         };

@@ -39,9 +39,12 @@ public abstract class Track implements TrackPart {
         return new SwitchTrack(point, endPoint);
     }
 
+    public static PowerTrack createPowerTrack(final Point point, final Point endPoint) {
+        return new PowerTrack(point, endPoint);
+    }
+
     public static Track fromStringIterable(final Iterable<String> iter) {
         return fromIterable(iter);
-
     }
 
     private static Track fromIterable(final Iterable<String> split) {

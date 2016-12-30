@@ -86,6 +86,9 @@ class TrainMouseAdapter  extends MouseAdapter {
             case SwitchTrack:
                 bus.post(DraftPartCreationAction.createSwitchTrack(e.getPoint()));
                 break;
+            case PowerTrack:
+                bus.post(DraftPartCreationAction.createPowerTrack(e.getPoint()));
+                break;
             case Move:
                 bus.post(UpdateMoveDraftPart.create(e.getPoint()));
                 break;
@@ -120,6 +123,9 @@ class TrainMouseAdapter  extends MouseAdapter {
                 break;
             case SwitchTrack:
                 bus.post(PartCreationAction.createSwitchTrack(e.getPoint()));
+                break;
+            case PowerTrack:
+                bus.post(PartCreationAction.createPowerTrack(e.getPoint()));
                 break;
             case Switch:
                 bus.post(PartCreationAction.createSwitch(e.getPoint()));
