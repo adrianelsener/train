@@ -3,6 +3,7 @@ package ch.adrianelsener.train.gui.swing.events;
 import ch.adrianelsener.train.gui.swing.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
 
 import java.awt.*;
 import java.util.Optional;
@@ -38,23 +39,28 @@ public abstract class DraftPartCreationAction extends CreationAction {
     }
 
     private static class DraftSwitchTrackCreationAction extends DraftPartCreationAction {
+        private final static Logger logger = LoggerFactory.getLogger(DraftSwitchTrackCreationAction.class);
         public DraftSwitchTrackCreationAction(Point point) {
             super(point);
         }
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
+            logger.debug("point for draft SwitchTrach is: '{}'", point);
             return Track.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
         }
     }
 
     private static class DraftPowerTrackCreationAction extends DraftPartCreationAction {
+        private final static Logger logger = LoggerFactory.getLogger(DraftPowerTrackCreationAction.class);
+
         public DraftPowerTrackCreationAction(Point point) {
             super(point);
         }
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
+            logger.debug("point for draft PowerTrack is: '{}'", point);
             return Track.createPowerTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
         }
     }
