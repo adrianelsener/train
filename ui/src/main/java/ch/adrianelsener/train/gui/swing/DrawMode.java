@@ -6,7 +6,7 @@ import com.google.common.eventbus.EventBus;
 import java.awt.event.MouseEvent;
 
 enum DrawMode {
-    Switch(true) {
+    Switch() {
         @Override
         public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e) {
             bus.post(DraftPartCreationAction.createSwitch(e.getPoint()));
@@ -22,7 +22,7 @@ enum DrawMode {
             bus.post(PartCreationAction.createSwitch(e.getPoint()));
         }
     }, //
-    Track(true) {
+    Track() {
         @Override
         public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e) {
             bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
@@ -56,7 +56,7 @@ enum DrawMode {
             bus.post(UpdatePart.createToggle(e.getPoint()));
         }
     }, //
-    Move(true) {
+    Move() {
         @Override
         public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e) {
             bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
@@ -84,7 +84,7 @@ enum DrawMode {
             bus.post(UpdatePoint.createDetailCoordinates(e.getPoint()));
         }
     }, //
-    DummySwitch(true) {
+    DummySwitch() {
         @Override
         public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e) {
             bus.post(DraftPartCreationAction.createDummySwitch(e.getPoint()));
@@ -100,7 +100,7 @@ enum DrawMode {
             bus.post(PartCreationAction.createDummySwitch(e.getPoint()));
         }
     },//
-    SwitchTrack(true) {
+    SwitchTrack() {
         @Override
         public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e) {
             bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
@@ -116,7 +116,7 @@ enum DrawMode {
             bus.post(PartCreationAction.createSwitchTrack(e.getPoint()));
         }
     },//
-    PowerTrack(true) {
+    PowerTrack() {
         @Override
         public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e) {
             bus.post(UpdatePoint.createCreationStartPoint(e.getPoint()));
@@ -132,7 +132,7 @@ enum DrawMode {
             bus.post(PartCreationAction.createPowerTrack(e.getPoint()));
         }
     },//
-    TripleSwitch(true) {
+    TripleSwitch() {
         @Override
         public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e) {
             bus.post(DraftPartCreationAction.createTripleSwitch(e.getPoint()));
@@ -149,18 +149,8 @@ enum DrawMode {
         }
     };
 
-    private boolean isDraft;
-
     DrawMode() {
 
-    }
-
-    DrawMode(final boolean asDraft) {
-        isDraft = asDraft;
-    }
-
-    public boolean isDraft() {
-        return isDraft;
     }
 
     public void doWhileInitialButtonIsPressed(EventBus bus, MouseEvent e){
