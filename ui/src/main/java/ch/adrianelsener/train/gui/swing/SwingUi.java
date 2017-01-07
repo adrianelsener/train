@@ -274,7 +274,8 @@ public class SwingUi extends JComponent {
 
     @Subscribe
     @AllowConcurrentEvents
-    public void createPart(PartCreationAction newPart) {
+    public void createPart(
+            PartCreationAction newPart) {
         db.add(newPart.createDraftPart(creationStartPoint, pointCalc));
         draftPart = InvisiblePart.create();
         bus.post(DrawMode.NoOp);

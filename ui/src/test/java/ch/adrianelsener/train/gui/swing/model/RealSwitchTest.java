@@ -139,7 +139,7 @@ public class RealSwitchTest extends RulesForTestNg {
         final Collection<String> strings = Collections2.transform(testee.getDataToPersist(), input -> input.toString());
         final Iterator<String> iterator = strings.iterator();
         iterator.next();
-        final RealSwitch result = RealSwitch.create(iterator);
+        final RealSwitch result = new TrackFactory().create(iterator);
         // Assert
         assertThat(result, is(equalTo(testee)));
     }
@@ -187,7 +187,8 @@ public class RealSwitchTest extends RulesForTestNg {
         // act
         final SwingSwitch result = testee.move(distance);
         // assert
-        assertThat(result, both(hasX(equalTo(middle.x + 3))).and(hasY(equalTo(middle.y + 5))));
+        assertThat(result, both(hasX(equalTo(middle.x + 3)))
+                .and(hasY(equalTo(middle.y + 5))));
     }
 
 }

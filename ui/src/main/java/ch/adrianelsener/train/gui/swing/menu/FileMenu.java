@@ -17,6 +17,8 @@ public class FileMenu extends JMenu {
     private Optional<File> currentShowing = Optional.empty();
     private final Odb<TrackPart> db;
     private final ObjectFactory<TrackPart> objectFactory;
+    private TrackFactory trackFactory = TrackFactory.instance();
+
 
     public FileMenu(final Odb<TrackPart> db) {
         super("File");
@@ -35,15 +37,15 @@ public class FileMenu extends JMenu {
             final String type = iterator.next();
             switch (type) {
                 case "T":
-                    return SimpleTrack.createSimpleTrack(iterator);
+                    return trackFactory.createSimpleTrack(iterator);
                 case "TS":
-                    return SwitchTrack.createSwitchTrack(iterator);
+                    return trackFactory.createSwitchTrack(iterator);
                 case "PT":
-                    return PowerTrack.createPowerTrack(iterator);
+                    return trackFactory.createPowerTrack(iterator);
                 case "S":
-                    return RealSwitch.create(iterator);
+                    return trackFactory.create(iterator);
                 case "DS":
-                    return DummySwitch.create(iterator);
+                    return trackFactory.createDummy(iterator);
                 default:
                     throw new IllegalArgumentException("Could not estimate what kind of TrackPart should be created\n" + input);
             }

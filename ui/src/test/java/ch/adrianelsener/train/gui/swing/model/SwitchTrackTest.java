@@ -173,7 +173,7 @@ public class SwitchTrackTest {
     public void asCsvStringCanBeUsedForFromCsvString() {
         final Track testee = new SwitchTrack(startPoint, endPoint);
         // Act
-        final Track result = SwitchTrack.fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
+        final Track result =  new TrackFactory().fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
         // Assert
         assertThat(result, is(equalTo(testee)));
     }
@@ -182,7 +182,7 @@ public class SwitchTrackTest {
     public void asCsvStringCanBeUsedForFromCsvStringToggled() {
         final Track testee = new SwitchTrack(startPoint, endPoint).setBoardId("7").setId("4").toggle(toggler).invertView(true);
         // Act
-        final Track result = SwitchTrack.fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
+        final Track result = new TrackFactory().fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
         // Assert
         assertThat(result, is(equalTo(testee)));
     }

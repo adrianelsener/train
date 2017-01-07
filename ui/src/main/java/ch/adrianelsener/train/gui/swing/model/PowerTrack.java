@@ -1,11 +1,14 @@
 package ch.adrianelsener.train.gui.swing.model;
 
+import ch.adrianelsener.train.config.Config;
+import ch.adrianelsener.train.driver.SpeedBoardDriver;
 import ch.adrianelsener.train.gui.BoardId;
 import ch.adrianelsener.train.gui.SwitchCallback;
 import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import ch.adrianelsener.train.gui.swing.common.PointMover;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -16,33 +19,29 @@ import java.util.List;
 /**
  * BoardId will be the microcontroller and SwitchId the PWM
  */
-public class PowerTrack extends Track {
+public class PowerTrack extends Track implements Powerable {
     private final TrackState trackState;
     private final TrackView trackView;
     private final BoardId boardId;
-    private final SwitchId trackId;
+    @Inject
+    private Config config;
 
-    PowerTrack(final Point startPoint, final Point endPoint, SwitchId id, BoardId boardId, TrackState trackState, final TrackView trackView){
+    PowerTrack(final Point startPoint, final Point endPoint, BoardId boardId, TrackState trackState, final TrackView trackView){
         super(startPoint, endPoint);
-        trackId = id;
         this.boardId = boardId;
         this.trackState = trackState;
         this.trackView = trackView;
+//        Config config = other by boardId P+BoardId
     }
 
     PowerTrack(Point startPoint, Point endPoint) {
-        this(startPoint, endPoint, SwitchId.createDummy(), BoardId.createDummy(), TrackState.Off, TrackView.Default);
-    }
-
-    public static Track createPowerTrack(final Iterator<String> iterator) {
-        return new PowerTrack(new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())), new Point(
-                Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())), SwitchId.fromValue(iterator.next()), BoardId.fromValue(iterator.next()), TrackState.valueOf(iterator.next()), TrackView.valueOf(iterator.next()));
+        this(startPoint, endPoint, BoardId.createDummy(), TrackState.Off, TrackView.Default);
     }
 
     @Nonnull
     @Override
     public TrackPart toggle(@Nonnull SwitchCallback toggler) {
-        return new PowerTrack(startPoint, endPoint, trackId, boardId, trackState.other(), trackView);
+        return new PowerTrack(startPoint, endPoint, boardId, trackState.other(), trackView);
     }
 
     @Override
@@ -64,12 +63,12 @@ public class PowerTrack extends Track {
 
     @Override
     public Collection<SwitchId> getId() {
-        return Lists.newArrayList(trackId);
+        return Lists.newArrayList();
     }
 
     @Override
     public PowerTrack setId(final String newId) {
-        return new PowerTrack(startPoint, endPoint, SwitchId.fromValue(newId), boardId, trackState, trackView);
+        return new PowerTrack(startPoint, endPoint, boardId, trackState, trackView);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class PowerTrack extends Track {
 
     @Override
     public TrackPart setBoardId(String boardId) {
-        return new PowerTrack(startPoint, endPoint, trackId, BoardId.fromValue(boardId), trackState, trackView);
+        return new PowerTrack(startPoint, endPoint, BoardId.fromValue(boardId), trackState, trackView);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class PowerTrack extends Track {
         } else {
             selected = TrackView.Default;
         }
-        return new PowerTrack(startPoint, endPoint, trackId, boardId, trackState, selected);
+        return new PowerTrack(startPoint, endPoint, boardId, trackState, selected);
     }
 
     @Override
@@ -102,9 +101,8 @@ public class PowerTrack extends Track {
     protected void paintLable(Graphics2D g) {
         int centerX = Math.max(getStart().x, getEnd().x) - (Math.abs(getStart().x - getEnd().x) / 2) + 5;
         int centerY = Math.max(getStart().y, getEnd().y) - (Math.abs(getStart().y - getEnd().y) / 2) + 5;
-
         g.setColor(Color.black);
-        g.drawString(boardId.toUiString() + "/" + trackId.toUiString(), centerX - 10, centerY - 10);
+        g.drawString(boardId.toUiString(), centerX - 10, centerY - 10);
     }
 
     @Override
@@ -114,13 +112,11 @@ public class PowerTrack extends Track {
         } else {
             return Color.blue;
         }
-
     }
 
     @Override
     protected Collection<Object> individualStorageProperties() {
         final List<Object> ownProps = Lists.newArrayList();
-        ownProps.add(trackId.toSerializable());
         ownProps.add(boardId.toSerializable());
         ownProps.add(trackState);
         ownProps.add(trackView);
@@ -130,5 +126,21 @@ public class PowerTrack extends Track {
     @Override
     protected String getCsvIdentifier() {
         return "PT";
+    }
+
+    @Override
+    public void setCurrentPower(int powerlevel) {
+
+    }
+
+    private SpeedBoardDriver createSpeedBoardDriver(final Config config) {
+        final SpeedBoardDriver speedBoard;
+        final String drvClassName = config.getChild("DRV");
+        try {
+            speedBoard = SpeedBoardDriver.class.cast(Class.forName(drvClassName).getConstructor(Config.class).newInstance(config));
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return speedBoard;
     }
 }

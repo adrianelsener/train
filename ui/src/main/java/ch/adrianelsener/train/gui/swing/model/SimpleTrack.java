@@ -21,11 +21,6 @@ public class SimpleTrack extends Track {
         super(startPoint, endPoint);
     }
 
-    public static SimpleTrack createSimpleTrack(final Iterator<String> iterator) {
-        return createSimpleTrack(new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())),
-                new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())));
-    }
-
     @Override
     public SimpleTrack moveTo(final Point newLocation) {
         return this;

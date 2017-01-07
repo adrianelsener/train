@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.Optional;
 
 public abstract class PartCreationAction extends CreationAction{
+    protected TrackFactory trackFactory = TrackFactory.instance();
     public PartCreationAction(Point point) {
         super( point);
     }
@@ -59,7 +60,7 @@ public abstract class PartCreationAction extends CreationAction{
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final TrackPart switchTrack = Track.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
+            final TrackPart switchTrack = trackFactory.createSwitchTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
             logger.debug("Created final switch track '{}' to send to ui", switchTrack);
             return switchTrack;
         }
@@ -73,7 +74,7 @@ public abstract class PartCreationAction extends CreationAction{
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final TrackPart powerTrack = Track.createPowerTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
+            final TrackPart powerTrack = trackFactory.createPowerTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
             logger.debug("Created final power track '{}' to send to ui", powerTrack);
             return powerTrack;
         }
@@ -87,7 +88,7 @@ public abstract class PartCreationAction extends CreationAction{
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final TrackPart simpleTrack = Track.createSimpleTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
+            final TrackPart simpleTrack = trackFactory.createSimpleTrack(point.get(), pointCalculator.calculatePoint(getEndPoint()));
             logger.debug("created simple track '{}' to send to ui", simpleTrack);
             return simpleTrack;
         }
@@ -101,7 +102,7 @@ public abstract class PartCreationAction extends CreationAction{
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final SwingSwitch swingSwitch = new RealSwitch(getEndPoint());
+            final SwingSwitch swingSwitch = trackFactory.create(getEndPoint());
             logger.debug("created switch '{}' to send to ui", swingSwitch);
             return swingSwitch;
         }
@@ -115,7 +116,7 @@ public abstract class PartCreationAction extends CreationAction{
 
         @Override
         public TrackPart createDraftPart(Optional<Point> point, PointCalculator pointCalculator) {
-            final SwingSwitch dummySwitch = new DummySwitch(getEndPoint());
+            final SwingSwitch dummySwitch = trackFactory.createDummySwitch(getEndPoint());
             logger.debug("created dummy switch '{}' to send to ui", dummySwitch);
             return dummySwitch;
         }

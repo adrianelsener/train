@@ -15,17 +15,11 @@ import java.util.Iterator;
 public class DummySwitch extends SwingSwitch {
     private final static Logger logger = LoggerFactory.getLogger(ch.adrianelsener.train.gui.swing.model.DummySwitch.class);
 
-    public static ch.adrianelsener.train.gui.swing.model.DummySwitch create(Iterator<String> iterator) {
-        final Point center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
-        final Double drawAngle = Double.valueOf(iterator.next());
-        return new ch.adrianelsener.train.gui.swing.model.DummySwitch(center, drawAngle);
-    }
-
-    public DummySwitch(final Point point) {
+    DummySwitch(final Point point) {
         super(point);
     }
 
-    public DummySwitch(final Point center, final double angle) {
+    DummySwitch(final Point center, final double angle) {
         super(center, angle);
     }
 

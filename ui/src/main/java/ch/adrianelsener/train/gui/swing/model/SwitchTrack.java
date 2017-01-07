@@ -32,11 +32,6 @@ public class SwitchTrack extends Track {
         this.trackView = trackView;
     }
 
-    public static Track createSwitchTrack(final Iterator<String> iterator) {
-        return new SwitchTrack(new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())), new Point(
-                Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next())), SwitchId.fromValue(iterator.next()), BoardId.fromValue(iterator.next()), TrackState.valueOf(iterator.next()), TrackView.valueOf(iterator.next()));
-    }
-
     @VisibleForTesting TrackState getTrackState() {
         return trackState;
     }

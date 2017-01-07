@@ -19,24 +19,8 @@ public class RealSwitch extends SwingSwitch {
     private final BoardId boardId;
     private final boolean on;
 
-    public static RealSwitch create(final Iterator<String> iterator) {
-        final Point center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
-        final Double drawAngle = Double.valueOf(iterator.next());
-        final SwitchId readSwitchId = SwitchId.fromValue(iterator.next());
-        final BoardId readBoardId = BoardId.fromValue(iterator.next());
-        final boolean state = Boolean.parseBoolean(iterator.next());
-        final SwitchMode mode = SwitchMode.valueOf(iterator.next()); // Switchmode no more needed
-        final TrackView switchView = TrackView.valueOf(iterator.next());
-        switch (mode) {
-            case Real:
-                return new RealSwitch(center, drawAngle, readSwitchId, readBoardId, state, switchView);
-            default:
-                throw new IllegalArgumentException("Could not determine switch");
-        }
-    }
 
-
-    public RealSwitch(final Point point) {
+    RealSwitch(final Point point) {
         this(point, 0, SwitchId.createDummy(), BoardId.createDummy(), false, TrackView.Default);
     }
 

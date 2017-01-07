@@ -148,7 +148,7 @@ public class SimpleTrackTest {
     public void asCsvStringCanBeUsedForFromCsvString() {
         final Track testee = new SimpleTrack(startPoint, endPoint);
         // Act
-        final Track result = Track.fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
+        final Track result = new TrackFactory().fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
         // Assert
         assertThat(result, is(equalTo(testee)));
     }
@@ -208,7 +208,9 @@ public class SimpleTrackTest {
         final SimpleTrack result = testee.move(direction);
         // assert
         assertThat(result,
-                both(hasStart(both(hasX(equalTo(startPoint.x + 7))).and(hasY(equalTo(startPoint.y + 9)))))
-                        .and(hasEnd(both(hasX(equalTo(endPoint.x + 7))).and(hasY(equalTo(endPoint.y + 9))))));
+                both(hasStart(both(hasX(equalTo(startPoint.x + 7)))
+                        .and(hasY(equalTo(startPoint.y + 9)))))
+                        .and(hasEnd(both(hasX(equalTo(endPoint.x + 7)))
+                                .and(hasY(equalTo(endPoint.y + 9))))));
     }
 }

@@ -11,7 +11,7 @@ class TrackMatchers {
     }
 
 
-    public static Matcher<? super Track> hasStart(Matcher<Point> integerMatcher) {
+    public static Matcher<Track> hasStart(Matcher<Point> integerMatcher) {
         return new FeatureMatcher<Track, Point>(integerMatcher, "getStartpoint", "getStartpoint") {
             @Override
             protected Point featureValueOf(Track switchTrack) {
@@ -20,7 +20,7 @@ class TrackMatchers {
         };
     }
 
-    public static Matcher<? super Track> hasEnd(Matcher<Point> integerMatcher) {
+    public static Matcher<Track> hasEnd(Matcher<Point> integerMatcher) {
         return new FeatureMatcher<Track, Point>(integerMatcher, "getEndpoint", "getEndpoint") {
             @Override
             protected Point featureValueOf(Track switchTrack) {

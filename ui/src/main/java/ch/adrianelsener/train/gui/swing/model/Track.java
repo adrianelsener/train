@@ -17,7 +17,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class Track implements TrackPart {
@@ -29,32 +28,6 @@ public abstract class Track implements TrackPart {
     protected Track(final Point startPoint, final Point endPoint) {
         this.startPoint = startPoint;
         this.endPoint = endPoint;
-    }
-
-    public static SimpleTrack createSimpleTrack(final Point startPoint, final Point endPoint) {
-        return new SimpleTrack(startPoint, endPoint);
-    }
-
-    public static SwitchTrack createSwitchTrack(final Point point, final Point endPoint) {
-        return new SwitchTrack(point, endPoint);
-    }
-
-    public static PowerTrack createPowerTrack(final Point point, final Point endPoint) {
-        return new PowerTrack(point, endPoint);
-    }
-
-    public static Track fromStringIterable(final Iterable<String> iter) {
-        return fromIterable(iter);
-    }
-
-    private static Track fromIterable(final Iterable<String> split) {
-        final Iterator<String> iterator = split.iterator();
-        final String identifier = iterator.next();
-        if ("T".equals(identifier)) {
-            return SimpleTrack.createSimpleTrack(iterator);
-        } else {
-            return SwitchTrack.createSwitchTrack(iterator);
-        }
     }
 
     public Point getStart() {

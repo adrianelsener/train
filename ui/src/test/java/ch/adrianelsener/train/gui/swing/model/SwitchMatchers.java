@@ -7,7 +7,7 @@ public class SwitchMatchers {
     private SwitchMatchers() {
         super();
     }
-    public static Matcher<? super BaseSwingSwitch> hasY(Matcher<Integer> integerMatcher) {
+    public static Matcher<BaseSwingSwitch> hasY(Matcher<Integer> integerMatcher) {
         return new FeatureMatcher<BaseSwingSwitch, Integer>(integerMatcher, "getY", "getY") {
             @Override
             protected Integer featureValueOf(BaseSwingSwitch swingSwitch) {
@@ -16,7 +16,7 @@ public class SwitchMatchers {
         };
     }
 
-    public static Matcher<? super BaseSwingSwitch> hasX(Matcher<Integer> integerMatcher) {
+    public static Matcher<BaseSwingSwitch> hasX(Matcher<Integer> integerMatcher) {
         return new FeatureMatcher<BaseSwingSwitch, Integer>(integerMatcher, "getX", "getX") {
             @Override
             protected Integer featureValueOf(BaseSwingSwitch trackPart) {

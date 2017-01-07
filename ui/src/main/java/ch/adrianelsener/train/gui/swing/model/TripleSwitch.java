@@ -149,10 +149,6 @@ public class TripleSwitch extends BaseSwingSwitch implements TrackPart {
         return Builder.create(this).setId(newId).build();
     }
 
-    public static Builder create(Iterator<String> data) {
-        return new Builder(data);
-    }
-
     public static class Builder {
         private Point center;
         private double angle;
@@ -168,7 +164,7 @@ public class TripleSwitch extends BaseSwingSwitch implements TrackPart {
             lowerPart = original.lowerPart;
         }
 
-        private Builder(Iterator<String> iterator) {
+        public Builder(Iterator<String> iterator) {
             center = new Point(Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()));
             angle = Double.parseDouble(iterator.next());
             state = SwitchState.valueOf(iterator.next());
