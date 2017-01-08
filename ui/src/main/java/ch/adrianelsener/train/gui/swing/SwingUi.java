@@ -33,6 +33,7 @@ import ch.adrianelsener.train.gui.swing.menu.SettingsMenu;
 import ch.adrianelsener.train.gui.swing.menu.ToolsMenu;
 import ch.adrianelsener.train.gui.swing.menu.ViewMenu;
 import ch.adrianelsener.train.gui.swing.model.InvisiblePart;
+import ch.adrianelsener.train.gui.swing.model.TrackFactory;
 import ch.adrianelsener.train.gui.swing.model.TrackPart;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.AllowConcurrentEvents;
@@ -48,6 +49,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -71,6 +74,8 @@ public class SwingUi extends JComponent {
     private EventBus bus;
     @Inject
     private Odb<TrackPart> db;
+    @Inject
+    private TrackFactory trackFactory;
     private TrackPart draftPart = InvisiblePart.create();
     private SwitchCallback toggler;
     private boolean rasterEnabled = true;
@@ -83,7 +88,11 @@ public class SwingUi extends JComponent {
 
     SwingUi() {
         Odb<TrackPart> theDb = CsvOdb.create(TrackPart.class).build();
-
+        try {
+            new InitialContext();
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
         final Module busModule = new AbstractModule() {
             @Override
             protected void configure() {
@@ -97,7 +106,13 @@ public class SwingUi extends JComponent {
                 }).toInstance(theDb);
             }
         };
-        final Injector injector = Guice.createInjector(busModule, dbModule);
+        final Module trackCreatorModule = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(TrackFactory.class).toInstance(TrackFactory.instance());
+            }
+        };
+        final Injector injector = Guice.createInjector(busModule, dbModule, trackCreatorModule);
         keyListener = new ModeKeyListener();
         mouseListener = new TrainMouseAdapter(currentDrawMode);
         if (rasterEnabled) {
@@ -161,9 +176,7 @@ public class SwingUi extends JComponent {
     }
 
     public void init() {
-        final InputStream configfis = SwingUi.class.getResourceAsStream("sample.conf");
-        final Config config = new ConfigPropertyReader(configfis).getConfig();
-        IOUtils.closeQuietly(configfis);
+        final Config config = readConfig();
         final ConfKey rbKey = ConfKey.create("RB");
         final String all = config.get(rbKey);
         final Map<String, Board> boards = Maps.newHashMap();
@@ -214,6 +227,13 @@ public class SwingUi extends JComponent {
         p.addMouseMotionListener(mouseListener);
     }
 
+    private Config readConfig() {
+        final InputStream configfis = SwingUi.class.getResourceAsStream("sample.conf");
+        final Config config = new ConfigPropertyReader(configfis).getConfig();
+        IOUtils.closeQuietly(configfis);
+        return config;
+    }
+
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
         menuBar.add(new FileMenu(db));
@@ -232,6 +252,7 @@ public class SwingUi extends JComponent {
     @Subscribe
     @AllowConcurrentEvents
     public void createDraftPart(final DraftPartCreationAction action) {
+        logger.debug("use creationStartPoint '{}' and pointCalc '{}'", creationStartPoint, pointCalc);
         this.draftPart = action.createDraftPart(creationStartPoint, pointCalc);
         repaint();
     }
@@ -244,7 +265,8 @@ public class SwingUi extends JComponent {
         logger.debug("basic calculation of start point '{}'", pressedPoint);
         this.creationStartPoint = Optional.of(db.filterUnique(part -> part.isNear(pressedPoint)).map(part -> part.getNextConnectionpoint(pressedPoint)).orElse(creationStartPoint.getPoint()));
         draftPart = db.filterUnique(part -> part.isNear(pressedPoint)).orElse(InvisiblePart.create());
-        logger.debug("use '{}' to update");
+        logger.debug("calculated creationStartPoint is '{}'", creationStartPoint);
+        logger.debug("use draftPart '{}' to update", draftPart);
     }
 
     private Optional<Point> creationStartPoint = Optional.empty();

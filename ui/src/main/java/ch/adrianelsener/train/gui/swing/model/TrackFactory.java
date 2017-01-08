@@ -6,24 +6,25 @@ import ch.adrianelsener.train.gui.SwitchId;
 import ch.adrianelsener.train.gui.swing.TrackView;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.awt.*;
 import java.util.Iterator;
 
 public class TrackFactory {
-    public SimpleTrack createSimpleTrack(final Point startPoint, final Point endPoint) {
-        Guice.createInjector(createConfigModuel());
-        return new SimpleTrack(startPoint, endPoint);
+    private final Config config;
+    private final Injector injector;
+
+    TrackFactory(Config config) {
+        this.config = config;
+        injector = Guice.createInjector(createConfigModuel(config));
     }
 
-    private static Module createConfigModuel() {
-        return new AbstractModule() {
-            @Override
-            protected void configure() {
-//                bind(Config.class).toInstance();
-            }
-        };
+    public SimpleTrack createSimpleTrack(final Point startPoint, final Point endPoint) {
+        return new SimpleTrack(startPoint, endPoint);
     }
 
     public SwitchTrack createSwitchTrack(final Point point, final Point endPoint) {
@@ -31,7 +32,9 @@ public class TrackFactory {
     }
 
     public PowerTrack createPowerTrack(final Point point, final Point endPoint) {
-        return new PowerTrack(point, endPoint);
+        final PowerTrack powerTrack = new PowerTrack(point, endPoint);
+        injector.injectMembers(powerTrack);
+        return powerTrack;
     }
 
     public Track fromStringIterable(final Iterable<String> iter) {
@@ -101,6 +104,26 @@ public class TrackFactory {
 
 
     public static TrackFactory instance() {
-        return null;
+        if (instance == null) {
+            Config cfg = null;
+            try {
+                cfg = (Config) new InitialContext().lookup("els:config");
+            } catch (NamingException e) {
+                throw new IllegalStateException(e);
+            }
+            instance = new TrackFactory(cfg);
+        }
+        return instance;
+    }
+
+    private static TrackFactory instance = null;
+
+    private static Module createConfigModuel(Config config) {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Config.class).toInstance(config);
+            }
+        };
     }
 }

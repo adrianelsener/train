@@ -139,7 +139,7 @@ public class RealSwitchTest extends RulesForTestNg {
         final Collection<String> strings = Collections2.transform(testee.getDataToPersist(), input -> input.toString());
         final Iterator<String> iterator = strings.iterator();
         iterator.next();
-        final RealSwitch result = new TrackFactory().create(iterator);
+        final RealSwitch result = TrackFactory.instance().create(iterator);
         // Assert
         assertThat(result, is(equalTo(testee)));
     }

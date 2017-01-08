@@ -3,7 +3,6 @@ package ch.adrianelsener.train.gui.swing.events;
 import ch.adrianelsener.train.gui.swing.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 
 import java.awt.*;
 import java.util.Optional;

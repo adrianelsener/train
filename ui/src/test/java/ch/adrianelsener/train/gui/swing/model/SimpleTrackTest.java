@@ -148,7 +148,7 @@ public class SimpleTrackTest {
     public void asCsvStringCanBeUsedForFromCsvString() {
         final Track testee = new SimpleTrack(startPoint, endPoint);
         // Act
-        final Track result = new TrackFactory().fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
+        final Track result = TrackFactory.instance().fromStringIterable(Collections2.transform(testee.getDataToPersist(), Object::toString));
         // Assert
         assertThat(result, is(equalTo(testee)));
     }

@@ -223,7 +223,7 @@ public class TripleSwitchTest extends TestListenerAdapter {
         // Assert
         final Iterator<String> iterator = strings.iterator();
         iterator.next();
-        assertThat(new TrackFactory().createTripleSwitch(iterator).build(), is(equalTo(testee)));
+        assertThat(TrackFactory.instance().createTripleSwitch(iterator).build(), is(equalTo(testee)));
     }
 
     @Test
